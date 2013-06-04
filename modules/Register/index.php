@@ -160,6 +160,7 @@ class Module_Register extends Base_Module
             $insert = $hooks->run_hooks('register', $insert);
             
             $new_player = $this->db->insert('<ezrpg>players', $insert);
+			$this->db->execute("INSERT INTO <ezrpg>players_meta (pid) VALUES ('". $new_player ."')");
             //Use $new_player to find their new ID number.
 
             $hooks->run_hooks('register_after', $new_player);
