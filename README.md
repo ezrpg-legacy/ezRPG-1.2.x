@@ -10,40 +10,41 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 =====
 
 ##Notes about 1.2.x development
-##ETA on delivery: June 9th 2013!
+####ETA on delivery: June 9th 2013!
 
+```
 Base_Module now holds more responsibility like "getTheme and loadView":
 getTheme() checks 3 things:
-	-- 1) Are you in an AdminCP by checking IN_ADMIN and serving up the Admin Theme. (Admin theme is supplied, and currently not looking to be edited)
-	-- 2) Is there a current theme that's enabled in the DB? (if so, select it)
-	-- 3) If no current theme is enabled, default back to default theme.
+1. Are you in an AdminCP by checking IN_ADMIN and serving up the Admin Theme. (Admin theme is supplied, and currently not looking to be edited)
+2. Is there a current theme that's enabled in the DB? (if so, select it)
+3. If no current theme is enabled, default back to default theme.
 	
 getTheme then provides a Smarty Variable: "THEME_DIR" which will the directory for Theme assets. Developers can still load from Static if based off of our default theme.
 
 loadView() is accessed via "$this->loadView('template.tpl')" just like "$this->tpl->display('template.tpl')".
 loadView() does 2 things:
-	-- 1) Grabs the current set theme via $this->theme set by getTheme()
-	-- 2) Calls "$this->tpl->display('file:[ NAME OF THEME DIR ] template.tpl')" 
+1. Grabs the current set theme via $this->theme set by getTheme()
+2. Calls "$this->tpl->display('file:[ NAME OF THEME DIR ] template.tpl')" 
 	
 Later an Error404 needs to be supplied some where to this process.
 
 Init.php has also taken a role in the Theme Support which needs to be decoupled later:
-	-- 1) Creates the default TemplateDir in Smarty for Admin and Default theme
-	-- 2) Checks if both a theme is in the themes folder AND in the DB.
-		-- 2.1) This happens on every page load which should be decoupled to only when checked or when there's an issue with a theme.
-	-- 3) HTMLPurifier was removed, but should have an option setting. Find a way to decouple!
+1. Creates the default TemplateDir in Smarty for Admin and Default theme
+2. Checks if both a theme is in the themes folder AND in the DB.
+2.1. This happens on every page load which should be decoupled to only when checked or when there's an issue with a theme.
+3. HTMLPurifier was removed, but should have an option setting. Find a way to decouple!
 
 Class.Menu is still unstable but provides better integration.
-	-- 1) 1.0.x class.Menu auto embeded HTML code, 1.2.x class.Menu just returns an Array of menu items.
-	-- 2) Smarty Templates now much do foreach to setup menus
-	-- 3) Possible idea is to serialize array'd menu data into db so we can leave the logic to PHP only and use just {Menu_} tag
-		-- 3.1) This would be that during Admin/MenuManager, when you edit a Menu Group's subMenus, you'll just save the data to the single db row.
+1. 1.0.x class.Menu auto embeded HTML code, 1.2.x class.Menu just returns an Array of menu items.
+2. Smarty Templates now much do foreach to setup menus
+3. Possible idea is to serialize array'd menu data into db so we can leave the logic to PHP only and use just {Menu_} tag
+3.1. This would be that during Admin/MenuManager, when you edit a Menu Group's subMenus, you'll just save the data to the single db row.
 	
 Smarty Templates now have much more logic to them. Possible No Go for some, but necessary at the current stage.
-	-- 1) Templates now take on dynamic themes, more ForEach's for menus, could be a bit tempting at first
-	-- 2) Only the header.tpl or any tpl that NEEDS a menu will have this logic in it. Comments should be provided still though.
+1. Templates now take on dynamic themes, more ForEach's for menus, could be a bit tempting at first
+2. Only the header.tpl or any tpl that NEEDS a menu will have this logic in it. Comments should be provided still though.
 	
-
+```
 =====
 A modular game engine written in PHP.
 
