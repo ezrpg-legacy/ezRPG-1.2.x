@@ -31,7 +31,7 @@ class Admin_Settings extends Base_Module
 		$query1 = $this->db->execute('select * from <ezrpg>settings where gid = 0');
 		$groups = $this->db->fetchAll($query1);
 		$this->tpl->assign("groups", $groups);
-		$this->loadView('admin/settings.tpl');
+		$this->loadView('settings.tpl');
 	}
 	
 	private function getGroupPage($id) {
@@ -43,7 +43,7 @@ class Admin_Settings extends Base_Module
 		$allSettings = $this->db->fetchAll($query3);
 		$this->tpl->assign('allSettings', $allSettings);
 		$this->tpl->assign('settings', $settings);
-		$this->loadView('admin/settings_page.tpl');
+		$this->loadView('settings_page.tpl');
 	}
 	
 	private function save_settings(){

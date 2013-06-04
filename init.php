@@ -13,7 +13,7 @@ define('ADMIN_DIR', CUR_DIR . '/admin');
 define('LIB_DIR', CUR_DIR . '/lib');
 define('EXT_DIR', LIB_DIR . '/ext');
 define('HOOKS_DIR', CUR_DIR . '/hooks');
-define('CORE_THEME', CUR_DIR . '/themes/core');
+define('THEME_DIR', CUR_DIR . '/templates/');
 
 require_once CUR_DIR . '/config.php';
 
@@ -52,14 +52,25 @@ $purifier = new HTMLPurifier($purifier_config);
 $tpl = new Smarty();
 $tpl->assign('GAMESETTINGS', $settings->get_settings_by_cat_name('general'));
 $tpl->addTemplateDir(array(
-'admin' => CUR_DIR . '/themes/admin/',
-'default' => CUR_DIR . '/themes/default/'));
-$tpl->compile_dir  = CUR_DIR . '/themes/cache/';
+'admin' => THEME_DIR . 'themes/admin/',
+'default' => THEME_DIR . 'themes/default/'));
+$tpl->compile_dir  = THEME_DIR . 'cache/';
 $tpl->config_dir   = CUR_DIR . '/smarty/configs/';
 $tpl->cache_dir    = CUR_DIR . '/smarty/cache/';
 
-
-
+$entries = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
+		foreach ($entries as $entry) {
+			if ( $entry != '.' && $entry != '..' && $entry != 'index.php' ){
+				if ( !array_key_exists( $entry, $tpl->getTemplateDir() ) ){
+					$entry_dir = THEME_DIR . 'themes/' . $entry;
+					if (is_dir($entry_dir)) {
+						$tpl->addTemplateDir(array(
+							$entry => $entry_dir,
+						));
+					}
+				}
+			}
+		}
 //Initialize $player
 $player = 0;
 

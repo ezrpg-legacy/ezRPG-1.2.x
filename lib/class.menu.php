@@ -208,16 +208,23 @@ class Menu
 								$menuarray[$mitem] = $mval;
 							}
 							$this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag), $menuarray);
+							unset($menuarray);
                         }
-						}else {
-                        $result .= $this->get_children($ival->id, $title, $showchildren);
-                        $result .= ($endings ? $this->get_menu_endings() : "</ul>");
-                        $this->tpl->assign('MENU_' . (($customtag == "")? $ival->name : $customtag), $result);
-						}
+					}else {
+                        $result = $this->get_children($ival->id, $title, $showchildren);
+						foreach ($result as $mitem => $mval){
+								$menuarray[$mitem] = $mval;
+							}
+                        $this->tpl->assign('MENU_' . (($customtag == "")? $ival->name : $customtag), $mentarray);
+						unset($menuarray);
+					}
                 } else {
                     if ($ival->parent_id == 0) //it's a group
                         {
-                        $result = $this->get_children($ival->id, $title, $showchildren);
+                    
+						
+						$result = $this->get_children($ival->id, $title, $showchildren);
+						
 						foreach ($result as $mitem => $mval){
 							$menuarray[$mitem] = $mval;
 						}
@@ -229,6 +236,7 @@ class Menu
 						}
 						$menuarray['Logout'] = 'index.php?mod=Logout';
                         $this->tpl->assign('TOP_MENU_' . (($customtag != 0)? $customtag : $ival->name), $menuarray);
+						unset($menuarray);
                     }
                 } 
 				}
@@ -263,10 +271,7 @@ class Menu
                 }
             } else {
                 if ($ival->parent_id == $parent) {
-                    
-					
 					$menuarray[($title == 0 ? $ival->title : $this->get_title($ival))] = $ival->uri;
-         
                 }
             }
         }}

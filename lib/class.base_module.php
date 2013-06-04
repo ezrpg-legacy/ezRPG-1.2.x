@@ -69,15 +69,17 @@ abstract class Base_Module
 		}else{
 			$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
 			$this->theme = $this->db->fetch($query);
-			$this->theme = $this->theme->name;
+			if(is_null($this->theme->name)){
+				$this->theme = 'default';
+			}else{
+				$this->theme = $this->theme->name;
+			}
 		}
+		$this->tpl->assign('THEMEDIR', 'templates/themes/' . $this->theme . '/');
 		$this->tpl->assign('THEME', $this->theme);
 		return $this->theme;
 	}
-	public function getThemes(){
-		$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
-		$themes = $this->db->fetchAll($query);
-	}
+	
 	public function loadView($tpl){
 		$this->tpl->display('file:['. $this->theme. ']' .$tpl);
 	}

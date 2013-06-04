@@ -1,0 +1,6 @@
+!.gitignore
+/themes/.compiled/
+/themes/.cache/
+/themes/.config/
+
+config.php
