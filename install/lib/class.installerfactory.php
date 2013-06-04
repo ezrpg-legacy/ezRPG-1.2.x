@@ -3,7 +3,7 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: ModuleFactory
+  Class: InstallerFactory
   Factory class for modules.
 */
 class InstallerFactory
