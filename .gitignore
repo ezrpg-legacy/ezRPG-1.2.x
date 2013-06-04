@@ -1,6 +1,7 @@
 !.gitignore
-/themes/.compiled/
-/themes/.cache/
-/themes/.config/
+/templates/.compiled/
+/templates/.cache/
+/templates/.config/
+/templates/cache/
 
 config.php
