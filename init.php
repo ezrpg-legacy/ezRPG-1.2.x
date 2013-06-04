@@ -59,14 +59,32 @@ $tpl->config_dir   = CUR_DIR . '/smarty/configs/';
 $tpl->cache_dir    = CUR_DIR . '/smarty/cache/';
 
 $entries = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
+$templateQuery = $db->execute("SELECT * FROM <ezrpg>themes");
+$templateObj = $db->fetchAll($templateQuery);
+$templates = array();
+foreach ($templateObj as $item => $val){
+		$templates[$val->name] = $val->name;
+}
 		foreach ($entries as $entry) {
 			if ( $entry != '.' && $entry != '..' && $entry != 'index.php' ){
-				if ( !array_key_exists( $entry, $tpl->getTemplateDir() ) ){
+				if ( !array_key_exists( $entry, $templates) && !array_key_exists( $entry, $tpl->getTemplateDir() ) ) {
 					$entry_dir = THEME_DIR . 'themes/' . $entry;
 					if (is_dir($entry_dir)) {
 						$tpl->addTemplateDir(array(
 							$entry => $entry_dir,
 						));
+						$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('".$entry."', '".$entry_dir."', 0)");
+					}
+				}else{
+					$entry_dir = THEME_DIR . 'themes/' . $entry;
+					if (is_dir($entry_dir)) {
+						if ( !array_key_exists( $entry, $tpl->getTemplateDir() ) ){
+							$tpl->addTemplateDir(array(
+								$entry => $entry_dir,
+							));
+						}elseif(!array_key_exists( $entry, $templates)){
+							$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('".$entry."', '".$entry_dir."', 0)");
+						}
 					}
 				}
 			}

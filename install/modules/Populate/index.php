@@ -111,12 +111,25 @@ QUERY;
 			`value` text NULL,
 			`disporder` smallint(5) NOT NULL DEFAULT '0',
 			`gid` smallint(5) NOT NULL DEFAULT '0',
-			`isdefault` int(1) NOT NULL DEFAULT '0', 
+			`isdefault` int(1) NOT NULL DEFAULT '0',
+			`visible` tinyint(1) NOT NULL DEFAULT '1',
 			UNIQUE KEY id (id)
 			) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 	
 	$db->execute($structure6);
+	
+	$structure7 = <<<QUERY
+	CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `dir` text NOT NULL,
+  `enabled` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+QUERY;
+	$db->execute($structure7)
+	
 	
 	$data1 = <<<QUERY
 INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`, `pos`, `active`) VALUES
@@ -130,7 +143,9 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (8, 0, 'AdminMenu', 'Admin Menu',NULL, '', 0, 1),
 (9, 8, 'Members', 'Members','Member Management', 'index.php?mod=Members', 0, 1),
 (10, 8, 'Menus', 'Menus', 'Menu Management', 'index.php?mod=Menu', 0, 1),
-(11, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1);
+(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Theme', 0, 1),
+(12, 8, 'Settings', 'Settings', 'Settings Management', 'index.php?mod=Settings', 0, 1),
+(13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1);
 QUERY;
 
 	$db->execute($data1);

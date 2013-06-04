@@ -11,20 +11,29 @@
   <tbody>
 		<tr>
 			<th width="25%">
-				Setting Groups
+				Themes
+			</th>
+			<th width="1%">
+				Enabled?
 			</th>
 		</tr>
+<form method="post" action="index.php?mod=Themes&act=save">
 {foreach from=$groups item=gitem}
 		<tr>
-			<td valign="top">
-				<a href="index.php?mod=Settings&act=getGroup&gid={$gitem->id}">{$gitem->title}</a><br>
+			<td>
+				Theme : {$gitem->name}
+			</td>
+			<td>
+				 <input type="radio" name="themes" value={$gitem->id} {if $gitem->enabled == 1} checked{/if} />
 			</td>
 		</tr>
 {/foreach}
 	</tbody>
 </table>
 </div>
-
+<input type="hidden" name="act" value="save" />
+<input type="submit" class="button" value="Save Settings" name='save' />
+</form>
 <!-- END OF ADMINCP_PLUGINS_ROW-->
 
 {include file="file:[$THEME]footer.tpl"}
