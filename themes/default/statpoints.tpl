@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Stat Points"}
+{include file="file:[$THEME]header.tpl" TITLE="Stat Points"}
 
 <h1>Stat Points</h1>
 
@@ -40,4 +40,4 @@ You receive stat points when you first sign up to the game, and also each time w
 <strong>Dexterity</strong> - This helps you aim better so you are less likely to miss your opponent.
 </p>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

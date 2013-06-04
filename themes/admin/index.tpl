@@ -1,4 +1,4 @@
-{include file="file:[admin]header.tpl" TITLE="Admin"}
+{include file="file:[$THEME]header.tpl" TITLE="Admin"}
 <h1>Admin</h1>
 <h2>Admin Modules</h2>
 <ul>

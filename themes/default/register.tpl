@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Register"}
+{include file="file:[$THEME]header.tpl" TITLE="Register"}
 
 <h1>Register</h1>
 
@@ -31,4 +31,4 @@ Want to join the fun? Fill out the form below to register!
 <input name="register" type="submit" value="Register!" class="button" />
 </form>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

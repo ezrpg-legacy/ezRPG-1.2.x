@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Coming Soon!"}
+{include file="file:[$THEME]header.tpl" TITLE="Coming Soon!"}
 
 <h1>Coming soon!/h1>
 
@@ -6,4 +6,4 @@
 This feature is coming soon!
 </p>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

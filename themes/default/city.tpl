@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="City"}
+{include file="file:[$THEME]header.tpl" TITLE="City"}
 
 <h1>City</h1>
 
@@ -34,4 +34,4 @@
 
 </div>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Members"}
+{include file="file:[$THEME]header.tpl" TITLE="Members"}
 
 <table width="90%">
   <tr>
@@ -22,4 +22,4 @@
 </strong>
 </span>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

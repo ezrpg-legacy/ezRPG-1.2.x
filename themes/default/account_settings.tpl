@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Account Settings"}
+{include file="file:[$THEME]header.tpl" TITLE="Account Settings"}
 
 <h1>Account Settings</h1>
 
@@ -22,4 +22,4 @@ Here you can change your password.
 
 </form>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

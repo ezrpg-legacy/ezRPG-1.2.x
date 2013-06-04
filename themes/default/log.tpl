@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Event Log"}
+{include file="file:[$THEME]header.tpl" TITLE="Event Log"}
 
 {if $logs}
 	<form method="post" action="index.php?mod=EventLog&act=clear">
@@ -25,4 +25,4 @@
 	</p>
 {/if}
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

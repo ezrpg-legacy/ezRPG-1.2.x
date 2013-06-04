@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Home"}
+{include file="file:[$THEME]header.tpl" TITLE="Home"}
 
 <h1>Home</h1>
 
@@ -31,4 +31,4 @@ You have no extra stat points to spend.
 </p>
 </div>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}

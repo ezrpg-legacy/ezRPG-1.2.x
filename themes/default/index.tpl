@@ -1,4 +1,4 @@
-{include file="header.tpl" TITLE="Home"}
+{include file="file:[$THEME]header.tpl" TITLE="Home"}
 
 <h1>Home</h1>
 

@@ -71,9 +71,13 @@ abstract class Base_Module
 			$this->theme = $this->db->fetch($query);
 			$this->theme = $this->theme->name;
 		}
+		$this->tpl->assign('THEME', $this->theme);
 		return $this->theme;
 	}
-	
+	public function getThemes(){
+		$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
+		$themes = $this->db->fetchAll($query);
+	}
 	public function loadView($tpl){
 		$this->tpl->display('file:['. $this->theme. ']' .$tpl);
 	}
