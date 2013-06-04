@@ -1,11 +1,13 @@
 <?php
+
 class Install_CreateAdmin extends InstallerFactory
 {
-	function start(){
+	function start()
+	{
 		if(!isset($_POST['submit'])){
 			$username = '';
 			$email = '';
-		}else{
+		} else {
 			$errors = 0;
 			$msg = '';
 			$username = $_POST['username'];
