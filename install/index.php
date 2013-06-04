@@ -7,6 +7,7 @@ define('EXT_DIR', '../lib/ext');
 
 require_once '../lib/class.base_module.php';
 require_once '../lib/exception.db.php';
+require_once '../lib/const.errors.php';
 require_once '../lib/class.dbfactory.php';
 require_once CUR_DIR . '/lib/class.installerfactory.php';
 

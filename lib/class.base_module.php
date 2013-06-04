@@ -63,10 +63,22 @@ abstract class Base_Module
 		$this->settings = $settings;
     }
 	
-	public function getTheme($theme = 'default'){
+    /*
+	  Function: getTheme
+	  Retrieves and sets the chosen theme for the overall game.
+	  
+	  Paramaters:
+	  $theme - Which theme type
+	  
+	  Returns:
+	  The currently selected theme.
+
+     */
+	public function getTheme($theme = 'default')
+	{
 		if(defined('IN_ADMIN')){
 			$this->theme = 'admin';
-		}else{
+		} else {
 			$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
 			$this->theme = $this->db->fetch($query);
 			if(is_null($this->theme->name)){
@@ -77,11 +89,19 @@ abstract class Base_Module
 		}
 		$this->tpl->assign('THEMEDIR', 'templates/themes/' . $this->theme . '/');
 		$this->tpl->assign('THEME', $this->theme);
+		
 		return $this->theme;
 	}
 	
-	public function loadView($tpl){
+	/*
+	  Function: loadView
+	  Loads a specific view file
+	  
+	  Paramaters:
+	  $tpl - The template file to load
+	 */
+	public function loadView($tpl)
+	{
 		$this->tpl->display('file:['. $this->theme. ']' .$tpl);
 	}
 }
-?>

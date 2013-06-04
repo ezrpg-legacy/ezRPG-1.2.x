@@ -1,13 +1,18 @@
 <?php
+
 class Install_Config extends InstallerFactory
 {
-	function start(){
+	/**
+	 * This method creates the configuration file.
+	 */
+	function start()
+	{
 		if(!isset($_POST['submit'])){
 			$dbhost = "localhost";
 			$dbuser = "root";
 			$dbname = "ezrpg";
 			$dbprefix = "ezrpg_";
-		}else{
+		} else {
 			$dbhost = $_POST['dbhost'];
 			$dbuser = $_POST['dbuser'];
 			$dbname = $_POST['dbname'];
@@ -94,6 +99,7 @@ CONF;
 				die;
 			}
 		}
+		
 		$this->header();
 		echo "<h2>Database Configuration</h2><br />\n";
 		echo '<form method="post">';
@@ -110,8 +116,8 @@ CONF;
 		echo '<label>Table Prefix (Optional)</label>';
 		echo '<input type="text" name="dbprefix" value="', $dbprefix, '" />';
 		echo '<p>You can enter a prefix for your table names if you like.<br />This can be useful if you will be sharing the database with other applications, or if you are running more than one ezRPG instance in a single database.</p>';
+		echo '<p><strong>Note</strong> Please make sure that the database exists.</p>';
 		echo '<input type="submit" name="submit" value="Submit"  class="button" />';
 		echo '</form>';
 	}
 }
-?>
