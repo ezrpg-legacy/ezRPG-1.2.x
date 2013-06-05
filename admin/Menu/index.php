@@ -52,7 +52,7 @@ class Admin_Menu extends Base_Module
 		$groups = $this->db->fetchAll($query1);
 		$this->tpl->assign("groups", $groups);
 		$this->tpl->assign("menus", $menu);
-		$this->loadView('admin/menus.tpl');
+		$this->loadView('menus.tpl');
 	}
 	
 	private function remove_menus()
@@ -74,7 +74,7 @@ class Admin_Menu extends Base_Module
 			} else {
 				$this->tpl->assign('error', TRUE);
 				$this->tpl->assign('page', 'delete');
-				$this->loadView('admin/menus-manage.tpl');
+				$this->loadView('menus-manage.tpl');
 			}
 		}
 		if(isset($_GET['confirm']) && isset($_GET['mid']))
@@ -102,7 +102,7 @@ class Admin_Menu extends Base_Module
 			$this->tpl->assign('mpos','');
 			$this->tpl->assign('page', 'add');
 			$this->tpl->assign('error', $error);
-			$this->loadView('admin/menus-manage.tpl');	
+			$this->loadView('menus-manage.tpl');	
 		} else {
 			$insert = Array();
 				$insert['uri'] =  preg_replace( "[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]","",$_POST['muri']);
@@ -132,7 +132,7 @@ class Admin_Menu extends Base_Module
 			$this->tpl->assign('mpos',$_POST['mpos']);
 			$this->tpl->assign('page', 'add');
 			$this->tpl->assign('error', $error);
-			$this->loadView('admin/menus-manage.tpl');	
+			$this->loadView('menus-manage.tpl');	
 			}
 		}
 	}
@@ -150,7 +150,7 @@ class Admin_Menu extends Base_Module
 				$this->tpl->assign('errormsg', "");
 				$this->tpl->assign('error', 0);
 				$this->tpl->assign('page', 'edit');
-				$this->loadView('admin/menus-manage.tpl');
+				$this->loadView('menus-manage.tpl');
 			}else{
 				$insert = Array();
 					$insert['uri'] =  preg_replace( "[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]","",$_POST['muri']);

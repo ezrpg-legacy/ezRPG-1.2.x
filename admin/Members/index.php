@@ -59,7 +59,7 @@ class Admin_Members extends Base_Module
         $this->tpl->assign('playercount', $total_players);
         $this->tpl->assign('members', $members);
         
-        $this->loadView($this->tpl->core .'admin/members.tpl');
+        $this->loadView('members.tpl');
     }
     
     /*
@@ -87,7 +87,7 @@ class Admin_Members extends Base_Module
         if (!isset($_POST['edit']))
         {
             $this->tpl->assign('member', $member);
-            $this->loadView('admin/members_edit.tpl');
+            $this->loadView('members_edit.tpl');
             exit;
         }
         
@@ -146,7 +146,7 @@ class Admin_Members extends Base_Module
             
             $this->tpl->assign('member', $member);
             $this->tpl->assign('GET_MSG', $msg);
-            $this->loadView('admin/members_edit.tpl');
+            $this->loadView('members_edit.tpl');
             exit;
         }
         else
@@ -185,7 +185,7 @@ class Admin_Members extends Base_Module
         if (!isset($_POST['confirm']))
         {
             $this->tpl->assign('member', $member);
-            $this->loadView('admin/members_delete.tpl');
+            $this->loadView('members_delete.tpl');
             exit;
         }
         else

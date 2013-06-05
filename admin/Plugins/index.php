@@ -48,14 +48,14 @@ class Admin_Plugins extends Base_Module
 		}
 		$this->install_ask();
 		$this->tpl->assign("plugins", $plugins);
-		$this->loadView('admin/plugins.tpl');
+		$this->loadView('plugins.tpl');
 	}
     private function upload_modules() {
 		if(isset($_FILES['file'])){
 			if ($_FILES["file"]["error"] > 0)
 			{
 				$this->tpl->assign("MSG", "Error: " . $_FILES["file"]["error"]);
-				$this->loadView('admin/upload_plugins.tpl');
+				$this->loadView('upload_plugins.tpl');
 			}
 			else
 			{
@@ -98,10 +98,10 @@ class Admin_Plugins extends Base_Module
 					$results .= "<a href='index.php?mod=Plugins'><input name='login' type='submit' class='button' value='Back To Manager' /></a>"; 
 				}
 				$this->tpl->assign("RESULTS", $results);
-				$this->loadView('admin/plugin_results.tpl');
+				$this->loadView('plugin_results.tpl');
 			}
 		} else {
-		$this->loadView('admin/upload_plugins.tpl');
+		$this->loadView('upload_plugins.tpl');
 		}
 	}
 	private function install_ask() {
