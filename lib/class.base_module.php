@@ -40,8 +40,12 @@ abstract class Base_Module
 	*/
 	
 	protected $settings;
-	
-	
+
+	/*
+	  Variable: $name
+	  The name variable used in loadView()
+	*/	
+	protected $name;
     /*
       Function: __construct
       The constructor the every module. Saves the database, template and player variables as class variables.
@@ -61,9 +65,10 @@ abstract class Base_Module
         $this->player = $player;
 		$this->menu = $menu;
 		$this->settings = $settings;
+		$this->name = get_class($this);
     }
 	
-    /*
+	/*
 	  Function: getTheme
 	  Retrieves and sets the chosen theme for the overall game.
 	  
@@ -74,11 +79,10 @@ abstract class Base_Module
 	  The currently selected theme.
 
      */
-	public function getTheme($theme = 'default')
-	{
+	public function getTheme($theme = 'default'){
 		if(defined('IN_ADMIN')){
 			$this->theme = 'admin';
-		} else {
+		}else{
 			$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
 			$this->theme = $this->db->fetch($query);
 			if(is_null($this->theme->name)){
@@ -89,19 +93,48 @@ abstract class Base_Module
 		}
 		$this->tpl->assign('THEMEDIR', 'templates/themes/' . $this->theme . '/');
 		$this->tpl->assign('THEME', $this->theme);
-		
 		return $this->theme;
 	}
-	
+
 	/*
 	  Function: loadView
 	  Loads a specific view file
 	  
 	  Paramaters:
 	  $tpl - The template file to load
-	 */
-	public function loadView($tpl)
-	{
-		$this->tpl->display('file:['. $this->theme. ']' .$tpl);
+	  $modtheme - Loads specified module theme (optional)
+	  
+	  Notes:
+	  modtheme should get it's variable via module class, not through
+	  developers input in the loadView. (Fix later)
+	 */	
+	public function loadView($tpl, $modtheme = ''){
+		if(file_exists( THEME_DIR . '/themes/'. $this->theme . '/' .$tpl) === TRUE){
+			$this->tpl->display('file:['. $this->theme. ']' .$tpl);
+		}else{
+			if (array_key_exists($modtheme, $this->tpl->getTemplateDir())){
+				$this->tpl->display('file:['. $modtheme. ']' .$tpl);
+			}else{
+				header('Location: index.php?mod=Error404&msg=' . urlencode($msg));
+				exit;
+			}
+		}
+	}
+
+	/*
+	  Function: getPlugin
+	  Gets ID of specified plugin
+	  
+	  Paramaters:
+	  $plugin_name - The plugin to find
+	  
+	 */		
+	public function getPlugin($plugin_name = ''){
+		if ( $plugin_name != '' ) {
+			$query = $this->db->execute("SELECT * FROM <ezrpg>plugins WHERE title = '".$plugin_name."'");
+			$result = $this->db->fetch($query);
+			return $result;
+		}
 	}
 }
+?>
