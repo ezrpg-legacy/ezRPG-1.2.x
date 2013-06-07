@@ -8,7 +8,8 @@ defined('IN_EZRPG') or exit;
 */
 class Module_AccountSettings extends Base_Module
 {
-    /*
+	
+	/*
       Function: start
       Begins the account settings page/
     */
@@ -23,6 +24,7 @@ class Module_AccountSettings extends Base_Module
         }
         else
         {
+			$this->__activate();
             $this->loadView('account_settings.tpl');
         }
     }

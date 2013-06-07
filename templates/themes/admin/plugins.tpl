@@ -1,8 +1,5 @@
 {include file="file:[$THEME]header.tpl" TITLE="Plugin/Module Admin"}
-{if $INSTALLED eq FALSE}
-DO YOU WISH TO INSTALL THE PLUGIN MANAGER?
-<a href="index.php?mod=Plugins&act=install">Yes</a> or <a href="index.php?mod=Index">No</a>
-{ELSE}
+
 <table width="100%" border="1">
 <tbody><tr>
 <th width="75%">
@@ -16,7 +13,7 @@ Actions
 {foreach from=$plugins item=plugin}
 <tr>
 <td valign="top">
-{$plugin->title}<br>
+{$plugin->title} | Version: {$plugin->version}<br>
 <i>{$plugin->description}</i><br>
 Created By: <a href="{$plugin->authorsite}">{$plugin->author}</a>
 </td>
@@ -30,5 +27,4 @@ Created By: <a href="{$plugin->authorsite}">{$plugin->author}</a>
 <!-- END OF ADMINCP_PLUGINS_ROW-->
 </tbody></table>
 <a href="index.php?mod=Plugins&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
-{/IF}
 {include file="file:[$THEME]footer.tpl"}
