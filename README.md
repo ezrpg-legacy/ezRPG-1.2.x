@@ -21,10 +21,15 @@ getTheme() checks 3 things:
 	
 getTheme then provides a Smarty Variable: "THEME_DIR" which will the directory for Theme assets. Developers can still load from Static if based off of our default theme.
 
-loadView() is accessed via "$this->loadView('template.tpl')" just like "$this->tpl->display('template.tpl')".
-loadView() does 2 things:
+loadView() is accessed via "$this->loadView('template.tpl', OPTIONAL 'ModuleName')" just like "$this->tpl->display('template.tpl')".
+loadView() does 4 things:
 1. Grabs the current set theme via $this->theme set by getTheme()
-2. Calls "$this->tpl->display('file:[ NAME OF THEME DIR ] template.tpl')" 
+2. If the second param is set like 'MailBox' or 'Bank':
+2.1. loadView checks the current theme for .tpl file
+2.2. If loadView can't find it, it loads 'MailBox' or 'Bank' theme
+2.2.1. These module themes are located templates/modules/*
+3. Calls "$this->tpl->display('file:[ NAME OF THEME DIR ] template.tpl')" 
+4. If this doesn't work at all, Error404 is redirected
 	
 Later an Error404 needs to be supplied some where to this process.
 
@@ -32,6 +37,7 @@ Init.php has also taken a role in the Theme Support which needs to be decoupled 
 1. Creates the default TemplateDir in Smarty for Admin and Default theme
 2. Checks if both a theme is in the themes folder AND in the DB.
 2.1. This happens on every page load which should be decoupled to only when checked or when there's an issue with a theme.
+2.2. Checks also for templates/modules and loads that into TemplateDir.
 3. HTMLPurifier was removed, but should have an option setting. Find a way to decouple!
 
 Class.Menu is still unstable but provides better integration.
@@ -43,7 +49,8 @@ Class.Menu is still unstable but provides better integration.
 Smarty Templates now have much more logic to them. Possible No Go for some, but necessary at the current stage.
 1. Templates now take on dynamic themes, more ForEach's for menus, could be a bit tempting at first
 2. Only the header.tpl or any tpl that NEEDS a menu will have this logic in it. Comments should be provided still though.
-	
+
+
 ```
 =====
 A modular game engine written in PHP.
