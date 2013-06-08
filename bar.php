@@ -3,10 +3,10 @@ define('IN_EZRPG', true);
 
 require_once('init.php');
 
-//User must be logged in
+// User must be logged in
 requireLogin();
 
-//Don't show errors or notices, or it breaks the image
+// Don't show errors or notices, or it breaks the image
 error_reporting(0);
 
 $width = (isset($_GET['width']))?intval($_GET['width']):100;

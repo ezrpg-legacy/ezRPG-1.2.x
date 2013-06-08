@@ -25,3 +25,4 @@ define('DRIVER_ERROR', 0);
 define('SERVER_ERROR', 1);
 define('DATABASE_ERROR', 2);
 define('SQL_ERROR', 3);
+?>

@@ -1,12 +1,12 @@
 <?php
-//This page cannot be viewed, it must be included
+// This page cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
-//Start Session
+// Start Session
 session_start();
 
 
-//Constants
+// Constants
 define('CUR_DIR', realpath(dirname(__FILE__)));
 define('MOD_DIR', CUR_DIR . '/modules');
 define('ADMIN_DIR', CUR_DIR . '/admin');
@@ -42,7 +42,7 @@ $tpl->addTemplateDir(array(
 	'default' => THEME_DIR . 'themes/default/'
 ));
 
-$tpl->compile_dir  = $tpl->cache_dir    = LIB_DIR . '/ext/smarty/cache/';
+$tpl->compile_dir  = $tpl->cache_dir = LIB_DIR . '/ext/smarty/cache/';
 
 // Themes
 $themetpldir = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
@@ -71,7 +71,7 @@ foreach ($entries as $entry) {
 				$tpl->addTemplateDir(array(
 					$entry => $entry_dir2,
 				));
-				$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('".$entry."', '".$entry_dir2."', 0)");
+				$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('".$entry."', '".$entry_dir2."', 0, 1)");
 			}
 		} else {
 			$entry_dir = THEME_DIR . 'themes/' . $entry;
@@ -91,7 +91,7 @@ foreach ($entries as $entry) {
 						$entry => $entry_dir2,
 					));
 				}elseif(!array_key_exists( $entry, $templates)){
-					$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('".$entry."', '".$entry_dir2."', 0)");
+					$db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('".$entry."', '".$entry_dir2."', 0, 1)");
 				}
 			}
 		}
@@ -113,9 +113,9 @@ foreach($hook_files as $hook_file) {
 	}
 }
 
-//Run login hooks on player variable
+// Run login hooks on player variable
 $player = $hooks->run_hooks('player', 0);
 
-//Create the Menu object
+// Create the Menu object
 $menu = new Menu($db, $tpl, $player);
 $menu->get_menus();

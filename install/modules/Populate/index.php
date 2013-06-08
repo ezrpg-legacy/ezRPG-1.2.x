@@ -100,17 +100,17 @@ QUERY;
 
 	$structure6 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>settings` (
-	`id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-	`name` varchar(120) NOT NULL,
-	`title` varchar(120) NOT NULL,
-	`description` text NOT NULL,
-	`optionscode` text NULL,
-	`value` text NULL,
-	`disporder` smallint(5) NOT NULL DEFAULT '0',
-	`gid` smallint(5) NOT NULL DEFAULT '0',
-	`isdefault` int(1) NOT NULL DEFAULT '0',
-	`visible` tinyint(1) NOT NULL DEFAULT '1',
-	UNIQUE KEY id (id)
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(120) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `description` text NOT NULL,
+  `optionscode` text NULL,
+  `value` text NULL,
+  `disporder` smallint(5) NOT NULL DEFAULT '0',
+  `gid` smallint(5) NOT NULL DEFAULT '0',
+  `isdefault` int(1) NOT NULL DEFAULT '0',
+  `visible` tinyint(1) NOT NULL DEFAULT '1',
+  UNIQUE KEY id (id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 	
@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
   `name` text NOT NULL,
   `dir` text NOT NULL,
   `enabled` int(11) NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;

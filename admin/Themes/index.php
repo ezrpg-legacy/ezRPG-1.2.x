@@ -20,15 +20,15 @@ class Admin_Themes extends Base_Module
 		} elseif (isset($_POST['act'])) {
 			switch ($_POST['act']){
 				case 'save' :
-					$this->save_settings();
+					$this->save_themes();
 			}
 		}else {
-		$this->list_settings();
+		$this->list_themes();
 		}
     }
 	
-	private function list_settings() {
-		$query1 = $this->db->execute("select * from <ezrpg>themes WHERE name != 'admin'");
+	private function list_themes() {
+		$query1 = $this->db->execute("select * from <ezrpg>themes WHERE name != 'admin' AND type = 0");
 		$themes = $this->db->fetchAll($query1);
 		$this->tpl->assign("groups", $themes);
 		$this->loadView('themes.tpl');
@@ -41,23 +41,12 @@ class Admin_Themes extends Base_Module
 		$this->loadView('themes_page.tpl');
 	}
 	
-	private function save_settings(){
-		$settings = array();
-		foreach ($_POST as $item => $val){
-			if ($item != 'act' and $item != 'save'){
-			if (strpos($item, 'sid') === 0){
-			$settings[preg_replace('/sid/', '', $item)] = $val;
-			}
-			if (strpos($item, 'sgid') === 0){
-			$settings[preg_replace('/sgid/', '', $item)] = $val;
-			}
-			}
-		}
-		foreach ($settings as $item => $val){
-			$update= array();
-			$update['value'] = $val;
-			$this->db->update("<ezrpg>settings", $update, 'id='.$item);
-		}
-		$this->list_settings();
+	private function save_themes(){
+		$update = array();
+		$update['enabled'] = 0;
+		$this->db->update("<ezrpg>themes", $update, 'enabled=1');
+		$update['enabled'] = 1;
+		$this->db->update("<ezrpg>themes", $update, 'id='.$_POST['themes']);
+		$this->list_themes();
 	}
 }
