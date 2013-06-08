@@ -158,7 +158,7 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (8, 0, 'AdminMenu', 'Admin Menu',NULL, '', 0, 1),
 (9, 8, 'Members', 'Members','Member Management', 'index.php?mod=Members', 0, 1),
 (10, 8, 'Menus', 'Menus', 'Menu Management', 'index.php?mod=Menu', 0, 1),
-(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Theme', 0, 1),
+(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Themes', 0, 1),
 (12, 8, 'Settings', 'Settings', 'Settings Management', 'index.php?mod=Settings', 0, 1),
 (13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1);
 QUERY;

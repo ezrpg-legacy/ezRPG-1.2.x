@@ -1,4 +1,4 @@
-{include file="file:[$THEME]header.tpl" TITLE="Plugin/Module Admin"}
+{include file="file:[$THEME]header.tpl" TITLE="Themes Admin"}
 
 <!-- START OF ADMINCP_PLUGINS_ROW-->
 {if $error != 0}

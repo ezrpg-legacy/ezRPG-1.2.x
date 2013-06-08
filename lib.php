@@ -29,9 +29,6 @@ require_once (LIB_DIR . '/const.errors.php');
 
 
 //External Libraries
-//HTML Purifier
-require_once (EXT_DIR . '/htmlpurifier/HTMLPurifier.auto.php');
-require_once (EXT_DIR . '/htmlpurifier/HTMLPurifier/Filter/ExtractStyleBlocks.php');
 //Smarty
 require_once (EXT_DIR . '/smarty/Smarty.class.php');
 ?>
