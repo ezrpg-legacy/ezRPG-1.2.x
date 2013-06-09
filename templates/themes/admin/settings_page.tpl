@@ -29,7 +29,7 @@
 					<select name="sid{$sitem->id}">
 						{foreach from=$allSettings item=subitem}
 						{if $sitem->id == $subitem->gid}
-					<option value="{$subitem->id}" {if $subitem->id == $sitem->value} selected{/if}>{$subitem->title}</option>
+					<option value="{$subitem->id}" {if $subitem->id == $sitem->value} selected{/if}>{$subitem->value}</option>
 						{/if}
 						{/foreach}
 					</select>
@@ -38,7 +38,7 @@
 				{if $sitem->optionscode == 'radio'}
 					{foreach from=$allSettings item=subitem}
 					{if $sitem->id == $subitem->gid}
-					<input name="sid{$sitem->id}" type='radio' name='setting{$sitem->id}' value="{$subitem->id}" {if $subitem->id == $sitem->value} checked{/if}>{$subitem->title}</input>
+					<input name="sid{$sitem->id}" type='radio' name='setting{$sitem->id}' value="{$subitem->id}" {if $subitem->id == $sitem->value} checked{/if}>{$subitem->value}</input>
 					{/if}
 					{/foreach}
 				{/if}

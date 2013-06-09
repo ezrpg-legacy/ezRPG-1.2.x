@@ -70,7 +70,7 @@ class Admin_Menu extends Base_Module
 				}
 				$this->tpl->assign('error', FALSE);
 				$this->tpl->assign('page', 'delete');
-				$this->loadView('admin/menus-manage.tpl');
+				$this->loadView('menus-manage.tpl');
 			} else {
 				$this->tpl->assign('error', TRUE);
 				$this->tpl->assign('page', 'delete');
@@ -117,8 +117,10 @@ class Admin_Menu extends Base_Module
 			if(!isClean($_POST['mpid']))
 				$error = 5;
 			if ( $error == 0 ){
-				$this->menu->add_menu($_POST['mpid'],$_POST['mname'],$_POST['mtitle'],$_POST['malt'],$_POST['muri'],$_POST['mpos']);
-				header('Location: index.php?mod=Menu');
+				$mid = $this->menu->add_menu($_POST['mpid'],$_POST['mname'],$_POST['mtitle'],$_POST['malt'],$_POST['muri'],$_POST['mpos']);
+				$this->tpl->assign('GET_MSG', 'You must activate the menu before it becomes accessible!');
+				$msg = 'You must first activate this plugin before it can be used!';
+				header('Location: index.php?mod=Menu&act=edit&mid='.$mid.'&msg='.$msg);
 				exit;
 			}else{
 			$query = $this->db->execute('select * from <ezrpg>menu');
