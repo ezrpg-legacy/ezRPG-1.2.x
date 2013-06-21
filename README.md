@@ -1,16 +1,21 @@
-ezRPG 1.2.x: Development Stage Branch
+##ezRPG 1.2.0 RC1
 
-Warning, this branch is a testing branch to test new ideas before pushing to Master. If you're new to ezRPG,
-stay with the Master branch instead. 
+###Warning this version of ezRPG 1.2.0 is still a Release Candidate and not a fully stable version. 
+At the present time,ezRPG is slated for two Release Candidates lasting between one to two weeks of testing and possible code changes.
+
+These Release Candidates are open for public development and recommended for only testing purposes. Any and all pull requests will be taken into consideration and pushed as needed. 
+
+####We do NOT recommend this version for current live games (yet)!
 
 =====
 
-This engine is destined to be part of the ezRPG legacy 1.x series started by Zeggy. For the new, reimagined version implementing the great new offerings of PHP5, a true MVC structure, PSR-0 compliant, and Smarty-Less, check out ezRPG 2.x series!.
+This engine is destined to be part of the ezRPG legacy 1.x series started by Zeggy. For the new, reimagined version implementing the great new offerings of PHP5, a true MVC structure, PSR-0 compliant, and Smarty-Less, check out ezRPG 2.x series when that development is ready for public release!
 
 =====
 
-##Notes about 1.2.x development
-####ETA on delivery: June 9th 2013!
+##Notes about 1.2.0 RC1
+####ETA on RC2: June 23 2013!
+####ETA on 1.2.0 (FINAL): July 7 2013!
 
 ```
 Base_Module now holds more responsibility like "getTheme and loadView":
