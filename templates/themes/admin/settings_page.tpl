@@ -29,7 +29,7 @@
 					<select name="sid{$sitem->id}">
 						{foreach from=$allSettings item=subitem}
 						{if $sitem->id == $subitem->gid}
-					<option value="{$subitem->id}" {if $subitem->id == $sitem->value} selected{/if}>{$subitem->value}</option>
+					<option value="{$subitem->id}" {if $subitem->id == $sitem->value} selected{/if}>{$subitem->title} - {$subitem->value}</option>
 						{/if}
 						{/foreach}
 					</select>

@@ -40,12 +40,12 @@ class DbFactory
       See Also:
       - <DbException>
     */
-    public static function factory($type='mysql', $host='localhost', $username='root', $password='', $db='ezrpg')
+    public static function factory($type='mysql', $host='localhost', $username='root', $password='', $db='ezrpg', $port='3306')
     {
         if (include_once(LIB_DIR . '/db.' . $type . '.php'))
         {
             $classname = 'Db_' . $type;
-            return new $classname($host, $username, $password, $db);
+            return new $classname($host, $username, $password, $db, $port);
         }
         else
         {

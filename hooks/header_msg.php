@@ -6,14 +6,19 @@ $hooks->add_hook('admin_header', 'header_msg', 1);
 
 function hook_header_msg(&$db, &$tpl, &$player, $args = 0)
 {
-    
-    if (isset($_GET['msg']) && is_string($_GET['msg']))
-    {
-        $_msg = trim(stripslashes($_GET['msg']));
-        $_msg =  htmlspecialchars($_msg);
-        if (!empty($_msg))
-            $tpl->assign('GET_MSG', $_msg);
-    }
+	// validate that there is something
+	if (!array_key_exists('status_messages', $_SESSION)) 
+		return $args;
+
+	// loop through the SESSION variable and push it to the template
+	foreach($_SESSION['status_messages'] as $key => $message) {
+		if (strlen($message) > 0) {
+			$tpl->assign('MSG_' . $key, $message);
+		}
+	}
+
+	// remove the session
+	unset($_SESSION['status_message']);
     
     return $args;
 }

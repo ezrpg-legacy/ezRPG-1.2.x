@@ -88,11 +88,14 @@ QUERY;
 	$structure5 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>plugins` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `pid` int(11) NOT NULL DEFAULT '0',
-  `title` text NOT NULL,
-  `filename` text NOT NULL,
-  `type` text NOT NULL,
-  UNIQUE KEY `id` (`id`)
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `authorsite` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `version` float NOT NULL,
+  `xml_location` text NOT NULL,
+  UNIQUE KEY id (id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 	
@@ -128,23 +131,6 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
 QUERY;
 	$db->execute($structure7)
 	
-
-	$structure8 = <<<QUERY
-CREATE TABLE IF NOT EXISTS `<ezrpg>plugins_meta` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` int(11) NOT NULL,
-  `author` text NOT NULL,
-  `description` text NOT NULL,
-  `version` text NOT NULL,
-  `url` text NOT NULL,
-  `active` tinyint(4) NOT NULL DEFAULT '0',
-  `installed` tinyint(4) NOT NULL DEFAULT '0',
-  `uninstall` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-QUERY;
-	$db->execute($structure8)
-	
 	
 	$data1 = <<<QUERY
 INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`, `pos`, `active`) VALUES
@@ -158,7 +144,7 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (8, 0, 'AdminMenu', 'Admin Menu',NULL, '', 0, 1),
 (9, 8, 'Members', 'Members','Member Management', 'index.php?mod=Members', 0, 1),
 (10, 8, 'Menus', 'Menus', 'Menu Management', 'index.php?mod=Menu', 0, 1),
-(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Themes', 0, 1),
+(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Theme', 0, 1),
 (12, 8, 'Settings', 'Settings', 'Settings Management', 'index.php?mod=Settings', 0, 1),
 (13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1);
 QUERY;

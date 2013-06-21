@@ -15,16 +15,13 @@ class Admin_Plugins extends Base_Module {
 		if ( isset( $_GET[ 'act' ] ) ) {
 			switch ( $_GET[ 'act' ] ) {
 				case 'view':
-					$this->view_modules(); //TODO:View Modules
+					$this->view_modules( $_GET['id'] ); //TODO:View Modules
 					break;
 				case 'upload':
 					$this->upload_modules(); //Completed:Upload Modules
 					break;
 				case 'remove':
-					$this->remove_modules( $_GET[ 'arg' ] ); //TODO:Remove Modules
-					break;
-				case 'install':
-					$this->install_manager(); //Completed:Install Manager
+					$this->remove_modules( $_GET[ 'id' ] ); //TODO:Remove Modules
 					break;
 				case 'list':
 					$this->list_modules(); //Completed:Lists Modules
@@ -96,6 +93,16 @@ class Admin_Plugins extends Base_Module {
 								}
 							}
 						}
+						if ( !empty( $plug->Plugin->Theme ) ) {
+							if ( !empty( $plug->Plugin->Theme->ThemeFolder ) ) {
+								foreach ( $plug->Plugin->Theme->ThemeFolder as $theme ) {
+									$theme[ 'pid' ]      = $p_m[ 'pid' ];
+									$theme[ 'filename' ] = (string) $theme->ThemeFolder;
+									$theme[ 'title' ]    = (string) $theme->ThemeTitle;
+									$this->db->insert( '<ezrpg>plugins', $theme );
+								}
+							}
+						}
 						$results .= "installed db data <br />";
 						if ( file_exists( $dir . '/modules' ) )
 							$this->re_copy( $dir . '/modules/', MOD_DIR );
@@ -149,8 +156,6 @@ class Admin_Plugins extends Base_Module {
 		}
 		$query  = $this->db->execute( 'SELECT uninstall FROM <ezrpg>plugins_meta WHERE pid=' . $id );
 		$result = $this->db->fetch( $query );
-		echo $result->uninstall;
-		exit;
 		if ( $result->uninstall === false ) {
 			$query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid='. $id);
 			$result = $this->db->fetchAll($query_mod);
@@ -163,6 +168,12 @@ class Admin_Plugins extends Base_Module {
 			$url = $settings->get_settings_by_cat_name('general')['site_url'];
 			header( 'Location: ' . $url . $result->uninstall );
 			exit;
+		}
+	}
+	private function view_modules( $id = 0 ) {
+		if ( $id == 0 ) {
+			$this->list_modules();
+			break;
 		}
 	}
 	private function rrmdir( $dir ) {

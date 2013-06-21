@@ -46,6 +46,13 @@ abstract class Base_Module
 	  The name variable used in loadView()
 	*/	
 	protected $name;
+	
+	protected $messages = array(
+		'INFO'		=> '',
+		'WARN'		=> '',
+		'FAIL'		=> '',
+		'GOOD'		=> ''
+	);
     /*
       Function: __construct
       The constructor the every module. Saves the database, template and player variables as class variables.
@@ -135,6 +142,42 @@ abstract class Base_Module
 			$result = $this->db->fetch($query);
 			return $result;
 		}
+	}
+	
+	/**
+	 * Sets a status message for use later on.
+	 * 
+	 * Levels:
+	 *	INFO
+	 *	WARN
+	 *	FAIL
+	 *	GOOD
+	 * 
+	 * @param string $message
+	 * @param integer $level
+	 * @return boolean 
+	 */
+	public function setMessage($message, $level='info') {
+		$level = strtoupper($level);
+
+		// for better practices.
+		if (array_key_exists($level, $this->messages) === false) {
+			throw new Exception('Message level "' . $level . '" does not exists.');
+			return false;
+		}
+
+		$this->messages[$level] .= $message;
+		return true;
+	}
+
+	public function __destruct() {
+		$_SESSION['status_messages'] = array();
+
+		foreach($this->messages as $key => $message) {
+			 $_SESSION['status_messages'][$key] = $message;
+		}
+
+		return true;
 	}
 }
 ?>

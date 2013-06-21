@@ -62,5 +62,24 @@ class Settings
 			return false;
 		}
 	}
+	
+	public function get_settings_by_id($catName)
+	{
+		$setting = $this->settings;
+		$settings = array();
+		
+		foreach ( $setting as $item => $val )
+		{
+			if ( $val->id == $catName )
+			{
+				$settings['value'] = $val->value;
+			}
+		}
+		if (!empty($settings)){
+			return $settings;
+		}else{
+			return false;
+		}
+	}
 }
 ?>

@@ -152,7 +152,7 @@ class Module_Register extends Base_Module
             $insert['username'] = $_POST['username'];
             $insert['email'] = $_POST['email'];
             $insert['secret_key'] = createKey(16);
-            $insert['password'] = sha1($insert['secret_key'] . $_POST['password'] . SECRET_KEY);
+            $insert['password'] = createPassword($insert['secret_key'], $_POST['password']);
             $insert['registered'] = time();
 
             global $hooks;

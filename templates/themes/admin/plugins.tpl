@@ -19,7 +19,7 @@ Created By: <a href="{$plugin->authorsite}">{$plugin->author}</a>
 </td>
 <td valign="top">
 {if $plugin->id != 1 }
-<a href="#">Edit</a> | <a href="#">Deactivate</a> | <a href="#">Uninstall</a> | <a href="#">Export</a>
+<a href="index.php?mod=Plugins&act=deactivate&id={$plugin->id}">Deactivate</a> | <a href="index.php?mod=Plugins&act=remove&id={$plugin->id}">Uninstall</a>
 {/if}
 </td>
 </tr>

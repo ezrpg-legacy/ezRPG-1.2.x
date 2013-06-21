@@ -24,7 +24,7 @@ require_once(CUR_DIR . '/lib.php');
 
 // Database
 try{
-    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname);
+    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 } catch (DbException $e) {
     $e->__toString();
 }
@@ -32,6 +32,7 @@ try{
 // Database password no longer needed, unset variable
 unset($config_password);
 
+// Settings
 $settings = new Settings($db);
 
 // Smarty
