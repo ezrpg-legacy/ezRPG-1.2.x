@@ -10,8 +10,8 @@ class Install_Index extends InstallerFactory
 			}
 			fclose($fh);
 		}
-		if(!is_writable('../smarty/templates_c')){
-			$files[] = "smarty/templates_c";
+		if(!is_writable('../cache/templates')){
+			$files[] = "cache/templates";
 		}
 		if(!empty($files)){
 			$this->header();

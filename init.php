@@ -43,7 +43,7 @@ $tpl->addTemplateDir(array(
 	'default' => THEME_DIR . 'themes/default/'
 ));
 
-$tpl->compile_dir  = $tpl->cache_dir = LIB_DIR . '/ext/smarty/cache/';
+$tpl->compile_dir  = $tpl->cache_dir = CUR_DIR . '/cache/templates/';
 
 // Themes
 $themetpldir = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
