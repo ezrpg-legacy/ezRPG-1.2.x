@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
-	$db->execute($structure7)
+	$db->execute($structure7);
 	
 	
 	$data1 = <<<QUERY
