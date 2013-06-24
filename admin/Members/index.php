@@ -74,7 +74,7 @@ class Admin_Members extends Base_Module
             exit;
         }
         
-        $member = $this->db->fetchRow('SELECT `id`, `username`, `email`, `rank`, `money`, `level` FROM `<ezrpg>players` WHERE `id`=?', array( intval($_GET['id']) ));
+        $member = $this->db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, <ezrpg>players.email, <ezrpg>players_meta.rank, <ezrpg>players_meta.money, <ezrpg>players_meta.level FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?', array( intval($_GET['id']) ));
         
         //No rows found
         if ($member == false)
