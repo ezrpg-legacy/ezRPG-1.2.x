@@ -495,8 +495,6 @@ class Db_pdo
 			$var .= $key . "='".$val ."', ";
 		}
 		$sql = "Update ". $table ." SET ". $var ." WHERE " . $where;
-		echo $sql;
-		exit;
 		return $this->execute($sql);
 	}
 
