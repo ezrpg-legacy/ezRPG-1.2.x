@@ -5,7 +5,7 @@ class Install_Populate extends InstallerFactory
 		require_once "../config.php";
 		try
 		{
-			$db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname);
+			$db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 		}
 		catch (DbException $e)
 		{
@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `username` varchar(30) default NULL,
   `password` varchar(40) default NULL,
   `email` varchar(255) default NULL,
+  `pass_method` tinyint(3) default NULL,
   `secret_key` text,
   `rank` smallint(5) unsigned NOT NULL default '1',
   `registered` int(11) unsigned default NULL,
@@ -144,7 +145,7 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (8, 0, 'AdminMenu', 'Admin Menu',NULL, '', 0, 1),
 (9, 8, 'Members', 'Members','Member Management', 'index.php?mod=Members', 0, 1),
 (10, 8, 'Menus', 'Menus', 'Menu Management', 'index.php?mod=Menu', 0, 1),
-(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Theme', 0, 1),
+(11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Themes', 0, 1),
 (12, 8, 'Settings', 'Settings', 'Settings Management', 'index.php?mod=Settings', 0, 1),
 (13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1);
 QUERY;
@@ -152,9 +153,9 @@ QUERY;
 	$db->execute($data1);
 	
 	$data2 = <<<QUERY
-INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `descript`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`) VALUES
+INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`) VALUES
 (1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1),
-(2, 'gametitle', 'Game Title', 'The title for your game', text, 'ezRPG 1.2.0', 0, 1, 1),
+(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'ezRPG 1.2.0', 0, 1, 1),
 (3, 'pass_encrpytion', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1),
 (4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', NULL, 0, 3, 1),
 (5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', NULL, 0, 3, 1),

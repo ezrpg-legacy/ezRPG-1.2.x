@@ -11,6 +11,7 @@ class Install_Config extends InstallerFactory
 			$dbhost = "localhost";
 			$dbuser = "root";
 			$dbname = "ezrpg";
+			$dbport = "3306";
 			$dbprefix = "ezrpg_";
 		} else {
 			$dbhost = $_POST['dbhost'];
@@ -19,13 +20,14 @@ class Install_Config extends InstallerFactory
 			$dbpass = $_POST['dbpass'];
 			$dbprefix = $_POST['dbprefix'];
 			$dbdriver = $_POST['dbdriver'];
+			$dbport = $_POST['dbport'];
 			$error = 0;
 
 			//test database connection.
 			define("DB_PREFIX", $dbprefix);
 			try
 			{
-				$db = DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname);
+				$db = DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
 			}
 			catch (DbException $e)
 			{
@@ -53,12 +55,14 @@ defined('IN_EZRPG') or exit;
   \$config_username - Username to login to server with
   \$config_password - Password to login to server with
   \$config_driver - Contains the database driver to use to connect to the database.
+  \$config_port - Contains the database port your database server port.
 */
 \$config_server = '{$dbhost}';
 \$config_dbname = '{$dbname}';
 \$config_username = '{$dbuser}';
 \$config_password = '{$dbpass}';
 \$config_driver = '{$dbdriver}';
+\$config_port = '{$dbport}';
 
 /*
   Constant:
@@ -107,6 +111,8 @@ CONF;
 		echo '<select name="dbdriver"><option value="mysql">MySQL</option><option value="mysqli">MySQLi</option><option value="pdo">PDO</option></select>';
 		echo '<label>Host</label>';
 		echo '<input type="text" name="dbhost" value="' . $dbhost . '" />';
+		echo '<label>Port</label>';
+		echo '<input type="text" name="dbport" value="' . $dbport . '" />';
 		echo '<label>Database Name</label>';
 		echo '<input type="text" name="dbname" value="' . $dbname . '" />';
 		echo '<label>User</label>';

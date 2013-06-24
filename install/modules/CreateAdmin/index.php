@@ -31,7 +31,7 @@ class Install_CreateAdmin extends InstallerFactory
 				require_once "../lib/func.rand.php";
 				try
 				{
-					$db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname);
+					$db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 				}
 				catch (DbException $e)
 				{
@@ -43,6 +43,7 @@ class Install_CreateAdmin extends InstallerFactory
 				$insert['username'] = $username;
 				$insert['password'] = sha1($secret_key . $password . SECRET_KEY);
 				$insert['email'] = $email;
+				$insert['pass_method'] = 1;
 				$insert['secret_key'] = $secret_key;
 				$insert['registered'] = time();
 				$insert['rank'] = 10;
