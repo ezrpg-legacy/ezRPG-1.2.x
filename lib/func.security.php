@@ -60,7 +60,6 @@ function createPBKDF2($password, $salt='ezRPG', $global_salt = SECRET_KEY,
 function comparePBKDF2($origin, $comparison) {
     if (count($origin) == 2) {
 		if (createPBKDF2($origin[0], $origin[1]) == $comparison) {
-			echo 'TRUE';
 			return TRUE;
 		} else {
 			echo createPBKDF2($origin[0], $origin[1]) . '<br />' . $comparison;
@@ -169,7 +168,7 @@ function compareLegacyPassword($secret, $input, $password) {
 
 function createPassword($secret, $password) {
 	global $settings;
-	$pass_meth = $settings->get_settings_by_id($settings->get_settings_by_cat_name('general')['pass_encryption'])['value'];
+	$pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
 	
 	switch ($pass_meth){
 		case 1:
@@ -186,7 +185,7 @@ function createPassword($secret, $password) {
 
 function checkPassword($secret, $input, $password, $override='0') {
 	global $settings;
-	$pass_meth = $settings->get_settings_by_id($settings->get_settings_by_cat_name('general')['pass_encryption'])['value'];
+	$pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
 	switch (($override == '0' ? $pass_meth : $override)){
 		case 1:
 			return compareLegacyPassword($secret, $input, ($override == 0 ? $password : createLegacyPassword($secret, $input)));
