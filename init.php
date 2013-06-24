@@ -37,7 +37,7 @@ $settings = new Settings($db);
 
 // Smarty
 $tpl = new Smarty();
-$tpl->assign('GAMESETTINGS', $settings->get_settings_by_cat_name('general'));
+$tpl->assign('GAMESETTINGS', $settings->setting['general']);
 $tpl->addTemplateDir(array(
 	'admin' => THEME_DIR . 'themes/admin/',
 	'default' => THEME_DIR . 'themes/default/'

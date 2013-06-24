@@ -14,11 +14,6 @@ class Settings
     protected $db;
     
     
-    /*
-    Variable: $settings
-    An array of all settings.
-    */
-    protected $settings;
     
     /*
     Function: __construct
@@ -34,52 +29,45 @@ class Settings
         $this->db =& $db;
         $query      = $this->db->execute('SELECT * FROM `<ezrpg>settings`');
         $this->settings = $db->fetchAll($query);
+		$this->setting = $this->get_settings($this->settings);
     }
-    
-	public function get_settings_by_cat_name($catName)
-	{
-		$setting = $this->settings;
-		$category = array();
-		$settings = array();
-		foreach ( $setting as $item => $val )
-		{
-			$category[$item] = $val;
-			if ( $val->name == $catName ) 
-			{
-				$category[$val->name]['id'] = $val->id;
-			}
-		}
-		foreach ( $setting as $item => $val )
-		{
-			if ( $val->gid == $category[$catName]['id'] )
-			{
-				$settings[$val->name] = $val->value;
-			}
-		}
-		if (!empty($settings)){
-			return $settings;
-		}else{
-			return false;
-		}
-	}
 	
-	public function get_settings_by_id($catName)
+	public function get_settings_by($column, $value, $setting)
 	{
-		$setting = $this->settings;
 		$settings = array();
 		
 		foreach ( $setting as $item => $val )
 		{
-			if ( $val->id == $catName )
+			if ( $val->$column == $value )
 			{
-				$settings['value'] = $val->value;
+				return array('id' => $val->id, 'value' => $val->value, 'title' => $val->title, 'optionscode' => $val->optionscode);
 			}
 		}
-		if (!empty($settings)){
-			return $settings;
-		}else{
-			return false;
+	}
+	
+	public function get_settings($setting)
+	{
+		$settings = array();
+		$special = array('select', 'radio');
+		foreach ( $setting as $items => $vals )
+		{
+			if ( $vals->gid == 0 ) 
+			{
+				foreach ( $setting as $item => $val )
+				{
+					if ( $val->gid == $vals->id ) // checks if current setting is related to current group
+					{
+						if ( in_array($val->optionscode, $special, true) ) // checks if current setting is a Radio or Select
+						{
+							$settings[$vals->name][$val->name] = array('id' => $val->id, 'value' => $this->get_settings_by('id', $val->value,$setting) , 'title' => $val->title, 'optionscode' => $val->optionscode);
+						} else {
+							$settings[$vals->name][$val->name] = array('id' => $val->id, 'value' => $val->value, 'title' =>$val->title, 'optionscode' => $val->optionscode);
+						}
+					}
+				}
+			}
 		}
+		return $settings;
 	}
 }
 ?>
