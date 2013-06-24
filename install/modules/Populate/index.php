@@ -154,7 +154,11 @@ QUERY;
 	$data2 = <<<QUERY
 INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `descript`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`) VALUES
 (1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1),
-(2, 'gametitle', 'Game Title', 'The title for your game', text, 'ezRPG 1.2.0', 0, 1, 1);
+(2, 'gametitle', 'Game Title', 'The title for your game', text, 'ezRPG 1.2.0', 0, 1, 1),
+(3, 'pass_encrpytion', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1),
+(4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', NULL, 0, 3, 1),
+(5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', NULL, 0, 3, 1),
+(6, 'bcrypt', 'BCrypt Method', 'BCRYPT','option', NULL, 0, 3, 1);
 QUERY;
 
 	$db->execute($data2);
