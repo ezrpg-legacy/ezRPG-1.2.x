@@ -92,8 +92,9 @@ abstract class Base_Module
 		}else{
 			$query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
 			$this->theme = $this->db->fetch($query);
-			if(is_null($this->theme->name)){
+			if(!is_object($this->theme)){
 				$this->theme = 'default';
+				$this->db->execute("UPDATE <ezrpg>themes SET enabled=1 WHERE name='default'");
 			}else{
 				$this->theme = $this->theme->name;
 			}
