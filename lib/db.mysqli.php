@@ -377,13 +377,9 @@ class Db_mysqli
     public function insert($table, $data) {
         if ($this->isConnected === false)
             $this->connect();
-		if(!strpos($table,"<ezrpg>") && !strpos($table, DB_PREFIX)){
-			$table = $this->prefix . $table;
-		}else{
-        $table = str_replace('<ezrpg>', $this->prefix, $table);
-        }
-		$query = 'INSERT INTO ' . $this->db->real_escape_string($table) . ' (';
-
+		
+		$query = 'INSERT INTO ' . $table . ' (';
+		
         $cols = count($data);
         $part1 = ''; //List of column names
         $part2 = ''; //List of question marks for parameter binding

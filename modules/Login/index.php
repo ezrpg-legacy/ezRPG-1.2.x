@@ -99,7 +99,7 @@ private function validate() {
             $player = $this->db->fetch($query);
             
             // We have different authentication methods at our disposal.
-			$pass_meth = $settings->setting['general']['pass_encryption']['value'];
+			$pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password, ($player->pass_method == $pass_meth ? '0': $player->pass_method));
 			if ($check !== true) {
 				return false;

@@ -382,8 +382,6 @@ class Db_pdo
         if ($this->isConnected === false) {
             $this->connect();
 		}
-		
-
 		$query = 'INSERT INTO ' . $table . ' (';
         $cols = count($data);
         $part1 = ''; //List of column names

@@ -381,9 +381,7 @@ class Db_mysql
         if ($this->isConnected === false)
             $this->connect();
 		
-		$table = str_replace('<ezrpg>', DB_PREFIX, $table);
-		$query = 'INSERT INTO ' . mysql_real_escape_string($table, $this->db) . ' (';
-		
+		$query = 'INSERT INTO ' . $table . ' (';
         $cols = count($data);
         $part1 = ''; //List of column names
         $part2 = ''; //List of question marks for parameter binding
