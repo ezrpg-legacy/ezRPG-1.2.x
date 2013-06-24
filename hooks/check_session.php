@@ -17,7 +17,7 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
             //Select player details
             $player = $db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, 
 			<ezrpg>players.email, <ezrpg>players.rank, <ezrpg>players.registered, 
-			<ezrpg>players_meta.* FROM `<ezrpg>players` INNER JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?', array($_SESSION['userid']));
+			<ezrpg>players_meta.* FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?', array($_SESSION['userid']));
 			
 			$tpl->assign('player', $player);
             
