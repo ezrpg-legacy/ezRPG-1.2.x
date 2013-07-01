@@ -204,7 +204,11 @@ class Menu {
 								$menuarray['To Game'] = '../index.php';
 							}
 							if ($this->player->rank > 5) {
-								$menuarray['Admin'] = 'admin/';
+								if (defined('IN_ADMIN')) {
+									$menuarray['To Game'] = '../index.php';
+								} else {
+									$menuarray['Admin'] = 'admin/';
+								}
 							}
 							$menuarray['Logout'] = 'index.php?mod=Logout';
 							$this->tpl->assign('TOP_MENU_' . (($customtag != 0) ? $customtag : $ival->name), $menuarray);

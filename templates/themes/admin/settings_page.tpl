@@ -55,6 +55,5 @@
 <input type="submit" class="button" value="Save Settings" name='save' />
 </form>
 <!-- END OF ADMINCP_PLUGINS_ROW-->
-<a href="index.php?mod=Menu&act=add"><input name="login" type="submit" class="button" value="Add New.." /></a>
 
 {include file="file:[$THEME]footer.tpl"}

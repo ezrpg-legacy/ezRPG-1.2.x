@@ -53,10 +53,10 @@ class Module_Example extends Base_Module
         //Do something here!
 		
         //Such as query the database for the number of players!
-        $c = $this->db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players`');
+        $b = $this->db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players`');
 		
         //Divide it by two!
-        $c = intval($c / 2);
+        $c = intval($b / 2);
 		
         //Then assign that variable to be displayed in a template!
         $this->tpl->assign('half_players', $c);
@@ -76,7 +76,7 @@ class Module_Example extends Base_Module
 	private function install_example()
 	{
 		// Create a Settings Group for your Module
-		$insert = array;
+		$insert = array();
 		$insert['name'] = 'example';
 		$insert['title'] = 'Example Module';
 		$insert['description'] = 'Some great settings for your module';
@@ -122,7 +122,7 @@ class Module_Example extends Base_Module
 		$this->db->update('<ezrpg>settings', $insert, 'ID = '. $example_id); 
 		
 		//Complete. Load a view
-		$this->loadView('index.tpl', 'Example')
+		$this->loadView('index.tpl', 'Example');
 	}
 }
 ?>

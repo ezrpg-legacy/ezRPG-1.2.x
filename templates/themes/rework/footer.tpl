@@ -3,9 +3,8 @@
 
 			<div id="footer"></div>
 			<div id="copyright">
-				<a href="index.php?mod=Legal">Terms of Service</a> | <a href="index.php?mod=Legal&act=Privacy">Privacy Policy</a><br />
-				Copyright &copy; {$smarty.now|date_format:'%Y'} <a href="./" target="_parent"><strong>Just Another Game</strong></a>.<br />
-				<small>Powered by <a href="https://github.com/nands/ezrpg" target="_blank">ezRPG rework</a>.</small>
+				Copyright &copy; {$smarty.now|date_format:'%Y'} <a href="./" target="_parent"><strong>{$GAMESETTINGS['game_name']['value']}</strong></a>.<br />
+				<small>Powered by <a href="http://www.ezrpgproject.net" target="_blank">ezRPG Project</a>.</small>
 			</div>
 
 		</div>

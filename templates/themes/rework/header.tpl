@@ -18,7 +18,7 @@
 		<div id="wrapper">
 
 			<div id="header">
-				<span id="title"><a href="./">ezRPG <span>rework</span></a></span>
+				<span id="title"><a href="./">{$GAMESETTINGS['game_name']['value']}</a></span>
 				<span id="time">{$smarty.now|date_format:'%A, %H:%M'}
 					<br />
 					<strong>Players Online</strong>: {$ONLINE}</span>
