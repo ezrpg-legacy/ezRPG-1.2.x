@@ -28,7 +28,9 @@ $clas = array(
 			'base_module',
 			'hooks',
 			'menu',
-			'settings');
+			'settings',
+			'themes'
+			);
 
 foreach ($clas as $item){
 	$filename = LIB_DIR . '/class.' . $item . '.php';
@@ -36,7 +38,6 @@ foreach ($clas as $item){
 		require_once ($filename);
 	}
 }
-
 //Exceptions
 require_once (LIB_DIR . '/exception.db.php');
 

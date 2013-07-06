@@ -2,8 +2,8 @@
 defined('IN_EZRPG') or exit;
 
 /*
-Class: Menu
-A class to handle the menu system
+Class: Settings
+A class to handle the settings system
 */
 class Settings
 {
@@ -17,21 +17,28 @@ class Settings
     
     /*
     Function: __construct
-    The constructor takes in database, template and player variables to pass onto any hook functions called.
+    The constructor takes in database variable to pass onto any functions called.
     
     Parameters:
     $db - An instance of the database class.
-    $tpl - A smarty object.
-    $player - A player result set from the database, or 0 if not logged in.
-    */
+     */
     public function __construct(&$db)
     {
-        $this->db =& $db;
-        $query      = $this->db->execute('SELECT * FROM `<ezrpg>settings`');
-        $this->settings = $db->fetchAll($query);
+		$this->db =& $db;
+		$this->settings = $this->loadSettings();
 		$this->setting = $this->get_settings($this->settings);
     }
 	
+	
+	/*
+    Function: get_settings_by
+    Function that parses the Settings for specified key
+    
+    Parameters:
+    $column - An column to check.
+    $value - A value to compare
+	$setting - An instance of the settings
+	*/
 	public function get_settings_by($column, $value, $setting)
 	{
 		$settings = array();
@@ -68,6 +75,31 @@ class Settings
 			}
 		}
 		return $settings;
+	}
+	
+	public function loadSettings()
+	{
+		$query = 'SELECT * FROM `<ezrpg>settings`';
+		$cache_file = md5($query);
+		
+		if( file_exists( CACHE_DIR . $cache_file ) )
+		{
+			if( filemtime( CACHE_DIR . $cache_file ) > time( ) - 60 * 60 * 24 ) 
+			{
+				$array = unserialize( file_get_contents( CACHE_DIR . $cache_file ) );
+				if ( DEBUG_MODE == 1 ) {
+				echo 'Loaded Settings Cache! <br />';
+				}
+			}
+		} else {
+			$query1 = $this->db->execute($query);
+			$array = $this->db->fetchAll($query1);
+			file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+			if ( DEBUG_MODE == 1 ) {
+				echo 'Created Settings Cache! <br />';
+			}
+		}
+		return $array;
 	}
 }
 ?>

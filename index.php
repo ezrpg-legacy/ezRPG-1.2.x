@@ -1,4 +1,4 @@
-<?php
+ <?php
 define('IN_EZRPG', true);
 
 $TIMER['ezRPG start']=microtime(1);
@@ -12,8 +12,8 @@ $TIMER['init.php Loaded:']=microtime(1);
 $default_mod = 'Index';
 
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod );
-
 //Header hooks
+//$hooks->run_hooks('init', $module_name);
 $module_name = $hooks->run_hooks('header', $module_name);
 $TIMER['header-hooks Loaded:']=microtime(1);
 

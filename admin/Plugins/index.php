@@ -79,6 +79,7 @@ class Admin_Plugins extends Base_Module {
 									$hook[ 'pid' ]      = $p_m[ 'pid' ];
 									$hook[ 'filename' ] = (string) $hooks->HookFileName;
 									$hook[ 'title' ]    = (string) $hooks->HookTitle;
+									$hook[ 'type' ] = 'hook';
 									$this->db->insert( '<ezrpg>plugins', $hook );
 								}
 							}
@@ -89,6 +90,7 @@ class Admin_Plugins extends Base_Module {
 									$lib[ 'pid' ]      = $p_m[ 'pid' ];
 									$lib[ 'filename' ] = (string) $libs->HookFileName;
 									$lib[ 'title' ]    = (string) $libs->HookTitle;
+									$lib[ 'type' ] = 'library';
 									$this->db->insert( '<ezrpg>plugins', $lib );
 								}
 							}
@@ -96,10 +98,11 @@ class Admin_Plugins extends Base_Module {
 						if ( !empty( $plug->Plugin->Theme ) ) {
 							if ( !empty( $plug->Plugin->Theme->ThemeFolder ) ) {
 								foreach ( $plug->Plugin->Theme->ThemeFolder as $theme ) {
-									$theme[ 'pid' ]      = $p_m[ 'pid' ];
-									$theme[ 'filename' ] = (string) $theme->ThemeFolder;
-									$theme[ 'title' ]    = (string) $theme->ThemeTitle;
-									$this->db->insert( '<ezrpg>plugins', $theme );
+									$theme_m[ 'pid' ]      = $p_m[ 'pid' ];
+									$theme_m[ 'filename' ] = (string) $theme->ThemeFolder;
+									$theme_m[ 'title' ]    = (string) $theme->ThemeTitle;
+									$theme_m[ 'type' ] = 'templates';
+									$this->db->insert( '<ezrpg>plugins', $theme_m );
 								}
 							}
 						}
@@ -118,13 +121,13 @@ class Admin_Plugins extends Base_Module {
 						$this->rrmdir( $dir );
 						$results .= "You have successfully uploaded a plugin via the manager! <br />";
 						if ( !empty( $plug->Plugin->AccessURL ) ) {
-							$install_url = str_replace('SITE_URL/', $this->settings->get_settings_by_cat_name('general')['site_url'], $p_m['url']);
+							$install_url = str_replace('SITE_URL/', $this->settings->get_settings('general')['site_url'], $p_m['url']);
 							if ( !empty( $plug->Plugin->InstallArg ) ) {
 								$install_url .= (string) $plug->Plugin->InstallArg;
 								$results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Install Plugin' /></a>";
 							} else {
-								$query = $this->db->execute( 'UPDATE <ezrpg>plugins_meta SET installed = 1, active = 1 WHERE id = ' . $p_m[ 'id' ] );
-								$this->db->execute( $query );
+								$query = $this->db->execute( 'UPDATE <ezrpg>plugins SET installed = 1, active = 1 WHERE id = ' . $p_m[ 'pid' ] );
+								//$this->db->execute( $query );
 								$results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Go To Plugin' /></a>";
 							}
 						}
@@ -165,7 +168,7 @@ class Admin_Plugins extends Base_Module {
 			$this->db->execute( 'DELETE FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id );
 			$this->db->execute( 'DELETE FROM <ezrpg>plugins_meta WHERE pid=' . $id );
 		} else {
-			$url = $settings->get_settings_by_cat_name('general')['site_url'];
+			$url = $settings->get_settings('general')['site_url'];
 			header( 'Location: ' . $url . $result->uninstall );
 			exit;
 		}

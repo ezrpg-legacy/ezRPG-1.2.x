@@ -14,6 +14,7 @@ define('LIB_DIR', CUR_DIR . '/lib');
 define('EXT_DIR', LIB_DIR . '/ext');
 define('HOOKS_DIR', CUR_DIR . '/hooks');
 define('THEME_DIR', CUR_DIR . '/templates/');
+define('CACHE_DIR', CUR_DIR . '/cache/');
 
 require_once CUR_DIR . '/config.php';
 
@@ -34,7 +35,6 @@ unset($config_password);
 
 // Settings
 $settings = new Settings($db);
-
 // Smarty
 $tpl = new Smarty();
 $tpl->assign('GAMESETTINGS', $settings->setting['general']);
@@ -43,9 +43,11 @@ $tpl->addTemplateDir(array(
 	'default' => THEME_DIR . 'themes/default/'
 ));
 
-$tpl->compile_dir  = $tpl->cache_dir = CUR_DIR . '/cache/templates/';
+$tpl->compile_dir  = $tpl->cache_dir = CACHE_DIR . 'templates/';
 
 // Themes
+$themes = new Themes($db, $tpl);
+/*
 $themetpldir = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
 $moduletpldir = scandir(THEME_DIR . 'modules/', SCANDIR_SORT_NONE);
 $entries = array_merge($themetpldir, $moduletpldir);
@@ -97,7 +99,7 @@ foreach ($entries as $entry) {
 			}
 		}
 	}
-}
+}*/
 
 // Initialize $player
 $player = 0;

@@ -88,15 +88,14 @@ QUERY;
 
 	$structure5 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>plugins` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `author` varchar(255) NOT NULL,
-  `authorsite` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
-  `version` float NOT NULL,
-  `xml_location` text NOT NULL,
-  UNIQUE KEY id (id)
+  `filename` text NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `installed` int(2) NOT NULL,
+  `pid` int(11) NOT NULL DEFAULT '0',
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 	
@@ -132,6 +131,19 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
 QUERY;
 	$db->execute($structure7);
 	
+	$structure8 = <<<QUERY
+CREATE TABLE IF NOT EXISTS `<ezrpg>plugins_meta` (
+   `id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `version` float NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `url` text NOT NULL,
+  `uninstall` varchar(255) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+QUERY;
+	
+	$db->execute($structure8);
 	
 	$data1 = <<<QUERY
 INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`, `pos`, `active`) VALUES
