@@ -1,4 +1,4 @@
-##ezRPG 1.2.0 RC1
+##ezRPG 1.2.0 RC2
 
 ###Warning this version of ezRPG 1.2.0 is still a Release Candidate and not a fully stable version. 
 At the present time,ezRPG is slated for two Release Candidates lasting between one to two weeks of testing and possible code changes.
@@ -13,48 +13,25 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0 RC1
-####ETA on RC2: June 23 2013!
-####ETA on 1.2.0 (FINAL): July 7 2013!
+##Notes about 1.2.0 RC2
+####ETA on 1.2.0 (FINAL): July 14 2013!
 
 ```
-Base_Module now holds more responsibility like "getTheme and loadView":
-getTheme() checks 3 things:
-1. Are you in an AdminCP by checking IN_ADMIN and serving up the Admin Theme. (Admin theme is supplied, and currently not looking to be edited)
-2. Is there a current theme that's enabled in the DB? (if so, select it)
-3. If no current theme is enabled, default back to default theme.
-	
-getTheme then provides a Smarty Variable: "THEME_DIR" which will the directory for Theme assets. Developers can still load from Static if based off of our default theme.
 
-loadView() is accessed via "$this->loadView('template.tpl', OPTIONAL 'ModuleName')" just like "$this->tpl->display('template.tpl')".
-loadView() does 4 things:
-1. Grabs the current set theme via $this->theme set by getTheme()
-2. If the second param is set like 'MailBox' or 'Bank':
-2.1. loadView checks the current theme for .tpl file
-2.2. If loadView can't find it, it loads 'MailBox' or 'Bank' theme
-2.2.1. These module themes are located templates/modules/*
-3. Calls "$this->tpl->display('file:[ NAME OF THEME DIR ] template.tpl')" 
-4. If this doesn't work at all, Error404 is redirected
-	
-Later an Error404 needs to be supplied some where to this process.
+Simple Cache system has been added for Settings DB and TemplateDIRs.
+Plugin System is near complete reading basic meta information from XML which will include FileLocations, Theme/Lib/Hook locations, URI information, etc
+Theme System allows for simple changing of Themes with two supplied during install
+Menu system allows modules to add and remove items from menu. Menu returns an array to be used in template headers, nav lists, etc. Must be parsed and styled accordingly.
+Hooks are to be added so developers have more native locations to integrate with other than Header/Footer (AdminHeader/AdminFooter).
+Simple stopwatch and percentage info added for Debug_mode to see which area takes the longest. Later better debug information should be used
 
-Init.php has also taken a role in the Theme Support which needs to be decoupled later:
-1. Creates the default TemplateDir in Smarty for Admin and Default theme
-2. Checks if both a theme is in the themes folder AND in the DB.
-2.1. This happens on every page load which should be decoupled to only when checked or when there's an issue with a theme.
-2.2. Checks also for templates/modules and loads that into TemplateDir.
-3. HTMLPurifier was removed, but should have an option setting. Find a way to decouple!
 
-Class.Menu is still unstable but provides better integration.
-1. 1.0.x class.Menu auto embeded HTML code, 1.2.x class.Menu just returns an Array of menu items.
-2. Smarty Templates now much do foreach to setup menus
-3. Possible idea is to serialize array'd menu data into db so we can leave the logic to PHP only and use just {Menu_} tag
-3.1. This would be that during Admin/MenuManager, when you edit a Menu Group's subMenus, you'll just save the data to the single db row.
-	
-Smarty Templates now have much more logic to them. Possible No Go for some, but necessary at the current stage.
-1. Templates now take on dynamic themes, more ForEach's for menus, could be a bit tempting at first
-2. Only the header.tpl or any tpl that NEEDS a menu will have this logic in it. Comments should be provided still though.
-
+TODO:
+BugTest BugTest BugTest
+Clean code and format accordingly
+Finish Plugin system
+Migrate basic popular Modules and Hooks for inspiration
+Complete Documentation
 
 ```
 =====
