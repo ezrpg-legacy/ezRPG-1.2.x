@@ -18,17 +18,19 @@ class Module_Login extends Base_Module
     */
     public function start()
     {
-        $fail = '';
-		$warn = '';
-
+		$error = 0;
         if (empty($_POST['username']) || empty($_POST['password'])) {
-            $warn = 'Please enter your username and password!';
+			$errors[] = 'Please enter your username and password!';
+			$error = 1;
 		} else {
 			$player = $this->validate();
-			if ($player === false)
-				$fail = 'Please check your username/password!';
+			if ($player === false){
+				$errors[] = 'Please check your username/password!';
+				$error = 1;
+			}
 		}
-        if (empty($fail) && empty($warn)) {
+        if ($error == 0) 
+		{
 			$pass_method = $this->settings->setting['general']['pass_encryption']['value']['value'];
 			$check = checkPassword($player->secret_key, $_POST['password'], $player->password);
 			if ($check !== TRUE)
@@ -71,22 +73,23 @@ class Module_Login extends Base_Module
 					exit;
 				}
 			}
-			else
+			
+			//If we made it this far, then there's an issue
+		
+			session_unset();
+			
+			$msg = 'Sorry, you could not login:<br />';
+			$msg .= '<ul>';
+			foreach($errors as $errmsg)
 			{
-				session_unset();
-				
-				$msg = 'Sorry, you could not login:<br />';
-				$msg .= '<ul>';
-				foreach($errors as $errmsg)
-				{
-					$msg .= '<li>' . $errmsg . '</li>';
-				}
-				$msg .= '</ul>';
-				
-				header('Location: index.php?msg=' . urlencode($msg));
-				exit;
+				$msg .= '<li>' . $errmsg . '</li>';
 			}
+			$msg .= '</ul>';
+			
+			header('Location: index.php?msg=' . urlencode($msg));
+			exit;
 		}
+		
     }
 private function validate() {
 		global $settings;
