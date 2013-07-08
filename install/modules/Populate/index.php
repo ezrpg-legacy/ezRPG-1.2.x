@@ -2,6 +2,18 @@
 class Install_Populate extends InstallerFactory
 {
 	function start(){
+		if(!file_exists('../config.php') OR filesize('../config.php') == 0){
+			$this->header();
+			echo "<h2>There's been an error!</h2><br />";
+			echo "<p>Config.php still was blank.<br />";
+			echo "<p>Please use the back button and follow the instructions again.<br />";
+			echo "<p>Installation can not move on until that's complete!</p>";
+			echo "<script>
+				document.write('<a href=' + document.referrer + '>Go Back</a>');
+			</script>";
+			$this->footer();
+			die;
+		}
 		require_once "../config.php";
 		try
 		{

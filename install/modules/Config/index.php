@@ -96,9 +96,71 @@ CONF;
 				fwrite($fh, $config);
 				fclose($fh);
 				$this->header();
+				if(filesize('../config.php') == 0){
+					rename ( '../config.php', '../config.php.bak');
+					echo "<h2>Error Writing To Config.php</h2>";
+					echo "<p>There was an error writing to Config.php.</p>";
+					echo "<p>Before continuing, please rename 'http://ezrpg/config.php.bak' to 'http://ezrpg/config.php.bak' and update with the following:</p><br />\n";
+					echo "<pre style='background-color: lightgrey;'><code style='word-wrap: break-word;'>&#60;?php<br />
+//This file cannot be viewed, it must be included<br />
+defined('IN_EZRPG') or exit; <br />
+<br />
+/*<br />
+  Title: Config<br />
+  The most important settings for the game are set here.<br />
+*/<br />
+<br />
+/*<br />
+  Variables: Database Connection<br />
+  Connection settings for the database.<br />
+  <br />
+  \$config_server - Database server <br />
+  \$config_dbname - Database name <br />
+  \$config_username - Username to login to server with<br />
+  \$config_password - Password to login to server with<br />
+  \$config_driver - Contains the database driver to use to connect to the database.<br />
+  \$config_port - Contains the database port your database server port.<br />
+*/<br />
+\$config_server = '{$dbhost}';<br />
+\$config_dbname = '{$dbname}';<br />
+\$config_username = '{$dbuser}';<br />
+\$config_password = '{$dbpass}';<br />
+\$config_driver = '{$dbdriver}';<br />
+\$config_port = '{$dbport}';<br />
+<br />
+/*<br />
+  Constant:<br />
+  This secret key is used in the hashing of player passwords and other important data.<br />
+  Secret keys can be of any length, however longer keys are more effective.<br />
+  <br />
+  This should only ever be set ONCE! Any changes to it will cause your game to break!<br />
+  You should save a copy of the key on your computer, just in case the secret key is lost or accidentally changed,.<br />
+  <br />
+  SECRET_KEY - A long string of random characters.<br />
+*/<br />
+define('SECRET_KEY', '{$secret_key}');<br />
+<br />
+<br />
+/*<br />
+  Constants: Settings<br />
+  Various settings used in ezRPG.<br />
+  <br />
+  DB_PREFIX - Prefix to the table names<br />
+  VERSION - Version of ezRPG<br />
+  SHOW_ERRORS - Turn on to show PHP errors.<br />
+  DEBUG_MODE - Turn on to show database errors and debug information.<br />
+*/<br />
+define('DB_PREFIX', '{$dbprefix}');<br />
+define('VERSION', '1.2.0');<br />
+define('SHOW_ERRORS', 0);<br />
+define('DEBUG_MODE', 0);<br />
+?><br /></code></pre>";
+					echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";				
+				} else {
 				echo "<h2>Configuration file written</h2>\n";
 				echo "<p>The configuration has ben verified, and the config.php file has been successfully written.</p><br />\n";
 				echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
+				}
 				$this->footer();
 				die;
 			}
