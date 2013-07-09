@@ -71,8 +71,8 @@ class Themes
 	{		
 		$query = 'SELECT * FROM <ezrpg>themes';
 		$cache_file = md5($query);
-		$themetpldir = scandir(THEME_DIR . 'themes/', SCANDIR_SORT_NONE);
-		$moduletpldir = scandir(THEME_DIR . 'modules/', SCANDIR_SORT_NONE);
+		$themetpldir = scandir(THEME_DIR . 'themes/', 0);
+		$moduletpldir = scandir(THEME_DIR . 'modules/', 0);
 		$entries = array_merge($themetpldir, $moduletpldir);
 		$templates = array();
 
