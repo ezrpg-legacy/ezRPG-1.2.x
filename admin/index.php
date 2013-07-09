@@ -4,6 +4,12 @@ define('IN_ADMIN', true);
 
 require_once '../init.php';
 
+// Check player exists
+if ($player == '0') {
+    header('Location: ../index.php');
+    exit;
+}
+
 //Require admin rank
 if ($player->rank < 5)
 {
