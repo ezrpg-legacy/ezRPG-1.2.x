@@ -33,11 +33,11 @@ class Module_Login extends Base_Module
 		{
 			$pass_method = $this->settings->setting['general']['pass_encryption']['value']['value'];
 			$check = checkPassword($player->secret_key, $_POST['password'], $player->password);
-			if ($check !== TRUE)
+			if ($check != TRUE)
 			{
 				if ($player->pass_method != $pass_method) {
 					$check = checkPassword($player->secret_key, $_POST['password'], $player->password, $player->pass_method);
-					if ($check !== TRUE)
+					if ($check != TRUE)
 					{
 						$errors[] = 'Password Set as Old Method!';
 						$error = 1;
@@ -104,7 +104,7 @@ private function validate() {
             // We have different authentication methods at our disposal.
 			$pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password, ($player->pass_method == $pass_meth ? '0': $player->pass_method));
-			if ($check !== true) {
+			if ($check != true) {
 				return false;
 			}
 
