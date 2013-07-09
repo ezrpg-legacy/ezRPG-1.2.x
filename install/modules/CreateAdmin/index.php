@@ -19,10 +19,20 @@ class Install_CreateAdmin extends InstallerFactory
 				$errors = 1;
 				$msg .= 'You forgot to fill in something!';
 			}
+			if (!preg_match("/^[a-zA-Z0-9_]{4,16}$/", $username))
+			{
+				$errors = 1;
+				$msg .= 'Username is invalid!';
+			}
 			if ($password != $password2)
 			{
 				$errors = 1;
 				$msg .= 'You didn\'t verify your password correctly.';
+			}
+			if (!preg_match("/[a-zA-Z0-9\W]{6}+/", $password))
+			{
+				$errors = 1;
+				$msg .= 'Password is invalid';
 			}
         
 			if ($errors == 0)
