@@ -1,9 +1,9 @@
- <?php
+<?php
 define('IN_EZRPG', true);
 
 $TIMER['ezRPG start']=microtime(1);
 
-if (!file_exists('config.php') OR filesize('config.php') != 0) {
+if (!file_exists('config.php') OR filesize('config.php') == 0) {
   header('Location: install/index.php');
 	exit(1);
 }
