@@ -16,7 +16,7 @@ session_start();
 
 // Constants
 define('CUR_DIR', realpath(dirname(__FILE__)));
-define('MOD_DIR', CUR_DIR . '/modules');
+define('MOD_DIR', CUR_DIR . '/modules/');
 define('ADMIN_DIR', CUR_DIR . '/admin');
 define('LIB_DIR', CUR_DIR . '/lib');
 define('EXT_DIR', LIB_DIR . '/ext');

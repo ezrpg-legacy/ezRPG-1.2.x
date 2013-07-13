@@ -383,9 +383,9 @@ class Menu {
 		}
 		return $result;
 	}
-	function isMenu($mid = 0, $menu = "") {
+	function isMenu($name) {
 		foreach ($this->menu as $item => $ival) {
-			if ($ival->id == $mid) {
+			if ($ival->name == $name) {
 				return true;
 			}
 		}

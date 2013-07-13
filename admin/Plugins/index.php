@@ -126,7 +126,7 @@ class Admin_Plugins extends Base_Module
                             {
                                 foreach ( $plug->Plugin->Hook->HookFile as $hooks )
                                 {
-                                    $hook['pid'] = $p_m['pid'];
+                                    $hook['pid'] = $p_m['plug_id'];
                                     $hook['filename'] = (string) $hooks->HookFileName;
                                     $hook['title'] = (string) $hooks->HookTitle;
                                     $hook['type'] = 'hook';
@@ -140,7 +140,7 @@ class Admin_Plugins extends Base_Module
                             {
                                 foreach ( $plug->Plugin->Lib->LibFile as $libs )
                                 {
-                                    $lib['pid'] = $p_m['pid'];
+                                    $lib['pid'] = $p_m['plug_id'];
                                     $lib['filename'] = (string) $libs->HookFileName;
                                     $lib['title'] = (string) $libs->HookTitle;
                                     $lib['type'] = 'library';
@@ -154,7 +154,7 @@ class Admin_Plugins extends Base_Module
                             {
                                 foreach ( $plug->Plugin->Theme->ThemeFolder as $theme )
                                 {
-                                    $theme_m['pid'] = $p_m['pid'];
+                                    $theme_m['pid'] = $p_m['plug_id'];
                                     $theme_m['filename'] = (string) $theme->ThemeFolder;
                                     $theme_m['title'] = (string) $theme->ThemeTitle;
                                     $theme_m['type'] = 'templates';
@@ -162,6 +162,35 @@ class Admin_Plugins extends Base_Module
                                 }
                             }
                         }
+						if ( !empty($plug->Plugin->Menu) )
+						{
+							if ( !empty($plug->Plugin->Menu->MenuParent) )
+							{
+								$menusys = $this->menu;
+								$menufile = $plug->Plugin->Menu;
+								$menu_p['module_id'] = $p_m['plug_id'];
+								$menu_p['parent_id'] = ($menusys->isMenu((string) $menufile->MenuParent) 
+														? $menusys->get_menu_id_by_name((string) $menufile->MenuParent) : '0');
+								$menu_p['title'] = (string) $menufile->Title;
+								$menu_p['uri'] = (string) $menufile->URL;
+								$menu_id = $this->db->insert('<ezrpg>menu', $menu_p);
+								if ( !empty($menufile->MenuChildren) )
+								{
+									if ( !empty($menufile->MenuChildren->Child) )
+									{
+										foreach ( $menufile->MenuChildren->Child as $menu )
+										{
+											$menu_c['module_id'] = $p_m['plug_id'];
+											$menu_c['parent_id'] = $menu_id;
+											$menu_c['title'] = (string) $menufile->Title;
+											$menu_c['uri'] = (string) $menu->URL;
+											$this->db->insert('<ezrpg>menu', $menu_c);
+										}
+									}
+								}
+								killMenuCache();
+							}	
+						}
                         $results .= "installed db data <br />";
                         if ( file_exists($dir . '/modules') )
                             $this->re_copy($dir . '/modules/', MOD_DIR);
@@ -178,17 +207,19 @@ class Admin_Plugins extends Base_Module
                         $results .= "You have successfully uploaded a plugin via the manager! <br />";
                         if ( !empty($plug->Plugin->AccessURL) )
                         {
-                            $install_url = str_replace('SITE_URL/', $this->settings->get_settings('general')['site_url'], $p_m['url']);
+                            $install_url = $this->settings->setting['general']['site_url']['value']. $p_m['url'];
+			
                             if ( !empty($plug->Plugin->InstallArg) )
                             {
-                                $install_url .= (string) $plug->Plugin->InstallArg;
+								 $this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=0 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
+							   $install_url .= (string) $plug->Plugin->InstallArg;
                                 $results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Install Plugin' /></a>";
                             }
                             else
                             {
-                                $query = $this->db->execute('UPDATE <ezrpg>plugins SET installed = 1, active = 1 WHERE id = ' . $p_m['pid'] . ' OR pid = ' . $p_m['pid']);
-                                $this->db->execute( $query );
-                                $results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Go To Plugin' /></a>";
+                                $this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=1 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
+                                $this->db->execute('UPDATE <ezrpg>menu SET active=1 WHERE module_id=' . $p_m['plug_id']);
+								$results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Go To Plugin' /></a>";
                             }
                         }
                         $results .= "<a href='index.php?mod=Plugins'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
@@ -225,22 +256,38 @@ class Admin_Plugins extends Base_Module
             break;
         }
         $query = $this->db->execute('SELECT uninstall FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
-        $result = $this->db->fetch($query);
-        $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id);
+        $result2 = $this->db->fetch($query);
+        $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id='.$id);
 		$result = $this->db->fetchAll($query_mod);
 		foreach ( $result as $file )
 		{
-			$this->rrmdir($file->filename);
+			switch($file->type){
+				case 'module':
+					$this->rrmdir(MOD_DIR . $file->title);
+					break;
+				case 'templates':
+					$this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
+					break;
+				case 'hook':
+					$this->rrmdir(HOOK_DIR . $file->filename);
+					break;
+			}
 		}
 		$this->db->execute('DELETE FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
 		$this->db->execute('DELETE FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
-        if ( $result->uninstall )
+		$this->db->execute('DELETE FROM <ezrpg>menu WHERE module_id=' . $id);
+		if ( $result2 )
 		{
-            $url = $settings->get_settings('general')['site_url'];
+            $url = $this->settings->setting['general']['site_url']['value'];
 			$this->setMessage('Module has been removed from DB. Please finish the uninstall process');
-            header('Location: ' . $url . $result->uninstall);
+            header('Location: ' . $url . $result2->uninstall);
             exit;
-        }
+        } else{
+			$url = $this->settings->setting['general']['site_url']['value'];
+			$this->setMessage('Module has been removed from DB. Please finish the uninstall process');
+            header('Location: ' . $url);
+            exit;
+		}
     }
 
     private function view_modules($id = 0)
