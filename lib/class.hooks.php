@@ -42,11 +42,12 @@ class Hooks
     */
     public function __construct(&$db, &$tpl, &$player = 0)
     {
+		global $debugTimer;
         $this->db = &$db;
         $this->tpl = &$tpl;
         $this->player = &$player;
-        
         $this->hooks = array();
+		$debugTimer['Hook Class constructed']=microtime(1);
     }
     
     /*
@@ -77,6 +78,7 @@ class Hooks
     */
     public function run_hooks()
     {
+		global $debugTimer;
         $num_args = func_num_args();
         if ($num_args == 0)
             return;
@@ -118,9 +120,9 @@ class Hooks
 
                 //Hook should have a return value
                 $func_args = call_user_func($call_func, $this->db, $this->tpl, $this->player, $func_args);
+				$debugTimer[$call_func]=microtime(1);
             }
         }
-        
         return $func_args;
     }
 }
