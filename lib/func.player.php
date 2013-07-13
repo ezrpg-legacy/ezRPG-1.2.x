@@ -23,11 +23,12 @@ function requireLogin($msg='')
 {
     if (!LOGGED_IN)
     {
-        if (!empty($msg))
-            header('Location: index.php?msg=' . urlencode($msg));
-        else
+        if (!empty($msg)){
+			$this->setMessage($msg);
             header('Location: index.php');
-	
+        } else {
+            header('Location: index.php');
+		}
         exit;
     }
 }
@@ -51,5 +52,44 @@ function requireAdmin($player = 0)
         header('Location: index.php');
         exit;
     }
+}
+
+function loadMetaCache($kill = 0)
+{
+	global $db, $debugTimer;
+       //Select player details
+			
+			$query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid'];
+			$cache_file = md5($query);
+			$cache = CACHE_DIR . $cache_file;
+			if ($kill == 1) 
+				unlink( $cache );
+			
+			if( file_exists( $cache ) )
+			{
+				if( filemtime( $cache ) > time( ) - 60 * 60 * 24 ) 
+				{
+					$array = unserialize( file_get_contents( $cache ) );
+					if ( DEBUG_MODE == 1 ) {
+					echo 'Loaded Player_Meta Cache! <br />';
+					}
+				} else {
+					unlink( $cache );
+					//$query1 = $db->execute($query);
+					$array = $db->fetchRow($query);
+					file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+					if ( DEBUG_MODE == 1 ) {
+						echo 'Created Player_Meta Cache! <br />';
+					}
+				}
+			} else {
+				//$query1 = $db->execute($query);
+				$array = $db->fetchRow($query);
+				file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+				if ( DEBUG_MODE == 1 ) {
+					echo 'Created Player_Meta Cache! <br />';
+				}
+			}
+    return $array;
 }
 ?>
