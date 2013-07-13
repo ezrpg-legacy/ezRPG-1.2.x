@@ -53,6 +53,7 @@ class Module_StatPoints extends Base_Module
 				WHERE pid=?', array($this->player->id));
               $msg = 'You have increased your strength!';
 			  $this->setMessage($msg);
+			  loadMetaCache(1);
               break;
           case 'Vitality':
               //Add to hp and max_hp
@@ -65,6 +66,7 @@ class Module_StatPoints extends Base_Module
               
               $msg = 'You have increased your vitality!';
 			  $this->setMessage($msg);
+			  loadMetaCache(1);
               break;
           case 'Agility':
               $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
@@ -74,6 +76,7 @@ class Module_StatPoints extends Base_Module
               
               $msg = 'You have increased your agility!';
               $this->setMessage($msg);
+			  loadMetaCache(1);
 			  break;
           case 'Dexterity':
               $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
@@ -83,18 +86,21 @@ class Module_StatPoints extends Base_Module
               
               $msg = 'You have increased your dexterity!';
               $this->setMessage($msg);
+			  loadMetaCache(1);
 			  break;
           default:
               break;
         }
 	
         //Player has just used up their last stat point
-        if ($this->player->stat_points <= 1)
-            header('Location: index.php');
-        else
+        if ($this->player->stat_points <= 1){
+            $this->setMessage('You have no more stat points!');
+			header('Location: index.php');
+			exit;
+		} else {
             header('Location: index.php?mod=StatPoints');
-	
-        exit;
+			exit;
+		}
     }
 }
 ?>
