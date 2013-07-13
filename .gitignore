@@ -5,4 +5,5 @@
 /templates/cache/
 
 config.php
+/cache/*.php
 /cache/templates/*.php
