@@ -179,11 +179,28 @@ img {
 	display: block;
 	clear: both;
 	width: 90%;
-	border: 1px solid #3399FF;
-	border-bottom: solid 5px #3399FF;
 	margin: 0px auto;
 	margin-top: 10px;
 	padding: 3px 10px;
+}
+.msg.info {
+  background-color: #C5D9F5;
+  color: #364C73;
+}
+
+.msg.warn {
+    background-color: #FFECDB;
+    color: #FC5B25;
+}
+
+.msg.fail {
+    background-color: #D93027;
+    color: #FFF;
+}
+
+.msg.good {
+  background-color: #DAFFA3;
+  color: #528752;
 }
 
 .space {
@@ -225,4 +242,48 @@ img {
 	padding: 5px;
 	margin: 2px;
 	margin-bottom: 10px;
+}
+
+.bar {
+    height: 20px;
+    width: 140px;
+    background-color: #cc0000;
+    margin: 5px 3px;
+	border-radius: 3px;
+
+
+	background: rgb(186,0,0); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(186,0,0,1) 0%, rgba(204,0,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(186,0,0,1)), color-stop(100%,rgba(204,0,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(186,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(186,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(186,0,0,1) 0%,rgba(204,0,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(186,0,0,1) 0%,rgba(204,0,0,1) 100%); /* W3C */
+}
+
+.bar .inner {
+    height: 20px;
+    background-color: #8fc800;
+	border-radius: 3px;
+
+	background: rgb(155,216,0); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(155,216,0,1) 0%, rgba(143,200,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(155,216,0,1)), color-stop(100%,rgba(143,200,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(155,216,0,1) 0%,rgba(143,200,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(155,216,0,1) 0%,rgba(143,200,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(155,216,0,1) 0%,rgba(143,200,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(155,216,0,1) 0%,rgba(143,200,0,1) 100%); /* W3C */
+
+}
+
+.bar .text {
+    position: relative;
+    top: -20px;
+    height: 2px;
+    line-height: 20px;
+    width: 140px;
+    text-align: center;
+    font-size: 9px;
+    color: #FFF;
+    font-weight: 600;
 }
