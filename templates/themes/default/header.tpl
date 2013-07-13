@@ -42,10 +42,18 @@
 <div id="sidebar">
 <strong>Level</strong>: {$player->level}<br />
 <strong>Gold</strong>: {$player->money}<br />
-
-<img src="bar.php?width=140&type=exp" alt="EXP: {$player->exp} / {$player->max_exp}" /><br />
-<img src="bar.php?width=140&type=hp" alt="HP: {$player->hp} / {$player->max_hp}" /><br />
-<img src="bar.php?width=140&type=energy" alt="Energy: {$player->energy} / {$player->max_energy}" /><br />
+<div class="bar">
+	<div class="inner" style="width: {$player->exp}/{$player->max_exp}%"></div>
+	<div class="text">EXP: {$player->exp} / {$player->max_exp}</div>
+</div>
+<div class="bar">
+	<div class="inner" style="width: {$player->hp}/{$player->max_hp}%"></div>
+	<div class="text">HP: {$player->hp} / {$player->max_hp}</div>
+</div>
+<div class="bar">
+	<div class="inner" style="width: {$player->energy}/{$player->max_energy}%"></div>
+	<div class="text">Energy: {$player->energy} / {$player->max_energy}</div>
+</div>
 
 {if $new_logs > 0}
 <a href="index.php?mod=EventLog" class="red"><strong>{$new_logs} New Log Events!</strong></a>
@@ -54,7 +62,13 @@
 {/if}
 
 <div id="{if $LOGGED_IN == 'TRUE'}gamebody{else}body{/if}">
-	{if $GET_MSG != ''}<div class="msg">
-	<span class="red"><strong>{$GET_MSG}</strong></span>
+	{if isset($MSG)}
+	<div class="msg">
+	{foreach from=$MSG item=newmsg}
+		{foreach from=$newmsg item=message key=level}
+			<span class="msg {$level}"><strong>{$message}</strong></span>
+		{/foreach}
+	{/foreach}
 	</div>
-	<span class="space"></span>{/if}
+	{/if}
+	<span class="space"></span>

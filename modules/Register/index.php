@@ -166,21 +166,20 @@ class Module_Register extends Base_Module
             $hooks->run_hooks('register_after', $new_player);
             
             $msg = 'Congratulations, you have registered! Please login now to play!';
-            header('Location: index.php?msg=' . urlencode($msg));
+			$this->setMessage($msg, 'GOOD');
+            header('Location: index.php');
             exit;
         }
         else
         {
-            $msg = 'Sorry, there were some mistakes in your registration:<br />';
-            $msg .= '<ul>';
-            foreach($errors as $errmsg)
+            $msg = 'Sorry, there were some mistakes in your registration:';
+            $this->setMessage($msg, 'FAIL');
+			foreach($errors as $errmsg)
             {
-                $msg .= '<li>' . $errmsg . '</li>';
+                $this->setMessage($errmsg, 'FAIL');
             }
-            $msg .= '</ul>';
             
-            $url = 'index.php?mod=Register&msg=' . urlencode($msg)
-                . '&username=' . urlencode($_POST['username'])
+            $url = 'index.php?mod=Register&username=' . urlencode($_POST['username'])
                 . '&email=' . urlencode($_POST['email'])
                 . '&email2=' . urlencode($_POST['email2']);
             header('Location: ' . $url);

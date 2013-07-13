@@ -22,8 +22,8 @@ class Module_Logout extends Base_Module
         global $hooks;
         $hooks->run_hooks('logout');
 		
-        $msg = 'You have been logged out!';
-        header('Location: index.php?msg=' . urlencode($msg));
+        $this->setMessage('You have been logged out!');
+        header('Location: index.php');
         exit;
     }
 }

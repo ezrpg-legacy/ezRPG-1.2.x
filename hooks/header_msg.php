@@ -11,12 +11,19 @@ function hook_header_msg(&$db, &$tpl, &$player, $args = 0)
 		return $args;
 
 	// loop through the SESSION variable and push it to the template
-	foreach($_SESSION['status_messages'] as $key => $message) {
+	$status_messages = array();
+		foreach($_SESSION['status_messages'] as $key ) {
+		foreach($key as $level => $message){
 		if (strlen($message) > 0) {
-			$tpl->assign('MSG_' . $key, $message);
+			$status = array($level => $message);
+			array_push($status_messages, $status);
+		}
 		}
 	}
-
+	if (empty($status_messages))
+		$status_messages = null;
+		
+	$tpl->assign('MSG', $status_messages);
 	// remove the session
 	unset($_SESSION['status_message']);
     

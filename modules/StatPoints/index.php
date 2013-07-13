@@ -29,7 +29,8 @@ class Module_StatPoints extends Base_Module
         else //No more stat points, redirect to player home page
         {
             $msg = 'You don\'t have any stat points left!';
-            header('Location: index.php?msg=' . urlencode($msg));
+			$this->setMessage($msg, 'WARN');
+            header('Location: index.php');
         }
     }
     
@@ -46,48 +47,52 @@ class Module_StatPoints extends Base_Module
         {
           case 'Strength':
               //Add to weight limit
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
 				stat_points=stat_points-1,
 				strength=strength+1
-				WHERE id=?', array($this->player->id));
+				WHERE pid=?', array($this->player->id));
               $msg = 'You have increased your strength!';
+			  $this->setMessage($msg);
               break;
           case 'Vitality':
               //Add to hp and max_hp
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
 				stat_points=stat_points-1,
 				vitality=vitality+1,
 				hp=hp+5,
 				max_hp=max_hp+5
-				WHERE id=?', array($this->player->id));
+				WHERE pid=?', array($this->player->id));
               
               $msg = 'You have increased your vitality!';
+			  $this->setMessage($msg);
               break;
           case 'Agility':
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
 				stat_points=stat_points-1,
 				agility=agility+1
-				WHERE id=?', array($this->player->id));
+				WHERE pid=?', array($this->player->id));
               
               $msg = 'You have increased your agility!';
-              break;
+              $this->setMessage($msg);
+			  break;
           case 'Dexterity':
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $query = $this->db->execute('UPDATE <ezrpg>players_meta SET
 				stat_points=stat_points-1,
 				dexterity=dexterity+1
-				WHERE id=?', array($this->player->id));
+				WHERE pid=?', array($this->player->id));
               
               $msg = 'You have increased your dexterity!';
-              break;
+              $this->setMessage($msg);
+			  break;
           default:
               break;
         }
 	
         //Player has just used up their last stat point
         if ($this->player->stat_points <= 1)
-            header('Location: index.php?msg=' . urlencode($msg));
+            header('Location: index.php');
         else
-            header('Location: index.php?mod=StatPoints&msg=' . urlencode($msg));
+            header('Location: index.php?mod=StatPoints');
 	
         exit;
     }

@@ -59,8 +59,8 @@ class Module_AccountSettings extends Base_Module
                 $msg = 'You have changed your password.';
             }
         }
-        
-        header('Location: index.php?mod=AccountSettings&msg=' . urlencode($msg));
+        $this->setMessage($msg);
+        header('Location: index.php?mod=AccountSettings');
     }
 }
 ?>
