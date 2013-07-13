@@ -54,42 +54,48 @@ function requireAdmin($player = 0)
     }
 }
 
+/*
+  Function: loadMetaCache
+  Checks for and loads the Players_Meta cache file.
+  
+  Parameters:
+  $kill - optional - Dictates if a new Cache should be made.
+  
+  Example Usage:
+  Just call the loadMetaCache(1) function if you want to force a new Cache file.
+*/
 function loadMetaCache($kill = 0)
 {
-	global $db, $debugTimer;
-       //Select player details
-			
-			$query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid'];
-			$cache_file = md5($query);
-			$cache = CACHE_DIR . $cache_file;
-			if ($kill == 1) 
-				unlink( $cache );
-			
-			if( file_exists( $cache ) )
-			{
-				if( filemtime( $cache ) > time( ) - 60 * 60 * 24 ) 
-				{
-					$array = unserialize( file_get_contents( $cache ) );
-					if ( DEBUG_MODE == 1 ) {
-					echo 'Loaded Player_Meta Cache! <br />';
-					}
-				} else {
-					unlink( $cache );
-					//$query1 = $db->execute($query);
-					$array = $db->fetchRow($query);
-					file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
-					if ( DEBUG_MODE == 1 ) {
-						echo 'Created Player_Meta Cache! <br />';
-					}
-				}
-			} else {
-				//$query1 = $db->execute($query);
-				$array = $db->fetchRow($query);
-				file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
-				if ( DEBUG_MODE == 1 ) {
-					echo 'Created Player_Meta Cache! <br />';
-				}
+	global $db, $debugTimer;			
+	$query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid'];
+	$cache_file = md5($query);
+	$cache = CACHE_DIR . $cache_file;
+	if ($kill == 1) 
+		unlink( $cache );
+	
+	if( file_exists( $cache ) )
+	{
+		if( filemtime( $cache ) > time( ) - 60 * 60 * 24 ) 
+		{
+			$array = unserialize( file_get_contents( $cache ) );
+			if ( DEBUG_MODE == 1 ) {
+			echo 'Loaded Player_Meta Cache! <br />';
 			}
+		} else {
+			unlink( $cache );
+			$array = $db->fetchRow($query);
+			file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+			if ( DEBUG_MODE == 1 ) {
+				echo 'Created Player_Meta Cache! <br />';
+			}
+		}
+	} else {
+		$array = $db->fetchRow($query);
+		file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+		if ( DEBUG_MODE == 1 ) {
+			echo 'Created Player_Meta Cache! <br />';
+		}
+	}
     return $array;
 }
 ?>
