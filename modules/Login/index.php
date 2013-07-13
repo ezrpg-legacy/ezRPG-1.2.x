@@ -34,6 +34,7 @@ class Module_Login extends Base_Module
 		{
 			$pass_method = $this->settings->setting['general']['pass_encryption']['value']['value'];
 			$check = checkPassword($player->secret_key, $_POST['password'], $player->password);
+			
 			if ($check != TRUE)
 			{
 				if ($player->pass_method != $pass_method) {
@@ -44,8 +45,8 @@ class Module_Login extends Base_Module
 						$error = 1;
 					} else {
 						$new_password = createPassword($player->secret_key, $_POST['password']);
-						//$this->db->update('<ezrpg>players', $item['password']=$new_password, $item['id']=$player->id);
 						$this->db->execute('UPDATE `<ezrpg>players` SET `password`=?, `pass_method`=? WHERE `id`=?', array($new_password, $pass_method, $player->id));
+						killPlayerCache();
 					}
 				} else {
 					$errors[] = 'Please check your username/password!';

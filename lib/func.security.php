@@ -62,8 +62,7 @@ function comparePBKDF2($origin, $comparison) {
 		if (createPBKDF2($origin[0], $origin[1]) == $comparison) {
 			return TRUE;
 		} else {
-			echo createPBKDF2($origin[0], $origin[1]) . '<br />' . $comparison;
-			return TRUE;
+			return FALSE;
 		}
     } else {
         if (createPBKDF2($origin[0]) === $comparison)
@@ -122,9 +121,6 @@ function createBcrypt($password, $salt='ezRPG', $count=7) {
   Boolean - true or false.
  */
 function compareBcrypt($origin, $comparison) {
-    if (count($origin) == 2) 
-        return (createBcrypt($origin[0], $origin[1]) === $comparison);
-    else
         return (createBcrypt($origin[0]) === $comparison);
 }
 
