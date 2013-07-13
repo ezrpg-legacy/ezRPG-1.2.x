@@ -1,4 +1,5 @@
 <?php
+
 define('IN_EZRPG', true);
 
 require_once('init.php');
@@ -48,9 +49,9 @@ $green = randColor();
 $blue = randColor();
 $backgroundColor = ImageColorAllocate($captchaImage, $red, $green, $blue);
 
-$rred = 255-$red;
-$rgreen = 255-$green;
-$rblue = 255-$blue;
+$rred = 255 - $red;
+$rgreen = 255 - $green;
+$rblue = 255 - $blue;
 $textColor = ImageColorAllocate($captchaImage, $rred, $rgreen, $rblue);
 
 imagefttext($captchaImage, $fontSize, 0, $textX, $textY, $textColor, $font, $verify_string);
@@ -61,7 +62,7 @@ $captchaImage = imagerotate($captchaImage, $angle, $backgroundColor);
 
 $line = ImageColorAllocate($captchaImage, $rred, $rgreen, $rblue);
 
-for($i = 0; $i < 10; $i++)
+for ( $i = 0; $i < 10; $i++ )
 {
     $xStart = mt_rand(0, $containerWidth);
     $yStart = mt_rand(0, $containerHeight);
@@ -73,7 +74,6 @@ for($i = 0; $i < 10; $i++)
 
 imagefilter($captchaImage, IMG_FILTER_CONTRAST, 1);
 //imagefilter($captchaImage, IMG_FILTER_BRIGHTNESS, 10);
-
 //imagefilter($captchaImage, IMG_FILTER_EDGEDETECT);
 imagefilter($captchaImage, IMG_FILTER_GAUSSIAN_BLUR);
 

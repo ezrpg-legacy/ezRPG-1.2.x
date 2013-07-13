@@ -14,7 +14,7 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
 		// The client has prompted that they have authorization details.
         // Validate they they are indeed valid: this will be in the for 
 		if (compareSignature($_SESSION['hash'])) {
-            //Select player details
+            //Select player details from Cache
 			$query = 'SELECT id, username, 
 			email, rank, registered
 			FROM `<ezrpg>players` WHERE id = ' . $_SESSION['userid'];

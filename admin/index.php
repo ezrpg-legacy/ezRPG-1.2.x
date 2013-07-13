@@ -1,17 +1,19 @@
 <?php
+
 define('IN_EZRPG', true);
 define('IN_ADMIN', true);
 
 require_once '../init.php';
 
 // Check player exists
-if ($player == '0') {
+if ( $player == '0' )
+{
     header('Location: ../index.php');
     exit;
 }
 
 //Require admin rank
-if ($player->rank < 5)
+if ( $player->rank < 5 )
 {
     header('Location: ../index.php');
     exit;
