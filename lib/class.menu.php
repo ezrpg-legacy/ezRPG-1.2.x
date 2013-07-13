@@ -43,9 +43,41 @@ class Menu {
 		$this->db =& $db;
 		$this->tpl =& $tpl;
 		$this->player =& $player;
-		$query      = $this->db->execute('SELECT * FROM `<ezrpg>menu` ORDER BY `pos`');
-		$this->menu = $db->fetchAll($query);
+		//$query      = $this->db->execute('SELECT * FROM `<ezrpg>menu` ORDER BY `pos`');
+		//$this->menu = $db->fetchAll($query);
+		$this->menu = $this->loadCache();
 	}
+	
+	
+	public function loadCache()
+	{
+		$query = 'SELECT * FROM `<ezrpg>menu` ORDER BY `pos`';
+		$cache_file = md5($query);
+		
+		if( file_exists( CACHE_DIR . $cache_file ) )
+		{
+			if( filemtime( CACHE_DIR . $cache_file ) > time( ) - 60 * 60 * 24 ) 
+			{
+				$array = unserialize( file_get_contents( CACHE_DIR . $cache_file ) );
+				if ( DEBUG_MODE == 1 ) {
+				echo 'Loaded Menu Cache! <br />';
+				}
+			} else {
+				unlink( CACHE_DIR . $cache_file);
+				$this->loadCache();
+				return;
+			}
+		} else {
+			$query1 = $this->db->execute($query);
+			$array = $this->db->fetchAll($query1);
+			file_put_contents( CACHE_DIR . $cache_file, serialize( $array ) );
+			if ( DEBUG_MODE == 1 ) {
+			echo 'Created Menu Cache! <br />';
+			}
+		}
+		return $array;
+	}
+	
 	
 	/*
 	Function: add_menu
