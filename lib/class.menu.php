@@ -43,15 +43,13 @@ class Menu {
 		$this->db =& $db;
 		$this->tpl =& $tpl;
 		$this->player =& $player;
-		//$query      = $this->db->execute('SELECT * FROM `<ezrpg>menu` ORDER BY `pos`');
-		//$this->menu = $db->fetchAll($query);
 		$this->menu = $this->loadCache();
 	}
 	
 	
 	public function loadCache()
 	{
-		$query = 'SELECT * FROM `<ezrpg>menu` ORDER BY `pos`';
+		$query = 'SELECT * FROM `<ezrpg>menu` WHERE active = 1 ORDER BY `pos`';
 		$cache_file = md5($query);
 		
 		if( file_exists( CACHE_DIR . $cache_file ) )
@@ -78,7 +76,6 @@ class Menu {
 		return $array;
 	}
 	
-	
 	/*
 	Function: add_menu
 	Adds menu to database.
@@ -98,7 +95,7 @@ class Menu {
 	$add_menu ($bid, 'Deposit', 'Deposit Money', '', 'index.php?mod=Bank&act=Deposit');
 	*/
 	
-	function add_menu($pid = 0, $name, $title = '', $alttitle = NULL, $uri = '', $pos = '') {
+	function add_menu($pid = 0, $name, $title = '', $alttitle = NULL, $uri = '', $pos = '', $mod_id = '') {
 		if (is_numeric($pid)) {
 			$item['parent_id'] = $pid;
 		} else {
@@ -108,6 +105,7 @@ class Menu {
 		$item['name']     = $name;
 		$item['title']    = $title;
 		$item['uri']      = $uri;
+		$item['module_id'] = $mod_id;
 		if ($pos == '') {
 			if ($item['parent_id'] == NULL) {
 				$pos = '0';
