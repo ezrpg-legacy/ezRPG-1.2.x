@@ -13,6 +13,7 @@ function hook_last_active($db, $tpl, $player, $args = 0)
     if ($player->last_active <= (time() - 300))
     {
         $query = $db->execute('UPDATE `<ezrpg>players_meta` SET `last_active`=? WHERE `pid`=?', array(time(), $player->id));
+		loadMetaCache(1);
     }
     
     return $args;
