@@ -23,7 +23,6 @@ foreach ($func as $item){
 //Classes			
 $clas = array(
 			'dbfactory',
-			'imagebar',
 			'modulefactory',
 			'base_module',
 			'hooks',
