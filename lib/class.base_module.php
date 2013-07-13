@@ -46,8 +46,8 @@ abstract class Base_Module
 	  The name variable used in loadView()
 	*/	
 	protected $name;
-	
-	protected $messages = array(
+	protected $messages = array();
+	protected $messageLevels = array(
 		'INFO'		=> '',
 		'WARN'		=> '',
 		'FAIL'		=> '',
@@ -123,7 +123,8 @@ abstract class Base_Module
 			if (array_key_exists($modtheme, $this->tpl->getTemplateDir())){
 				$this->tpl->display('file:['. $modtheme. ']' .$tpl);
 			}else{
-				header('Location: index.php?mod=Error404&msg=' . urlencode($msg));
+				$this->setMessage($msg, 'FAIL');
+				header('Location: index.php?mod=Error404');
 				exit;
 			}
 		}
@@ -158,16 +159,15 @@ abstract class Base_Module
 	 * @param integer $level
 	 * @return boolean 
 	 */
-	public function setMessage($message, $level='info') {
+	public function setMessage($message, $level='INFO') {
 		$level = strtoupper($level);
 
 		// for better practices.
-		if (array_key_exists($level, $this->messages) === false) {
+		if (array_key_exists($level, $this->messageLevels) === false) {
 			throw new Exception('Message level "' . $level . '" does not exists.');
 			return false;
 		}
-
-		$this->messages[$level] .= $message;
+		array_push($this->messages, array($level => $message));
 		return true;
 	}
 

@@ -154,8 +154,8 @@ class Admin_Members extends Base_Module
             //No errors, update player info
             $query = $this->db->execute('UPDATE `<ezrpg>players` SET `email`=?, `rank`=?, `money`=?, `level`=? WHERE `id`=?', array($_POST['email'], $_POST['rank'], $_POST['money'], $_POST['level'], $member->id));
             
-            $msg = 'You have updated the player\'s info.';
-            header('Location: index.php?mod=Members&msg=' . urlencode($msg));
+			$this->setMessage('You have updated the player\'s info.', 'GOOD');
+            header('Location: index.php?mod=Members');
             exit;
         }
     }
@@ -177,8 +177,8 @@ class Admin_Members extends Base_Module
         if ($member->id == $this->player->id)
         {
             //Cannot delete self
-            $msg = 'You cannot delete yourself!';
-            header('Location: index.php?mod=Members&msg=' . urlencode($msg));
+			$this->setMessage('You cannot delete yourself!', 'WARN');
+            header('Location: index.php?mod=Members');
             exit;
         }
         
@@ -191,8 +191,8 @@ class Admin_Members extends Base_Module
         else
         {
             $query = $this->db->execute('DELETE FROM `<ezrpg>players` WHERE `id`=?', array($member->id));
-            $msg = 'You have deleted <strong>' . $member->username . '</strong>.';
-            header('Location: index.php?mod=Members&msg=' . urlencode($msg));
+			$this->setMessage('You have deleted <strong>' . $member->username . '</strong>.', 'GOOD');
+            header('Location: index.php?mod=Members');
             exit;
         }
     }
