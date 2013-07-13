@@ -2,9 +2,10 @@
 defined('IN_EZRPG') or exit;
 
 $hooks->add_hook('player', 'level_up', 2);
-
+global $debugTimer;
 function hook_level_up($db, &$tpl, $player, $args = 0)
 {
+	global $debugTimer;
     //No player data
     if ($args === 0 || LOGGED_IN == false)
        return $args;
@@ -24,10 +25,11 @@ function hook_level_up($db, &$tpl, $player, $args = 0)
         
         //Update the database
         $db->execute('UPDATE `<ezrpg>players_meta` SET `exp`=?, `level`=level+1, `stat_points`=stat_points+2, `max_exp`=max_exp+20, `energy`=energy+1, `max_energy`=max_energy+1, `hp`=hp+5, `max_hp`=max_hp+5 WHERE `pid`=?', array(intval($args->exp), intval($args->id)));
-        
+        $debugTimer['UPDATE Stats']=microtime(1);
         //Add event log
         $msg = 'You have leveled up! You gained +2 stat points and +1 max energy!';
         addLog(intval($args->id), $msg, $db);
+		$debugTimer['Add Log']=microtime(1);
     }
     
     return $args;
