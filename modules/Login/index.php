@@ -15,6 +15,7 @@ class Module_Login extends Base_Module
       If successful, a new session is generated and the user is redirected to the game.
 	
       On failure, session data is cleared and the user is redirected back to the login page.
+	 
     */
     public function start()
     {
@@ -73,22 +74,22 @@ class Module_Login extends Base_Module
 					exit;
 				}
 			}
-			
-			//If we made it this far, then there's an issue
 		
-			session_unset();
-			
-			$msg = 'Sorry, you could not login:<br />';
-			$msg .= '<ul>';
-			foreach($errors as $errmsg)
-			{
-				$msg .= '<li>' . $errmsg . '</li>';
-			}
-			$msg .= '</ul>';
-			
-			header('Location: index.php?msg=' . urlencode($msg));
-			exit;
 		}
+	
+		//If we made it this far, then there's an issue
+	
+		session_unset();
+		
+		foreach($errors as $errmsg)
+		{
+			//Sets message(s) to FAIL
+			$this->setMessage($errmsg, 'FAIL');
+		}
+		
+		header('Location: index.php');
+		exit;
+	
 		
     }
 private function validate() {
