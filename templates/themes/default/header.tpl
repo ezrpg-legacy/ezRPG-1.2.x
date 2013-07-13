@@ -64,8 +64,8 @@
 <div id="{if $LOGGED_IN == 'TRUE'}gamebody{else}body{/if}">
 	{if isset($MSG)}
 	<div class="msg">
-	{foreach from=$MSG item=newmsg}
-		{foreach from=$newmsg item=message key=level}
+	{foreach $MSG as $newmsg}
+		{foreach $newmsg as $level=>$message}
 			<span class="msg {$level}"><strong>{$message}</strong></span>
 		{/foreach}
 	{/foreach}

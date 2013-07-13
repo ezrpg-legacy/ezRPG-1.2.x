@@ -90,7 +90,12 @@
 <span class="space"></span>
 
 <div id="body">
-	{if $GET_MSG != ''}<div class="msg">
-	<span class="red"><strong>{$GET_MSG}</strong></span>
+	{if isset($MSG)}
+	<div class="msg">
+	{foreach $MSG as $newmsg}
+		{foreach $newmsg as $level=>$message}
+			<span class="msg {$level}"><strong>{$message}</strong></span>
+		{/foreach}
+	{/foreach}
 	</div>
-	<span class="space"></span>{/if}
+	{/if}

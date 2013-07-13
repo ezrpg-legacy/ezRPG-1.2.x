@@ -183,22 +183,22 @@ img {
 	margin-top: 10px;
 	padding: 3px 10px;
 }
-.msg.info {
+.msg.INFO, .msg.info {
   background-color: #C5D9F5;
   color: #364C73;
 }
 
-.msg.warn {
+.msg.WARN, .msg.warn {
     background-color: #FFECDB;
     color: #FC5B25;
 }
 
-.msg.fail {
+.msg.FAIL, .msg.fail {
     background-color: #D93027;
     color: #FFF;
 }
 
-.msg.good {
+.msg.GOOD, .msg.good {
   background-color: #DAFFA3;
   color: #528752;
 }
