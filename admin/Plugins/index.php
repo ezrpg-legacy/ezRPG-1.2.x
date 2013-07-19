@@ -117,7 +117,16 @@ class Admin_Plugins extends Base_Module
                         $p_m['author'] = (string) $plug->Plugin->Author;
                         $p_m['description'] = (string) $plug->Plugin->Description;
                         $p_m['url'] = (string) $plug->Plugin->AccessURL;
-                        $p_m['uninstall'] = (string) $plug->Plugin->UninstallArg;
+						if ( !empty($plug->Plugin->ExtendedInstall) )
+						{
+							if ( !empty($plug->Plugin->ExtendedInstall->UninstallArg))
+								$p_m['uninstall'] = (string) $plug->Plugin->ExtendedInstall->UninstallArg;
+							else
+								$p_m['uninstall'] = '';
+								
+							if ( !empty($plug->Plugin->ExtendedInstall->InstallArg))
+								$p_d['second_installed'] = 0;
+						}
                         $p_m['plug_id'] = $this->db->insert('<ezrpg>plugins', $p_d);
                         $this->db->insert('<ezrpg>plugins_meta', $p_m);
                         if ( !empty($plug->Plugin->Hook) )
@@ -207,12 +216,12 @@ class Admin_Plugins extends Base_Module
                         $results .= "You have successfully uploaded a plugin via the manager! <br />";
                         if ( !empty($plug->Plugin->AccessURL) )
                         {
-                            $install_url = $this->settings->setting['general']['site_url']['value']. $p_m['url'];
+                            $install_url = $this->settings->setting['general']['site_url']['value'];
 			
-                            if ( !empty($plug->Plugin->InstallArg) )
+                            if ( !empty($plug->Plugin->ExtendedInstall->InstallArg) )
                             {
 								 $this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=0 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
-							   $install_url .= (string) $plug->Plugin->InstallArg;
+							   $install_url .= (string) $plug->Plugin->ExtendedInstall->InstallArg;
                                 $results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Install Plugin' /></a>";
                             }
                             else
@@ -269,7 +278,7 @@ class Admin_Plugins extends Base_Module
 					$this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
 					break;
 				case 'hook':
-					$this->rrmdir(HOOK_DIR . $file->filename);
+					$this->rrmdir(HOOKS_DIR . $file->filename);
 					break;
 			}
 		}
