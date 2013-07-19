@@ -30,8 +30,18 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 //Set Default module and check if Module is selected in URI
 $default_mod = 'Index';
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod );
-$module_name = (isModuleActive($module_name) ? $_GET['mod'] : $default_mod );
-
+if (isModuleActive($module_name)){
+	$module_name = $_GET['mod'];
+}else{
+	if (isset($_GET['act'])){
+		if ($_GET['act'] == 'Install')
+			$module_name = $_GET['mod'];
+		else 
+			$module_name = $default_mod;
+	}else{
+		$module_name = $default_mod;
+	}
+}
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
 $debugTimer['Init-hooks Loaded:'] = microtime(1);
@@ -71,4 +81,8 @@ if ( DEBUG_MODE == 1 )
 	 echo "Memory Used: " . round($mem / pow(1024, ($i = floor(log($mem, 1024)))), 2) . ' ' . $unit[$i]. "</pre>";
     //}
 }
+//echo "<pre>";
+//print_r(loadModuleCache());
+//echo "</pre>";
+//echo (isModuleActive('Bank') ? 'Yes' : 'No');
 ?>
