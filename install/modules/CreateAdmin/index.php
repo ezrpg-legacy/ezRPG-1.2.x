@@ -5,11 +5,13 @@ class Install_CreateAdmin extends InstallerFactory
 	function start()
 	{
 		if(!isset($_POST['submit'])){
+			$siteurl = "http://localhost/ezrpg/";
 			$username = '';
 			$email = '';
 		} else {
 			$errors = 0;
 			$msg = '';
+			$siteurl = $_POST['siteurl'];
 			$username = $_POST['username'];
 			$password = $_POST['password'];
 			$password2 = $_POST['password2'];
@@ -61,6 +63,13 @@ class Install_CreateAdmin extends InstallerFactory
 				$admin_meta = array();
 				$admin_meta['pid'] = $new_admin;
 				$db->insert("<ezrpg>players_meta", $admin_meta);
+				$insertconf = array();
+				$insertconf['name'] = 'site_url';
+				$insertconf['title'] = 'Site URL';
+				$insertconf['optionscode'] = 'text';
+				$insertconf['value'] = $siteurl;
+				$insertconf['gid'] = 1;
+				$db->insert("<ezrpg>settings", $insertconf);
 				$this->header();
 				echo "<p>Your admin account has been created! You may now login to the game.</p>\n";
 				$fh = fopen("lock", "w+");
@@ -82,6 +91,8 @@ class Install_CreateAdmin extends InstallerFactory
 		$this->header();
 		echo '<h2>Create your admin account for ezRPG.</h2>';
 		echo '<form method="post">';
+		echo '<label>SiteURL</label>';
+		echo '<input type="text" name="siteurl" value="', $siteurl, '" />';
 		echo '<label>Username</label>';
 		echo '<input type="text" name="username" value="', $username, '" />';
 		echo '<label>Email</label>';
