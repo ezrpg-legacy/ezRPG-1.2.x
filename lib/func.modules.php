@@ -61,7 +61,7 @@ function loadModuleCache() {
   TRUE
  */
 function killModuleCache(){
-	$query = 'SELECT * FROM `<ezrpg>plugins` WHEE active = 1';
+	$query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
 	$cache_file = md5($query);
 	$cache = CACHE_DIR . $cache_file;
 	unlink( $cache );
@@ -145,4 +145,30 @@ function isModuleActive($name, $modules = 0){
 	return false;
 		
 	}
+	
+function setModuleActive($name, $modules = 0){
+	global $db;
+	
+	if($modules == 0)
+	   $modules = (array)loadModuleCache();
+	
+	$db->execute('UPDATE `<ezrpg>plugins` SET `second_installed`=1, `active`=1 WHERE `title`=?', array($name));
+	killModuleCache();
+	setMenuActive($name);
+	return true;
+}
+function setMenuActive($name){
+	global $db;
+	$modules = (array)loadModuleCache();
+	foreach ( $modules as $key => $item) {
+		if(in_array($name,(array) $item)){
+			$mod = (array) $item;
+			$mod_id = $mod['id'];
+			$db->execute('UPDATE `<ezrpg>menu` SET `active`=1 WHERE `module_id`=?', array($mod_id));
+			killMenuCache();
+			return true;
+		}
+	}
+	return false;
+}
 ?>

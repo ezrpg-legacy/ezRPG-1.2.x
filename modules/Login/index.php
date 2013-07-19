@@ -46,7 +46,7 @@ class Module_Login extends Base_Module
 					} else {
 						$new_password = createPassword($player->secret_key, $_POST['password']);
 						$this->db->execute('UPDATE `<ezrpg>players` SET `password`=?, `pass_method`=? WHERE `id`=?', array($new_password, $pass_method, $player->id));
-						killPlayerCache();
+						killPlayerCache($player->id);
 					}
 				} else {
 					$errors[] = 'Please check your username/password!';

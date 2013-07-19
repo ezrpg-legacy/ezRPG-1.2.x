@@ -90,6 +90,9 @@ class Settings
 				if ( DEBUG_MODE == 1 ) {
 				echo 'Loaded Settings Cache! <br />';
 				}
+			}else{
+				unlink(CACHE_DIR . $cache_file);
+				return $this->loadSettings();
 			}
 		} else {
 			$query1 = $this->db->execute($query);
