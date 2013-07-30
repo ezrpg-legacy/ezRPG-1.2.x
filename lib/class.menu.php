@@ -383,9 +383,14 @@ class Menu {
 		}
 		return $result;
 	}
+	
 	function isMenu($name) {
-		foreach ($this->menu as $item => $ival) {
-			if ($ival->name == $name) {
+		$query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
+		$array = $this->db->fetchAll($query, true);
+		foreach ( $array as $item => $ival) {
+			if ($ival['name'] == $name) {
+				return true;
+			}elseif ($ival['id'] == $name) {
 				return true;
 			}
 		}
