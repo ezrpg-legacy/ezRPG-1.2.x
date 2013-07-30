@@ -9,4 +9,4 @@ We couldn't locate the page you were looking for!
 </div>
 
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}
