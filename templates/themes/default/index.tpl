@@ -20,4 +20,4 @@ Welcome to ezRPG! Login now!
 </form>
 </div>
 
-{include file="footer.tpl"}
+{include file="file:[$THEME]footer.tpl"}
