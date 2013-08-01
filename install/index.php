@@ -1,4 +1,5 @@
 <?php
+
 define('IN_EZRPG', true);
 define('LIB_DIR', realpath("../lib"));
 define('CUR_DIR', realpath(dirname(__FILE__)));

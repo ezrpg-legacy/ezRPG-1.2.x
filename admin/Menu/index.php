@@ -181,15 +181,15 @@ class Admin_Menu extends Base_Module
             else
             {
                 $error = '0';
-				if ( !isClean($_POST['mname']) )
-                    $error = '1';//die('hisdf');
+                if ( !isClean($_POST['mname']) )
+                    $error = '1';
                 if ( !isClean($_POST['mtitle']) )
-                    $error = '2';//die('hisdf');
+                    $error = '2';
                 if ( !isClean($_POST['malt']) )
-                    if($_POST['malt'] == NULL)
-						$_POST['malt']= '';
-					else
-						$error = '3';
+                    if ( $_POST['malt'] == NULL )
+                        $_POST['malt'] = '';
+                    else
+                        $error = '3';
                 if ( !isClean($_POST['mpos']) )
                     $error = '4';
                 if ( !isClean($_POST['mpid']) )
@@ -197,11 +197,14 @@ class Admin_Menu extends Base_Module
                 if ( $error == '0' )
                 {
                     $this->menu->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'], $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive']);
-					killMenuCache();
-					header('Location: index.php?mod=Menu');
+                    killMenuCache();
+                    header('Location: index.php?mod=Menu');
                     exit;
-                }else{
-				}
+                }
+                else
+                {
+                    
+                }
             }
         }
         else

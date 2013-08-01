@@ -30,17 +30,22 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 //Set Default module and check if Module is selected in URI
 $default_mod = 'Index';
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod );
-if (isModuleActive($module_name)){
-	$module_name = $_GET['mod'];
-}else{
-	if (isset($_GET['act'])){
-		if ($_GET['act'] == 'Install')
-			$module_name = $_GET['mod'];
-		else 
-			$module_name = $default_mod;
-	}else{
-		$module_name = $default_mod;
-	}
+if ( isModuleActive($module_name) )
+{
+    $module_name = $_GET['mod'];
+}
+else
+{
+    if ( isset($_GET['act']) )
+    {
+        if ( $_GET['act'] == 'Install' )
+            $module_name = $_GET['mod'];
+        else
+            $module_name = $default_mod;
+    }else
+    {
+        $module_name = $default_mod;
+    }
 }
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
@@ -76,9 +81,9 @@ if ( DEBUG_MODE == 1 )
         $prev = $value;
     }
     echo "</table>";
-	$mem = memory_get_usage();
+    $mem = memory_get_usage();
     $unit = array( 'b', 'kb', 'mb', 'gb', 'tb', 'pb' );
-	 echo "Memory Used: " . round($mem / pow(1024, ($i = floor(log($mem, 1024)))), 2) . ' ' . $unit[$i]. "</pre>";
+    echo "Memory Used: " . round($mem / pow(1024, ($i = floor(log($mem, 1024)))), 2) . ' ' . $unit[$i] . "</pre>";
     //}
 }
 //echo "<pre>";
