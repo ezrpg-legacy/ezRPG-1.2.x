@@ -98,4 +98,11 @@ function loadMetaCache($kill = 0)
 	}
     return $array;
 }
+
+	function forcePrunePlayerCache()
+	{
+		global $db;
+		$db->execute('UPDATE <ezrpg>players SET force_cache = 1');
+		return true;
+	}
 ?>

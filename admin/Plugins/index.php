@@ -214,6 +214,7 @@ class Admin_Plugins extends Base_Module
 
                         $this->rrmdir($dir);
                         $results .= "You have successfully uploaded a plugin via the manager! <br />";
+						killModuleCache();
                         if ( !empty($plug->Plugin->AccessURL) )
                         {
                             $install_url = $this->settings->setting['general']['site_url']['value'];

@@ -117,7 +117,9 @@ function killPlayerCache($id){
 			email, rank, registered
 			FROM `<ezrpg>players` WHERE id = ' . $id;
 	$cache_file = md5($query);
-	unlink( CACHE_DIR . $cache_file );
+	if(file_exists(CACHE_DIR . $cache_file)){
+		unlink( CACHE_DIR . $cache_file );
+	}
 	echo 'Player Cache cleaned!';
 	loadMetaCache(1);
 	return true;
@@ -152,7 +154,29 @@ function setModuleActive($name, $modules = 0){
 	if($modules == 0)
 	   $modules = (array)loadModuleCache();
 	
-	$db->execute('UPDATE `<ezrpg>plugins` SET `second_installed`=1, `active`=1 WHERE `title`=?', array($name));
+	$db->execute('UPDATE `<ezrpg>plugins` SET `active`=1 WHERE `title`=?', array($name));
+	killModuleCache();
+	setMenuActive($name);
+	return true;
+}
+function setModuleDeactive($name, $modules = 0){
+	global $db;
+	
+	if($modules == 0)
+	   $modules = (array)loadModuleCache();
+	
+	$db->execute('UPDATE `<ezrpg>plugins` SET  `active`=0 WHERE `title`=?', array($name));
+	killModuleCache();
+	setMenuActive($name);
+	return true;
+}
+function secondaryInstallComplete($name, $modules = 0){
+	global $db;
+	
+	if($modules == 0)
+	   $modules = (array)loadModuleCache();
+	
+	$db->execute('UPDATE `<ezrpg>plugins` SET `second_installed`=1 WHERE `title`=?', array($name));
 	killModuleCache();
 	setMenuActive($name);
 	return true;

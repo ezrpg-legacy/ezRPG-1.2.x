@@ -1,4 +1,4 @@
-##ezRPG 1.2.0 
+##ezRPG 1.2.0.1 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,18 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0
+##Notes about 1.2.0.1
+####Pushed Aug 1 2013
 ```
 
-- Simple Cache System for Menus, Settings, Themes, and Smarty Templates.
-- Plugin System to upload, install, and uninstall. Plus plugin integration with Menus and Settings.
-- Theme System with templates built for specific themes, modules, etc.
-- Menu system allows modules to add and remove items from menu. Menu returns an array to be used in template headers, nav lists, etc. Must be parsed and styled accordingly.
-- Hooks are to be added so developers have more native locations to integrate with other than Header/Footer (AdminHeader/AdminFooter).
-- Simple stopwatch and percentage info added for Debug_mode to see which area takes the longest. Later better debug information should be used
-- PDO Driver added along with MySQLi
-- Smarty 3.0
-- More password encryptions supported
+- Extended Cache functions
+- Holes were found in Caches not being updated when they should
+- New cache hook added to check if we need to prune ALL player caches
 ```
 =====
 A modular game engine written in PHP.

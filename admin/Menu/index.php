@@ -180,24 +180,28 @@ class Admin_Menu extends Base_Module
             }
             else
             {
-                $insert = Array( );
-                $insert['uri'] = preg_replace("[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]", "", $_POST['muri']);
-                if ( !isClean($_POST['mname']) )
-                    $error = 1;
+                $error = '0';
+				if ( !isClean($_POST['mname']) )
+                    $error = '1';//die('hisdf');
                 if ( !isClean($_POST['mtitle']) )
-                    $error = 2;
+                    $error = '2';//die('hisdf');
                 if ( !isClean($_POST['malt']) )
-                    $error = 3;
+                    if($_POST['malt'] == NULL)
+						$_POST['malt']= '';
+					else
+						$error = '3';
                 if ( !isClean($_POST['mpos']) )
-                    $error = 4;
+                    $error = '4';
                 if ( !isClean($_POST['mpid']) )
-                    $error = 5;
-                if ( $error == 0 )
+                    $error = '5';
+                if ( $error == '0' )
                 {
                     $this->menu->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'], $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive']);
-                    header('Location: index.php?mod=Menu');
+					killMenuCache();
+					header('Location: index.php?mod=Menu');
                     exit;
-                }
+                }else{
+				}
             }
         }
         else

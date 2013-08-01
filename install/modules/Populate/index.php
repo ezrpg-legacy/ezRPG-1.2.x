@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `secret_key` text,
   `rank` smallint(5) unsigned NOT NULL default '1',
   `registered` int(11) unsigned default NULL,
+  `force_cache` int(11) unsigned default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
@@ -108,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>plugins` (
   `type` varchar(255) NOT NULL,
   `installed` int(2) NOT NULL,
   `pid` bigint(20) NOT NULL DEFAULT '0',
+  `second_installed` int(11) unsigned default '1',
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
