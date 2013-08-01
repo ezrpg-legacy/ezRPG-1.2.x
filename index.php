@@ -40,11 +40,14 @@ else
     {
         if ( $_GET['act'] == 'Install' )
             $module_name = $_GET['mod'];
-        else
+		else
             $module_name = $default_mod;
     }else
     {
-        $module_name = $default_mod;
+		if ( $_GET['mod'] == 'Register' )
+			$module_name = $_GET['mod'];
+        else
+			$module_name = $default_mod;
     }
 }
 //Init Hooks - Runs before Header

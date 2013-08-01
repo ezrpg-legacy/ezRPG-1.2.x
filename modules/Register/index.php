@@ -158,12 +158,13 @@ class Module_Register extends Base_Module
             $insert['email'] = $_POST['email'];
             $insert['secret_key'] = createKey(16);
             $insert['password'] = createPassword($insert['secret_key'], $_POST['password']);
+			global $settings;
+			$insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
             $insert['registered'] = time();
 
             global $hooks;
             //Run register hook
             $insert = $hooks->run_hooks('register', $insert);
-
             $new_player = $this->db->insert('<ezrpg>players', $insert);
             $this->db->execute("INSERT INTO <ezrpg>players_meta (pid) VALUES ('" . $new_player . "')");
             //Use $new_player to find their new ID number.
