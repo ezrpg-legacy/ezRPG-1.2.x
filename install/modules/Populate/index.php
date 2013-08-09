@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
         $db->execute($structure1);
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players_meta` (
   `kills` int(11) unsigned NOT NULL default '0',
   `deaths` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
         $db->execute($structure2);
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>player_log` (
   PRIMARY KEY  (`id`),
   KEY `player_log` (`player`,`time`),
   KEY `new_logs` (`player`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 QUERY;
         $db->execute($structure3);
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>menu` (
   `uri` varchar(255) NOT NULL,
   `pos` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
         $db->execute($structure4);
 
@@ -152,13 +152,14 @@ QUERY;
 
         $structure8 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>plugins_meta` (
-   `meta_id` int(11) NOT NULL,
+   `meta_id` int(11) NOT NULL AUTO_INCREMENT,
   `plug_id` int(11) NOT NULL,
   `version` float NOT NULL,
   `author` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `url` text NOT NULL,
-  `uninstall` varchar(255) NOT NULL
+  `uninstall` varchar(255) NOT NULL,
+   PRIMARY KEY  (`meta_id`),
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 
