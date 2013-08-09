@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>plugins_meta` (
   `description` text NOT NULL,
   `url` text NOT NULL,
   `uninstall` varchar(255) NOT NULL,
-   PRIMARY KEY  (`meta_id`),
+   PRIMARY KEY  (`meta_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 
