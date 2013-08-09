@@ -44,12 +44,18 @@ else
             $module_name = $default_mod;
     }else
     {
-		if ( $_GET['mod'] == 'Register' )
-			$module_name = $_GET['mod'];
-        else
+		if ( isset($_GET['mod']) )
+		{
+			if ( $_GET['mod'] == 'Register' )
+				$module_name = $_GET['mod'];
+			else
+				$module_name = $default_mod;
+		}else
+		{
 			$module_name = $default_mod;
-    }
-}
+		}
+	}
+}	
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
 $debugTimer['Init-hooks Loaded:'] = microtime(1);
