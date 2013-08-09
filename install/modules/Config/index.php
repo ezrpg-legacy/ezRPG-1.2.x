@@ -92,7 +92,7 @@ define('SECRET_KEY', '{$secret_key}');
   DEBUG_MODE - Turn on to show database errors and debug information.
 */
 define('DB_PREFIX', '{$dbprefix}');
-define('VERSION', '1.2.0.3');
+define('VERSION', '1.2.0.4');
 define('SHOW_ERRORS', 0);
 define('DEBUG_MODE', 0);
 ?>
@@ -157,7 +157,7 @@ define('SECRET_KEY', '{$secret_key}');<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
 define('DB_PREFIX', '{$dbprefix}');<br />
-define('VERSION', '1.2.0.3');<br />
+define('VERSION', '1.2.0.4');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";

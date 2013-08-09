@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.3 
+##ezRPG 1.2.0.4 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,13 +8,12 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.3
+##Notes about 1.2.0.4
 ####Pushed Aug 9 2013
 ```
 
-- Fixed Installer Issues with Plugin_Meta
-- Updated a check for isset($_GET['mod'])
-- Moved template files for each provided module to it's own folder.
+- Fixed Plugins.XML issue with menus to allow multiple menu items
+
 ```
 =====
 A modular game engine written in PHP.
