@@ -25,7 +25,7 @@ class Install_Index extends InstallerFactory
             echo "<strong>The following files need to be writable</strong><br />\n<ul>\n";
             foreach ( $files as $file )
             {
-                echo $file;
+                echo "$file <br />";
             }
             echo "\n</ul><br />\n";
             echo "<a href=\"index.php\">Click here to try again.</a>";
