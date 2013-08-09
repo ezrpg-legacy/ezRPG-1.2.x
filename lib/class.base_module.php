@@ -142,7 +142,7 @@ abstract class Base_Module
             }
             else
             {
-                $this->setMessage($msg, 'FAIL');
+                $this->setMessage('Could not find page you requested<br />'.$tpl, 'FAIL');
                 header('Location: index.php?mod=Error404');
                 exit;
             }
