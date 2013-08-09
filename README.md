@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.1 
+##ezRPG 1.2.0.3 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,13 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.1
-####Pushed Aug 1 2013
+##Notes about 1.2.0.3
+####Pushed Aug 9 2013
 ```
 
-- Extended Cache functions
-- Holes were found in Caches not being updated when they should
-- New cache hook added to check if we need to prune ALL player caches
+- Fixed Installer Issues with Plugin_Meta
+- Updated a check for isset($_GET['mod'])
+- Moved template files for each provided module to it's own folder.
 ```
 =====
 A modular game engine written in PHP.
