@@ -25,7 +25,7 @@ class Module_City extends Base_Module
         $this->menu->get_menus("UserMenu", $args);
         $this->menu->get_menus("WorldMenu", $args);
         $this->menu->get_menus("City", $args);
-        $this->loadView('city.tpl');
+        $this->loadView('city.tpl', 'City');
     }
 
 }

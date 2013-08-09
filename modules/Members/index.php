@@ -33,7 +33,7 @@ class Module_Members extends Base_Module
         $this->tpl->assign('nextpage', ++$page);
         $this->tpl->assign('prevpage', $prevpage);
         $this->tpl->assign('members', $members);
-        $this->loadView('members.tpl');
+        $this->loadView('members.tpl', 'Members');
     }
 
 }

@@ -26,7 +26,7 @@ class Module_AccountSettings extends Base_Module
         }
         else
         {
-            $this->loadView('account_settings.tpl');
+            $this->loadView('account_settings.tpl', 'Account_Settings');
         }
     }
 

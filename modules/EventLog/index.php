@@ -34,7 +34,7 @@ class Module_EventLog extends Base_Module
             $this->db->execute('UPDATE `<ezrpg>player_log` SET `status`=1 WHERE `player`=?', array( $this->player->id ));
 
             $this->tpl->assign('logs', $logs);
-            $this->loadView('log.tpl');
+            $this->loadView('log.tpl', 'Log');
         }
     }
 

@@ -19,11 +19,11 @@ class Module_Index extends Base_Module
     {
         if ( LOGGED_IN )
         {
-            $this->loadView('home.tpl');
+            $this->loadView('home.tpl', 'Home');
         }
         else
         {
-            $this->loadView('index.tpl');
+            $this->loadView('index.tpl', 'Index');
         }
     }
 

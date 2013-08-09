@@ -53,7 +53,7 @@ class Module_Register extends Base_Module
         if ( !empty($_GET['email2']) )
             $this->tpl->assign('GET_EMAIL2', $_GET['email2']);
 
-        $this->loadView('register.tpl');
+        $this->loadView('register.tpl', 'Register');
     }
 
     /*
