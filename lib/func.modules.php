@@ -76,7 +76,7 @@ function killModuleCache()
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;
     unlink($cache);
-    echo 'Module Cache cleaned!';
+    echo 'Module Cache cleaned!  <br />';
     return true;
 }
 
@@ -95,7 +95,7 @@ function killMenuCache()
     $query = 'SELECT * FROM `<ezrpg>menu` WHERE active = 1 ORDER BY `pos`';
     $cache_file = md5($query);
     unlink(CACHE_DIR . $cache_file);
-    echo 'Menu Cache cleaned!';
+    echo 'Menu Cache cleaned!  <br />';
     return true;
 }
 
@@ -114,7 +114,7 @@ function killSettingsCache()
     $query = 'SELECT * FROM `<ezrpg>settings`';
     $cache_file = md5($query);
     unlink(CACHE_DIR . $cache_file);
-    echo 'Settings Cache cleaned!';
+    echo 'Settings Cache cleaned!  <br />';
     return true;
 }
 
@@ -138,7 +138,7 @@ function killPlayerCache($id)
     {
         unlink(CACHE_DIR . $cache_file);
     }
-    echo 'Player Cache cleaned!';
+    echo 'Player Cache cleaned!  <br />';
     loadMetaCache(1);
     return true;
 }
