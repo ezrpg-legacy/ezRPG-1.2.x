@@ -7,7 +7,8 @@ class Install_CreateAdmin extends InstallerFactory
     {
         if ( !isset($_POST['submit']) )
         {
-            $siteurl = "http://localhost/ezrpg/";
+			$sitefolder = strtok($_SERVER['PHP_SELF'], 'install');
+            $siteurl = 'http://' . $_SERVER['HTTP_HOST'] . $sitefolder;
             $username = '';
             $email = '';
         }
