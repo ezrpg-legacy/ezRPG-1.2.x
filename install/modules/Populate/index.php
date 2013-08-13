@@ -221,6 +221,7 @@ INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `d
 QUERY;
 
         $db->execute($data4);
+        killSettingsCache();
         $this->header();
         echo "<h2>The database has been populated.</h2>\n";
         echo "<a href=\"index.php?step=CreateAdmin\">Continue to next step</a>";
