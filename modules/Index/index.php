@@ -27,6 +27,10 @@ class Module_Index extends Base_Module
         }
     }
 
+	public function test()
+	{
+		echo 'test';
+	}
 }
 
 ?>

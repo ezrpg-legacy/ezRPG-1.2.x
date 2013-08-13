@@ -108,7 +108,7 @@ QUERY;
 CREATE TABLE IF NOT EXISTS `<ezrpg>plugins` (
    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
   `filename` text NOT NULL,
   `type` varchar(255) NOT NULL,
   `installed` int(2) NOT NULL,
@@ -221,7 +221,7 @@ INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `d
 QUERY;
 
         $db->execute($data4);
-        killSettingsCache();
+		killSettingsCache();
         $this->header();
         echo "<h2>The database has been populated.</h2>\n";
         echo "<a href=\"index.php?step=CreateAdmin\">Continue to next step</a>";

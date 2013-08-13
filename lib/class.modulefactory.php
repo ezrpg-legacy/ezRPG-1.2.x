@@ -85,7 +85,7 @@ class ModuleFactory
             return new Admin_Index($db, $tpl, $player, $menu, $settings);
         }
     }
-
+	
 }
 
 ?>

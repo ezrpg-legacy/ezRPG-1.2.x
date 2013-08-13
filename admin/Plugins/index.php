@@ -218,22 +218,19 @@ class Admin_Plugins extends Base_Module
                         $this->rrmdir($dir);
                         $results .= "You have successfully uploaded a plugin via the manager! <br />";
                         killModuleCache();
+						 if ( !empty($plug->Plugin->ExtendedInstall->InstallArg) )
+                            {
+								$mod = ModuleFactory::Factory($this->db, $this->tpl, $this->player, $plug->Plugin->Name, $this->menu, $this->settings);
+                                $install_func = (string) $plug->Plugin->ExtendedInstall->InstallArg;
+                                $mod->$install_func();
+							}
+						$this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=1 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
+						$this->db->execute('UPDATE <ezrpg>menu SET active=1 WHERE module_id=' . $p_m['plug_id']);
+
                         if ( !empty($plug->Plugin->AccessURL) )
                         {
-                            $install_url = $this->settings->setting['general']['site_url']['value'];
-
-                            if ( !empty($plug->Plugin->ExtendedInstall->InstallArg) )
-                            {
-                                $this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=0 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
-                                $install_url .= (string) $plug->Plugin->ExtendedInstall->InstallArg;
-                                $results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Install Plugin' /></a>";
-                            }
-                            else
-                            {
-                                $this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=1 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
-                                $this->db->execute('UPDATE <ezrpg>menu SET active=1 WHERE module_id=' . $p_m['plug_id']);
-                                $results .= "<a href='" . $install_url . "'><input name='install' type='submit' class='button' value='Go To Plugin' /></a>";
-                            }
+                            $mod_url = $this->settings->setting['general']['site_url']['value'];
+							$mod_url .= (string) $plug->Plugin->AccessURL;
                         }
                         $results .= "<a href='index.php?mod=Plugins'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
                     }
@@ -272,40 +269,63 @@ class Admin_Plugins extends Base_Module
         $result2 = $this->db->fetch($query);
         $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
         $result = $this->db->fetchAll($query_mod);
-        foreach ( $result as $file )
-        {
-            switch ( $file->type )
-            {
-                case 'module':
-                    $this->rrmdir(MOD_DIR . $file->title);
-                    break;
-                case 'templates':
-                    $this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
-                    break;
-                case 'hook':
-                    $this->rrmdir(HOOKS_DIR . $file->filename);
-                    break;
-            }
-        }
-        $this->db->execute('DELETE FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
-        $this->db->execute('DELETE FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
-        $this->db->execute('DELETE FROM <ezrpg>menu WHERE module_id=' . $id);
-        killMenuCache();
 		if ( $result2 )
         {
-            $url = $this->settings->setting['general']['site_url']['value'];
-            $this->setMessage('Module has been removed from DB. Please finish the uninstall process');
-            header('Location: ' . $url . $result2->uninstall);
-            exit;
+            $mod = ModuleFactory::Factory($this->db, $this->tpl, $this->player, $result[0]->title, $this->menu, $this->settings); 
+            $uninstall_func = (string) $result2->uninstall;
+			if($mod->$uninstall_func() == true)
+			{
+				
+				$complete = $this->finish_removal($id, $result);
+			}else{
+				$this->setMessage('Uninstall Failed', 'FAIL');
+				header('Location: index.php?mod=Plugins');
+			}
         }
         else
         {
-            $url = $this->settings->setting['general']['site_url']['value'];
-            $this->setMessage('Module has been removed from DB. Please finish the uninstall process');
-            header('Location: ' . $url);
-            exit;
+            $complete = $this->finish_removal($id, $result);
         }
+		if ($complete == true)
+		{
+			$this->setMessage('Uninstall Complete', 'GOOD');
+			header('Location: index.php?mod=Plugins');
+		}else{
+			$this->setMessage('Uninstall Failed', 'FAIL');
+			header('Location: index.php?mod=Plugins');
+		}
     }
+	
+	private function finish_removal($id, $module)
+	{
+		try
+		{
+			foreach ( $result as $file )
+			{
+				switch ( $file->type )
+				{
+					case 'module':
+						$this->rrmdir(MOD_DIR . $file->title);
+						break;
+					case 'templates':
+						$this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
+						break;
+					case 'hook':
+						$this->rrmdir(HOOKS_DIR . $file->filename);
+						break;
+				}
+			}
+			$this->db->execute('DELETE FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
+			$this->db->execute('DELETE FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
+			$this->db->execute('DELETE FROM <ezrpg>menu WHERE module_id=' . $id);
+			killMenuCache();
+			return true;
+		}catch (Exception $e)
+		{
+			$this->setMessage($e, 'FAIL');
+			return false;
+		}
+	}
 
     private function view_modules($id = 0)
     {

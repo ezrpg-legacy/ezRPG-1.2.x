@@ -113,9 +113,12 @@ function killSettingsCache()
 {
     $query = 'SELECT * FROM `<ezrpg>settings`';
     $cache_file = md5($query);
-    unlink(CACHE_DIR . $cache_file);
-    echo 'Settings Cache cleaned!  <br />';
-    return true;
+	if(file_exists( CACHE_DIR . $cache_file ) )
+	{
+	    unlink(CACHE_DIR . $cache_file);
+		echo 'Settings Cache cleaned!  <br />';
+    }
+	return true;
 }
 
 /*

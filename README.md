@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.6 
+##ezRPG 1.2.0.7 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,12 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.6
+##Notes about 1.2.0.7
 ####Pushed Aug 13 2013
 ```
 
-- Fixed Installer issue Caches
-- Added a URL 'guessor' to 'guess' the siteurl
+- Fixed the Module Installer to utilize ModuleFactory instead of reloading a page.
+- Laid ground work for future router system
+- Cleaned up current 'Routing' methods
 
 ```
 =====
