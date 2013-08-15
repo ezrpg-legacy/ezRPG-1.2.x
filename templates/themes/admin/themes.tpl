@@ -1,11 +1,6 @@
 {include file="file:[$THEME]header.tpl" TITLE="Themes Admin"}
 
 <!-- START OF ADMINCP_PLUGINS_ROW-->
-{if $error != 0}
-<b>You have an error with a code of {$error}:</b>
-<b>{$errormsg}</b>
-<br />
-{/if}
 <div>
 <table width="100%" border="1px">
   <tbody>

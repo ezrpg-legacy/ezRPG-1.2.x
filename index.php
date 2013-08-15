@@ -29,19 +29,12 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 
 //Set Default module and check if Module is selected in URI
 $default_mod = 'Index';
-$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod );
-if (isModuleActive($module_name)){
-	$module_name = $_GET['mod'];
-}else{
-	if (isset($_GET['act'])){
-		if ($_GET['act'] == 'Install')
-			$module_name = $_GET['mod'];
-		else 
-			$module_name = $default_mod;
-	}else{
-		$module_name = $default_mod;
-	}
-}
+$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod'])) ? $_GET['mod'] : $default_mod );
+/*
+$router = new Router($db, $player);
+$routes = $router->getRoutes();
+*/
+
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
 $debugTimer['Init-hooks Loaded:'] = microtime(1);
@@ -52,7 +45,26 @@ $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
 $module = ModuleFactory::factory($db, $tpl, $player, $module_name, $menu, $settings);
-$module->start();
+if ( isset($_GET['act']))
+{
+	/*if ( in_array($_GET['act'], $router->reservedActions))
+	{
+		$module->$_GET['act']();
+	}else{*/
+		if (method_exists($module, $_GET['act']))
+		{
+			$reflection = new ReflectionMethod($module, $_GET['act']);
+			if($reflection->isPublic())
+				$module->$_GET['act']();
+			else
+				$module->start();
+		}else{
+			$module->start();
+		}
+	//}
+}else{
+	$module->start();
+}
 $debugTimer[$module_name . 'Loaded'] = microtime(1);
 
 //Footer hooks
@@ -62,7 +74,7 @@ $debugTimer['footer-hooks'] = microtime(1);
 // DEBUG_INFO with Timer @since 1.2RC
 if ( DEBUG_MODE == 1 )
 {
-//if ($player->rank > 5 ) {
+if ($player->rank > 5 ) {
     echo "<pre><table border=1><tr><td>name</td><td>Total Time</td><td>Step Time</td><td>%</td></tr>";
     reset($debugTimer);
     $start = $prev = current($debugTimer);
@@ -76,13 +88,9 @@ if ( DEBUG_MODE == 1 )
         $prev = $value;
     }
     echo "</table>";
-	$mem = memory_get_usage();
+    $mem = memory_get_usage();
     $unit = array( 'b', 'kb', 'mb', 'gb', 'tb', 'pb' );
-	 echo "Memory Used: " . round($mem / pow(1024, ($i = floor(log($mem, 1024)))), 2) . ' ' . $unit[$i]. "</pre>";
-    //}
+    echo "Memory Used: " . round($mem / pow(1024, ($i = floor(log($mem, 1024)))), 2) . ' ' . $unit[$i] . "</pre>";
+    }
 }
-//echo "<pre>";
-//print_r(loadModuleCache());
-//echo "</pre>";
-//echo (isModuleActive('Bank') ? 'Yes' : 'No');
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -8,7 +9,7 @@ defined('IN_EZRPG') or exit;
 
   See Also:
   - <Module_EventLog>
-*/
+ */
 
 /*
   Function: addLog
@@ -25,13 +26,14 @@ defined('IN_EZRPG') or exit;
   Example Usage:
   > $message = 'This is an example log message!';
   > $new_log = addLog($player->id, $message, $db);
-*/
+ */
+
 function addLog($player, $msg, &$db)
 {
     $insert['player'] = $player;
     $insert['time'] = time();
     $insert['message'] = $msg;
-	
+
     return $db->insert('<ezrpg>player_log', $insert);
 }
 
@@ -48,10 +50,12 @@ function addLog($player, $msg, &$db)
 
   Example Usage:
   > echo 'New Log Events: ', checkLog($player->id, $db);
-*/
+ */
+
 function checkLog($player, &$db)
 {
-    $result = $db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0', array(intval($player)));
+    $result = $db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0', array( intval($player) ));
     return $result->count;
 }
+
 ?>

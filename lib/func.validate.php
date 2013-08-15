@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('IN_EZRPG'))
+if ( !defined('IN_EZRPG') )
     exit;
 
 /*
@@ -19,7 +19,8 @@ if (!defined('IN_EZRPG'))
   Boolean - true or false
  */
 
-function isUsername($username) {
+function isUsername($username)
+{
     return (preg_match("/^[a-zA-Z0-9_]{4,16}$/", $username));
 }
 
@@ -34,7 +35,8 @@ function isUsername($username) {
   Boolean - true or false
  */
 
-function isPassword($password) {
+function isPassword($password)
+{
     return (preg_match("/[a-zA-Z0-9\W]{6}+/", $password));
 }
 
@@ -49,7 +51,8 @@ function isPassword($password) {
   Boolean - true or false
  */
 
-function isEmail($email) {
+function isEmail($email)
+{
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
@@ -63,7 +66,10 @@ function isEmail($email) {
   Returns:
   Boolean - true or false
  */
-function isClean($input) {
-	return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+
+function isClean($input)
+{
+    return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
 }
+
 ?>

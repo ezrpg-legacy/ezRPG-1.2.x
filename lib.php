@@ -38,6 +38,7 @@ $clas = array(
     'menu',
     'settings',
     'themes'
+	//,'router'
 );
 
 foreach ( $clas as $item )
