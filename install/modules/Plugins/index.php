@@ -89,7 +89,8 @@ INSERT INTO `<ezrpg>plugins` (`id`, `title`, `active`, `filename`, `type`, `inst
 (5, 'AccountSettings', 1, '', 'module', 1, 1),
 (6, 'Members', 1, '', 'module', 1, 1),
 (7, 'Logout', 1, '', 'module', 1, 1),
-(8, 'Register', 1, '', 'module', 1, 1);
+(8, 'Register', 1, '', 'module', 1, 1),
+(9, 'StatPoints', 1, '', 'module', 1, 1);
 QUERY;
 
         $db->execute($data2);
@@ -103,7 +104,8 @@ INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `d
 (5, 6, 1.2, 'ezRPGTeam', 'Members - ezRPGCore', '', ''),
 (6, 7, 1.2, 'ezRPGTeam', 'Logout Module - ezRPGCore', '', ''),
 (7, 1, 1.2, 'ezRPGTeam', 'ezRPG Core. Disabling this will disable ALL core modules. Deleting with completely REMOVE ALL core modules', '', ''),
-(8, 8, 1.2, 'ezRPGTeam', 'Register Module - ezRPGCore', '', '');
+(8, 8, 1.2, 'ezRPGTeam', 'Register Module - ezRPGCore', '', ''),
+(9, 8, 1.2, 'ezRPGTeam', 'StatPoints Module - ezRPGCore', '', '');
 QUERY;
 
         $db->execute($data3);
