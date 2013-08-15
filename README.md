@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.7 
+##ezRPG 1.2.0.8 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,13 +8,15 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.7
-####Pushed Aug 13 2013
+##Notes about 1.2.0.8
+####Pushed Aug 15 2013
 ```
 
-- Fixed the Module Installer to utilize ModuleFactory instead of reloading a page.
-- Laid ground work for future router system
-- Cleaned up current 'Routing' methods
+- Fixed Registration Bug where messages weren't being shown due to session_destory and not being started.
+- Fixed an issue with the Themes Class that didn't load the themes all the time. It was very buggy. Should be more stable.
+- Started to lay ground work for an Update module in Admin panel. Just skeleton created.
+- Fixed issue with Menu class not creating Logout menu for non-admins. Stupid error.
+- Separated Modules Install from the Populate Module in the initial installer.
 
 ```
 =====

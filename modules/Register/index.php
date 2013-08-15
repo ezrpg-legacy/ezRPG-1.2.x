@@ -147,9 +147,10 @@ class Module_Register extends Base_Module
         //verify_code must NOT be used again.
         session_unset();
         session_destroy();
+		session_start();
 
-
-        if ( $error == 0 )
+		
+        if ( empty($errors) )
         {
             unset($insert);
             $insert = Array( );

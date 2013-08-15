@@ -43,15 +43,15 @@
 <strong>Level</strong>: {$player->level}<br />
 <strong>Gold</strong>: {$player->money}<br />
 <div class="bar">
-	<div class="inner" style="width: {$player->exp}/{$player->max_exp}%"></div>
+	<div class="inner" style="width: {{$player->exp}/{$player->max_exp}*100}%"></div>
 	<div class="text">EXP: {$player->exp} / {$player->max_exp}</div>
 </div>
 <div class="bar">
-	<div class="inner" style="width: {$player->hp}/{$player->max_hp}%"></div>
+	<div class="inner" style="width: {{$player->hp}/{$player->max_hp}*100}%"></div>
 	<div class="text">HP: {$player->hp} / {$player->max_hp}</div>
 </div>
 <div class="bar">
-	<div class="inner" style="width: {$player->energy}/{$player->max_energy}%"></div>
+	<div class="inner" style="width: {{$player->energy}/{$player->max_energy}*100}%"></div>
 	<div class="text">Energy: {$player->energy} / {$player->max_energy}</div>
 </div>
 

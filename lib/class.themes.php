@@ -43,12 +43,12 @@ class Themes
       Function that checks for a Cache file and loads/builds it.
      */
 
-    public function loadCache()
+    public function loadCache($id = null)
     {
         $query = 'SELECT * FROM <ezrpg>themes';
         $cache_file = md5($query);
 
-        if ( file_exists(CACHE_DIR . $cache_file) )
+        if ( file_exists(CACHE_DIR . $cache_file) || !is_null($id) )
         {
             if ( filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24 )
             {
@@ -96,9 +96,10 @@ class Themes
         {
             if ( $entry != '.' && $entry != '..' && $entry != 'index.php' )
             {
+				$entry_dir = THEME_DIR . 'themes/' . $entry;
+				$entry_dir2 = THEME_DIR . 'modules/' . $entry;
                 if ( !array_key_exists($entry, $templates) && !array_key_exists($entry, $this->tpl->getTemplateDir()) )
                 {
-                    $entry_dir = THEME_DIR . 'themes/' . $entry;
                     if ( is_dir($entry_dir) )
                     {
                         $this->tpl->addTemplateDir(array(
@@ -106,9 +107,8 @@ class Themes
                         ));
                         $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('" . $entry . "', '" . $entry_dir . "', 0)");
                         unlink(CACHE_DIR . $cache_file);
-                        $this->loadCache();
+                        $this->loadCache(1);
                     }
-                    $entry_dir2 = THEME_DIR . 'modules/' . $entry;
                     if ( is_dir($entry_dir2) )
                     {
                         $this->tpl->addTemplateDir(array(
@@ -116,45 +116,38 @@ class Themes
                         ));
                         $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir2 . "', 0, 1)");
                         unlink(CACHE_DIR . $cache_file);
-                        $this->loadCache();
+                        $this->loadCache(1);
                     }
                 }
-                else
+                elseif(!array_key_exists($entry, $templates) && array_key_exists($entry, $this->tpl->getTemplateDir()))
                 {
-                    $entry_dir = THEME_DIR . 'themes/' . $entry;
-                    if ( is_dir($entry_dir) )
+                    if ( is_dir($entry_dir) || is_dir($entry_dir2) )
                     {
-                        if ( !array_key_exists($entry, $this->tpl->getTemplateDir()) )
-                        {
-                            $this->tpl->addTemplateDir(array(
-                                $entry => $entry_dir,
-                            ));
-                        }
-                        elseif ( !array_key_exists($entry, $templates) )
-                        {
-                            $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('" . $entry . "', '" . $entry_dir . "', 0)");
-                            unlink(CACHE_DIR . $cache_file);
-                            $this->loadCache();
-                        }
-                    }
-                    $entry_dir2 = THEME_DIR . 'modules/' . $entry;
-                    if ( is_dir($entry_dir2) )
-                    {
-                        if ( !array_key_exists($entry, $this->tpl->getTemplateDir()) )
-                        {
-                            $this->tpl->addTemplateDir(array(
-                                $entry => $entry_dir2,
-                            ));
-                        }
-                        elseif ( !array_key_exists($entry, $templates) )
-                        {
-                            $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir2 . "', 0, 1)");
-                            unlink(CACHE_DIR . $cache_file);
-                            $this->loadCache();
-                        }
-                    }
-                }
-            }
+                        $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir . "', 0, ". (is_dir($entry_dir) ? 0 : 1) . ")");
+                        unlink(CACHE_DIR . $cache_file);
+                        $this->loadCache(1);
+                    }else{
+						$this->db->execute("DELETE FROM <ezrpg>themes WHERE name = '" . $entry . "'");
+                        unlink(CACHE_DIR . $cache_file);
+						echo 'deleted theme ' . $entry;
+                        $this->loadCache(1);
+					}
+                }elseif(array_key_exists($entry, $templates) && !array_key_exists($entry, $this->tpl->getTemplateDir()))
+				{ 
+					if ( is_dir($entry_dir) )
+                    { 
+						$this->tpl->addTemplateDir(array(
+							$entry => $entry_dir,
+						));
+					}
+					if ( is_dir($entry_dir2) )
+                    { 
+						$this->tpl->addTemplateDir(array(
+							$entry => $entry_dir2,
+						));
+					}
+				}
+            }//print_r($templates);
         }
     }
 
