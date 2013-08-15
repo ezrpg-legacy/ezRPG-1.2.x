@@ -1,4 +1,5 @@
 <?php
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -14,15 +15,16 @@ defined('IN_EZRPG') or exit;
   See Also:
   - <DbFactory>
   - <Error Codes>
-*/
+ */
+
 class DbException extends Exception
 {
     /*
       Function: __toString
       Formats and returns the error file, line and message.
-	
+
       Uses die() to print the formatted error message and to stop further execution of any code.
-	
+
       Example Usage:
       > try
       > {
@@ -32,24 +34,25 @@ class DbException extends Exception
       > {
       >     $e->__toString(); //Display the error page. This will stop further execution of the script.
       > }
-    */
+     */
+
     public function __toString()
     {
-        switch($this->code)
+        switch ( $this->code )
         {
-          case DRIVER_ERROR: //Could not connect to server
-              $this->message = 'Could not find driver: ' . $this->message;
-              break;
-          case SERVER_ERROR: //Could not connect to server
-              $this->message = 'Could not connect to database server!';
-              break;
-          case DATABASE_ERROR: //Could not select database
-              $this->message = 'Could not select database: ' . $this->message;
-              break;
-          case SQL_ERROR: //SQL error
-              break;
-          default:
-              break;
+            case DRIVER_ERROR: //Could not connect to server
+                $this->message = 'Could not find driver: ' . $this->message;
+                break;
+            case SERVER_ERROR: //Could not connect to server
+                $this->message = 'Could not connect to database server!';
+                break;
+            case DATABASE_ERROR: //Could not select database
+                $this->message = 'Could not select database: ' . $this->message;
+                break;
+            case SQL_ERROR: //SQL error
+                break;
+            default:
+                break;
         }
 
         $trace = nl2br($this->getTraceAsString());
@@ -71,7 +74,7 @@ class DbException extends Exception
 OUT;
 
         //Only show line number and file if debug mode is on
-        if (DEBUG_MODE)
+        if ( DEBUG_MODE )
         {
             $ret .= <<<OUT
 <strong>File</strong>: $this->file<br />
@@ -86,7 +89,7 @@ $this->message
 OUT;
 
         //Only show stack trace if debug mode is on
-        if (DEBUG_MODE)
+        if ( DEBUG_MODE )
         {
             $ret .= <<<OUT
 <br /><br />
@@ -99,8 +102,10 @@ OUT;
 </p></div>
 </body></html>
 OUT;
-		
+
         die($ret);
     }
+
 }
+
 ?>

@@ -82,7 +82,7 @@ class Admin_Settings extends Base_Module
             $update['value'] = $val;
             $this->db->update("<ezrpg>settings", $update, 'id=' . $item);
         }
-		killSettingsCache();
+        killSettingsCache();
         $this->list_settings();
     }
 

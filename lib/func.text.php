@@ -1,11 +1,12 @@
 <?php
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
 /*
   Title: Text Functions
   This file contains functions that deal with manipulating pieces of text.
-*/
+ */
 
 /*
   Function: shorten
@@ -25,13 +26,14 @@ defined('IN_EZRPG') or exit;
   > $new_str = shorten($str, 15);
   > echo $new_str;
   > //Outputs: 'blablabla long...'
-*/
+ */
+
 function shorten($text, $length = 50)
-{	
-    if (strlen($text) > $length)
+{
+    if ( strlen($text) > $length )
     {
         $ret = '';
-        while (substr($text, $length, 1) != ' ')
+        while ( substr($text, $length, 1) != ' ' )
         {
             --$length;
         }
@@ -44,4 +46,5 @@ function shorten($text, $length = 50)
         return $text;
     }
 }
+
 ?>

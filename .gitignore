@@ -3,7 +3,9 @@
 /templates/.cache/
 /templates/.config/
 /templates/cache/
+/admin/Plugins/temp/*
 
 config.php
-/cache/*.php
+/cache/*
 /cache/templates/*.php
+install/lock

@@ -5,9 +5,7 @@
 	{foreach from=$MENU_AdminModules item=menu key=menukey} 
 	<li><a href={$menu}>{$menukey}</a></li>
 	{/foreach}
-	</ul>
-<p>
-If you install extra admin modules, edit <em>smarty/templates/admin/index.tpl</em> to add links above.
-</p>
+</ul>
+
 
 {include file="file:[$THEME]footer.tpl"}
