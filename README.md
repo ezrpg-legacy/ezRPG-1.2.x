@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.8 
+##ezRPG 1.2.0.9 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,15 +8,14 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.8
+##Notes about 1.2.0.9
 ####Pushed Aug 15 2013
 ```
 
-- Fixed Registration Bug where messages weren't being shown due to session_destory and not being started.
-- Fixed an issue with the Themes Class that didn't load the themes all the time. It was very buggy. Should be more stable.
-- Started to lay ground work for an Update module in Admin panel. Just skeleton created.
-- Fixed issue with Menu class not creating Logout menu for non-admins. Stupid error.
-- Separated Modules Install from the Populate Module in the initial installer.
+- Fixed Validation issues for isUsername()
+- Added an isAdmin() for T/F checks on player when redirection isn't needed
+- Added further debug message to Plugin Installer for unsupported filetypes
+- Added more filetypes that relate to .zips
 
 ```
 =====

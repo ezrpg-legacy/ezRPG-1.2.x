@@ -96,7 +96,16 @@ class Admin_Plugins extends Base_Module
             }
             else
             {
-                if ( $_FILES["file"]["type"] == "application/x-zip-compressed" )
+				$type = $_FILES["file"]["type"];
+				$okay = false;
+				$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+				foreach($accepted_types as $mime_type) {
+					if($mime_type == $type) {
+						$okay = true;
+						break;
+					} 
+				}
+                if ( $okay )
                 {
                     $zip = new PclZip($_FILES["file"]["tmp_name"]);
                     $ziptempdir = substr(uniqid('', true), -5);
@@ -245,7 +254,9 @@ class Admin_Plugins extends Base_Module
                 }
                 else
                 {
-                    $results = "Uploaded Unsupported filetype. Only upload .zips at this time.<br>";
+					$results = "Filetype detected: " . $_FILES['file']['type'] . '<br />';
+                    $results .= "Uploaded Unsupported filetype. Only upload .zips at this time.<br />";
+					$results .= "If you feel that this message is in error, please ask for support from ezRPGProject.net!<br />";
                     $results .= "<a href='index.php?mod=Plugins'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
                 }
                 $this->tpl->assign("RESULTS", $results);
