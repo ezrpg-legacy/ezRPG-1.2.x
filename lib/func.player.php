@@ -61,6 +61,32 @@ function requireAdmin($player = 0)
 }
 
 /*
+  Function: isAdmin
+  Checks if the player is an admin. Returns a boolean instead of redirect.
+
+  Parameters:
+  $player - A player object.
+  
+  Return:
+  boolean (TRUE / FALSE)
+  
+  Example Usage:
+  Just call the isAdmin() function if you require the user to be an admin.
+
+  Use isAdmin if you need to just check for admin but don't need to redirect.
+  Use requireAdmin if the page is ONLY for admins and you need to redirect out.
+ */
+
+function isAdmin($player = 0)
+{
+    if ( $player->rank < 5 )
+    {
+        return false;
+    }
+	return true;
+}
+
+/*
   Function: loadMetaCache
   Checks for and loads the Players_Meta cache file.
 
