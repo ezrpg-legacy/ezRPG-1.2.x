@@ -142,7 +142,7 @@ function killPlayerCache($id)
         unlink(CACHE_DIR . $cache_file);
     }
     echo 'Player Cache cleaned!  <br />';
-    loadMetaCache(1);
+    loadMetaCache(1, $id);
     return true;
 }
 

@@ -13,8 +13,8 @@ function hook_player_cache(&$db, &$tpl, &$player, $args = 0)
     {
         foreach ( $query as $item )
         {
-            killPlayerCache($item);
-            $db->execute('UPDATE <ezrpg>players SET force_cache = 0 WHERE id=?', array( $item ));
+            killPlayerCache($item->id);
+            $db->execute('UPDATE <ezrpg>players SET force_cache = 0 WHERE id=?', array( $item->id ));
         }
     }
     return $args;
