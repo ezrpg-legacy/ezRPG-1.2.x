@@ -21,7 +21,7 @@ if ( !defined('IN_EZRPG') )
 
 function isUsername($username)
 {
-    return (preg_match("/^[a-zA-Z0-9_]{4,16}$/", $username));
+    return (preg_match("/^[a-zA-Z0-9_]{3,16}$/", $username));
 }
 
 /*

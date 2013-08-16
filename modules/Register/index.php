@@ -98,7 +98,7 @@ class Module_Register extends Base_Module
         }
         else if ( !isPassword($_POST['password']) )
         { //If password is too short...
-            $errors[] = 'Your password must be longer than 3 characters!'; //Add to error message
+            $errors[] = 'Your password must be longer than 6 characters!'; //Add to error message
             $error = 1; //Set error check
         }
 
