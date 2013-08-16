@@ -81,7 +81,7 @@ class Module_Register extends Base_Module
         }
         else if ( !isUsername($_POST['username']) )
         { //If username is too short...
-            $errors[] = 'Your username must be longer than 3 characters and may only contain alphanumerical characters!'; //Add to error message
+            $errors[] = 'Your username must be between 3 and 16 characters and may only contain alphanumerical characters!'; //Add to error message
             $error = 1; //Set error check
         }
         else if ( $result->count > 0 )
