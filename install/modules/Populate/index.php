@@ -143,7 +143,13 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (3, 'pass_encryption', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1),
 (4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', 1, 0, 3, 1),
 (5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', 2, 0, 3, 1),
-(6, 'bcrypt', 'BCrypt Method', 'BCRYPT','option', 3, 0, 3, 1);
+(6, 'bcrypt', 'BCrypt Method', 'BCRYPT','option', 3, 0, 3, 1),
+(7, 'validation', 'Validation Settings', 'Set the specifics for the ezRPG Validation functions.', NULL, NULL, 1, 0, 1, 1),
+(8, 'passLenMin', 'Password Minimum Length', 'Set the minimum length for the password', 'text', '6', 1, 8, 0, 1),
+(9, 'passLenMax', 'Password Maximum Length (Optional)', 'Maximum length that a password can be', 'text', '18', 2, 8, 1, 1),
+(10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 8, 1, 1),
+(11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
+(12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1);
 QUERY;
 
         $db->execute($data1);

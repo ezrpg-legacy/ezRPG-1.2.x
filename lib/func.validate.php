@@ -37,7 +37,13 @@ function isUsername($username)
 
 function isPassword($password)
 {
-    return (preg_match("/[a-zA-Z0-9\W]{6}+/", $password));
+	global $settings;
+	$length = $settings->setting['validation']['passLenMin']['value'];
+	if($settings->setting['validation']['passLens']['value']['value'] == 'minmax')
+	{
+		$length .= ','. $settings->setting['validation']['passLenMax']['value'];
+	}
+    return (preg_match("/[a-zA-Z0-9\W]{$length}+/", $password));
 }
 
 /*
