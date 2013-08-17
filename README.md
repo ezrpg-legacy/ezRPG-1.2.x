@@ -1,4 +1,4 @@
-##ezRPG 1.2.0.9 
+##ezRPG 1.2.0.10 
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,14 +8,20 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.0.9
-####Pushed Aug 15 2013
+##Notes about 1.2.0.10
+####Pushed Aug 16 2013
 ```
 
-- Fixed Validation issues for isUsername()
-- Added an isAdmin() for T/F checks on player when redirection isn't needed
-- Added further debug message to Plugin Installer for unsupported filetypes
-- Added more filetypes that relate to .zips
+- Fixed error message in Register module.
+- Added ?admin= debug functionality. Admins can now flush cache by $_GET parameters.
+- Fixed Validation issues for isUsername().
+- Added an isAdmin() for T/F checks on player when redirection isn't needed.
+- Added further debug message to Plugin Installer for unsupported filetypes.
+- Added more filetypes that relate to .zips.
+- Fixed player Cache issues.
+- Removed experimental modules and .zip.
+- Testing settings for isPassword validation.
+
 
 ```
 =====
