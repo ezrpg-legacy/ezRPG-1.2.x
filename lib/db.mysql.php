@@ -190,10 +190,11 @@ class Db_mysql
             $this->query = $query;
 
             if ( DEBUG_MODE === 1 )
-                echo $query, '<br />';;
+                echo $query . '<br />';
 
             //Execute query
             $result = mysql_query($query, $this->db);
+
             if ( $result === false )
             { //If there was an error with the query
                 $this->error = mysql_error();
@@ -203,8 +204,15 @@ class Db_mysql
                 {
                     //Feature: admin logging of errors?
                     $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . $this->error . '</strong>';
-                    throw new DbException($error_msg, SQL_ERROR);
-                }
+                }elseif( isset($_SESSION['in_installer']) && $_SESSION['in_installer'] )
+				{
+					$error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . $this->error . '</strong> <br />';
+					$error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
+					$error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
+				}else{
+					$error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
+				}
+				throw new DbException($error_msg, SQL_ERROR);
 
                 return false;
             }
