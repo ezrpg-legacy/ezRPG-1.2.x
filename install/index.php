@@ -14,6 +14,8 @@ require_once '../lib/class.dbfactory.php';
 require_once '../lib/func.modules.php';
 require_once CUR_DIR . '/lib/class.installerfactory.php';
 
+$_SESSION['in_installer'] = true;
+
 $installer = new InstallerFactory;
 $default_mod = 'Index';
 
