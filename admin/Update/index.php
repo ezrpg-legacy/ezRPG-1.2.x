@@ -204,7 +204,8 @@ class Admin_Update extends Base_Module
 							$this->rrmdir($dir);
 							$results .= "You have successfully uploaded a plugin via the manager! <br />";
 							killModuleCache();
-							 
+							killSettingsCache();
+							killMenuCache();
 							$results .= "<a href='index.php?mod=Update'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
 						}
 						else

@@ -21,6 +21,15 @@ function hook_admin_controls(&$db, &$tpl, &$player, $args = 0)
 				case 'flushMenus':
 					killMenuCache();
 					break;
+				case 'flushPlayer':
+					killPlayerCache($player->id);
+					break;
+				case 'flushCaches':
+					killSettingsCache();
+					killModulesCache();
+					killMenuCache();
+					killPlayerCache($player->id);
+					break;
 			}
 		}
 	}

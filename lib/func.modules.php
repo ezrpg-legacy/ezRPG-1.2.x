@@ -74,10 +74,13 @@ function killModuleCache()
 {
     $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
     $cache_file = md5($query);
-    $cache = CACHE_DIR . $cache_file;
-    unlink($cache);
-	$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Module Cache Cleaned');
-    return true;
+    if(file_exists( CACHE_DIR . $cache_file ) )
+	{
+		$cache = CACHE_DIR . $cache_file;
+		unlink($cache);
+		$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Module Cache Cleaned');
+	}
+	return true;
 }
 
 /*
@@ -94,9 +97,12 @@ function killMenuCache()
 {
     $query = 'SELECT * FROM `<ezrpg>menu` WHERE active = 1 ORDER BY `pos`';
     $cache_file = md5($query);
-    unlink(CACHE_DIR . $cache_file);
-	$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Menu Cache Cleaned');
-    return true;
+    if(file_exists( CACHE_DIR . $cache_file ) )
+	{
+		unlink(CACHE_DIR . $cache_file);
+		$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Menu Cache Cleaned');
+	}
+	return true;
 }
 
 /*
