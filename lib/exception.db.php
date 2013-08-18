@@ -102,7 +102,6 @@ OUT;
 </p></div>
 </body></html>
 OUT;
-
         die($ret);
     }
 
