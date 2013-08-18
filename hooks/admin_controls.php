@@ -26,7 +26,7 @@ function hook_admin_controls(&$db, &$tpl, &$player, $args = 0)
 					break;
 				case 'flushCaches':
 					killSettingsCache();
-					killModulesCache();
+					killModuleCache();
 					killMenuCache();
 					killPlayerCache($player->id);
 					break;

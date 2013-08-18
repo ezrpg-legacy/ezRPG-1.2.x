@@ -37,7 +37,7 @@ class Admin_Update extends Base_Module
 
     private function list_update()
     {
-		print_r($this->settings->setting['general']['version']['value']);
+		$version = $this->settings->setting['general']['version']['value'];
         $this->tpl->assign("version", $version);
         $this->loadView('update.tpl');
     }
@@ -48,16 +48,13 @@ class Admin_Update extends Base_Module
         {
 			if (isset($_POST['agreed']) && $_POST['agreed'])
 			{
-				echo 'is set! <br/>';
 				if ( $_FILES["file"]["error"] > 0 )
 				{
-					echo 'Error!! <br/>';
 					$this->tpl->assign("MSG", "Error: " . $_FILES["file"]["error"]);
 					$this->loadView('upload_update.tpl');
 				}
 				else
 				{
-					echo 'No Error! <br/>';
 					$type = $_FILES["file"]["type"];
 					$okay = false;
 					$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
@@ -69,7 +66,6 @@ class Admin_Update extends Base_Module
 					}
 					if ( $okay )
 					{
-						echo 'Correct File Type!! <br/>';
 						$zip = new PclZip($_FILES["file"]["tmp_name"]);
 						$ziptempdir = substr(uniqid('', true), -5);
 						$dir = "Update/temp/" . $ziptempdir;
