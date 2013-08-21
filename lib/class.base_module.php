@@ -132,12 +132,14 @@ abstract class Base_Module
     {
         if ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === TRUE )
         {
+			$this->getMessages();
             $this->tpl->display('file:[' . $this->theme . ']' . $tpl);
         }
         else
         {
             if ( array_key_exists($modtheme, $this->tpl->getTemplateDir()) )
             {
+				$this->getMessages();
                 $this->tpl->display('file:[' . $modtheme . ']' . $tpl);
             }
             else
@@ -194,6 +196,32 @@ abstract class Base_Module
         array_push($this->messages, array( $level => $message ));
         return true;
     }
+	
+	public function getMessages()
+	{
+		 if ( !array_key_exists('status_messages', $_SESSION) )
+			return false;
+
+		// loop through the SESSION variable and push it to the template
+		$status_messages = array( );
+		foreach ( $_SESSION['status_messages'] as $key )
+		{
+			foreach ( $key as $level => $message )
+			{
+				if ( strlen($message) > 0 )
+				{
+					$status = array( $level => $message );
+					array_push($status_messages, $status);
+				}
+			}
+		}
+		if ( empty($status_messages) )
+			$status_messages = null;
+
+		$this->tpl->assign('MSG', $status_messages);
+		// remove the session
+		unset($_SESSION['status_message']);
+	}
 
     public function __destruct()
     {

@@ -60,9 +60,12 @@ class Themes
             }
             else
             {
-                unlink(CACHE_DIR . $cache_file);
-                $this->loadCache();
-                return;
+                if(file_exists(CACHE_DIR . $cache_file))
+				{
+					unlink(CACHE_DIR . $cache_file);
+					$this->loadCache();
+					return;
+				}
             }
         }
         else
