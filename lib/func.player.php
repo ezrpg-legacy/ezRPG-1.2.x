@@ -61,6 +61,32 @@ function requireAdmin($player = 0)
 }
 
 /*
+  Function: isAdmin
+  Checks if the player is an admin. Returns a boolean instead of redirect.
+
+  Parameters:
+  $player - A player object.
+  
+  Return:
+  boolean (TRUE / FALSE)
+  
+  Example Usage:
+  Just call the isAdmin() function if you require the user to be an admin.
+
+  Use isAdmin if you need to just check for admin but don't need to redirect.
+  Use requireAdmin if the page is ONLY for admins and you need to redirect out.
+ */
+
+function isAdmin($player = 0)
+{
+    if ( $player->rank < 5 )
+    {
+        return false;
+    }
+	return true;
+}
+
+/*
   Function: loadMetaCache
   Checks for and loads the Players_Meta cache file.
 
@@ -71,10 +97,19 @@ function requireAdmin($player = 0)
   Just call the loadMetaCache(1) function if you want to force a new Cache file.
  */
 
-function loadMetaCache($kill = 0)
+function loadMetaCache($kill = 0, $id = 0)
 {
     global $db, $debugTimer;
-    $query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid'];
+	if($id != 0)
+	{
+		$playerID = $id;
+	}elseif(isset($_SESSION['userid']))
+	{
+		$playerID = $_SESSION['userid'];
+	}else{
+		return;
+	}
+    $query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $playerID;
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;
     if ( $kill == 1 )

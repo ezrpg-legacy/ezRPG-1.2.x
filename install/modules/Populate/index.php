@@ -19,7 +19,7 @@ class Install_Populate extends InstallerFactory
             die;
         }
         require_once "../config.php";
-        try
+		try
         {
             $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
         }
@@ -27,7 +27,7 @@ class Install_Populate extends InstallerFactory
         {
             $e->__toString();
         }
-
+		
         $structure1 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -137,22 +137,30 @@ QUERY;
 
      
         $data1 = <<<QUERY
-INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`) VALUES
-(1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1),
-(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'ezRPG 1.2.0', 0, 1, 1),
-(3, 'pass_encryption', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1),
-(4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', 1, 0, 3, 1),
-(5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', 2, 0, 3, 1),
-(6, 'bcrypt', 'BCrypt Method', 'BCRYPT','option', 3, 0, 3, 1);
+INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`,`visible`) VALUES
+(1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1, 1),
+(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'ezRPG 1.2.0', 0, 1, 1, 1),
+(3, 'pass_encryption', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1, 1),
+(4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', 1, 0, 3, 1, 1),
+(5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', 2, 0, 3, 1, 1),
+(6, 'bcrypt', 'BCrypt Method', 'BCRYPT','option', 3, 0, 3, 1, 1),
+(7, 'validation', 'Validation Settings', 'Set the specifics for the ezRPG Validation functions.', NULL, 1, 1, 0, 1, 1),
+(8, 'passLenMin', 'Password Minimum Length', 'Set the minimum length for the password', 'text', '6', 1, 7, 1, 1),
+(9, 'passLenMax', 'Password Maximum Length (Optional)', 'Maximum length that a password can be', 'text', '18', 2, 7, 0, 1),
+(10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 7, 1, 1),
+(11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
+(12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1),
+(13, 'version', 'Game Version', '', 'text', '1.2.0.11', 0, 1, 1, 0);
 QUERY;
 
         $db->execute($data1);
-
-     	killSettingsCache();
-        $this->header();
-        echo "<h2>The database has been populated.</h2>\n";
-        echo "<a href=\"index.php?step=Plugins\">Continue to next step</a>";
-        $this->footer();
+		
+		killSettingsCache();
+		$this->header();
+		echo "<h2>The database has been populated.</h2>\n";
+		echo "<a href=\"index.php?step=Plugins\">Continue to next step</a>";
+		$this->footer();
+		
     }
 
 }

@@ -31,7 +31,7 @@ function loadModuleCache()
             $array = unserialize(file_get_contents($cache));
             if ( DEBUG_MODE == 1 )
             {
-                echo 'Loaded Module Cache! <br />';
+				$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Loaded Module Cache!');
             }
         }
         else
@@ -42,7 +42,7 @@ function loadModuleCache()
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
             if ( DEBUG_MODE == 1 )
             {
-                echo 'Created Module Cache! <br />';
+                $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
             }
         }
     }
@@ -53,7 +53,7 @@ function loadModuleCache()
         file_put_contents(CACHE_DIR . $cache_file, serialize($array));
         if ( DEBUG_MODE == 1 )
         {
-            echo 'Created Module Cache! <br />';
+            $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
         }
     }
     $debugTimer['Loaded Module Cache'] = microtime(1);
@@ -74,10 +74,13 @@ function killModuleCache()
 {
     $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
     $cache_file = md5($query);
-    $cache = CACHE_DIR . $cache_file;
-    unlink($cache);
-    echo 'Module Cache cleaned!  <br />';
-    return true;
+    if(file_exists( CACHE_DIR . $cache_file ) )
+	{
+		$cache = CACHE_DIR . $cache_file;
+		unlink($cache);
+		$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Module Cache Cleaned');
+	}
+	return true;
 }
 
 /*
@@ -94,9 +97,12 @@ function killMenuCache()
 {
     $query = 'SELECT * FROM `<ezrpg>menu` WHERE active = 1 ORDER BY `pos`';
     $cache_file = md5($query);
-    unlink(CACHE_DIR . $cache_file);
-    echo 'Menu Cache cleaned!  <br />';
-    return true;
+    if(file_exists( CACHE_DIR . $cache_file ) )
+	{
+		unlink(CACHE_DIR . $cache_file);
+		$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Menu Cache Cleaned');
+	}
+	return true;
 }
 
 /*
@@ -116,7 +122,7 @@ function killSettingsCache()
 	if(file_exists( CACHE_DIR . $cache_file ) )
 	{
 	    unlink(CACHE_DIR . $cache_file);
-		echo 'Settings Cache cleaned!  <br />';
+		$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Settings Cache Cleaned');
     }
 	return true;
 }
@@ -141,8 +147,8 @@ function killPlayerCache($id)
     {
         unlink(CACHE_DIR . $cache_file);
     }
-    echo 'Player Cache cleaned!  <br />';
-    loadMetaCache(1);
+	$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Player Cache Cleaned');
+    loadMetaCache(1, $id);
     return true;
 }
 

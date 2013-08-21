@@ -85,6 +85,14 @@ img {
 #nav {
 	width: 100%;
 	clear: both;
+	-webkit-border-radius: 3px;     -moz-border-radius: 3px;    
+	border-radius: 3px;      
+	background-color: #F7F7F7;  
+	background-image: -webkit-linear-gradient(TOP, #F7F7F7, #C2C6CE);  
+	background-image: -moz-linear-gradient(top, #F7F7F7, #C2C6CE);  
+	background-image: -o-linear-gradient(top, #F7F7F7, #C2C6CE);  
+	background-image: -ms-linear-gradient(top, #F7F7F7, #C2C6CE);  
+	background-image: linear-gradient(top, #F7F7F7, #C2C6CE);    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);     -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 #nav ul ul{
@@ -110,13 +118,14 @@ img {
 #nav ul li a {
 	display: block;
 	float: left;
-	width: 95px;
+	/* width: 63px; */
 	color: #666666;
-	border: solid 1px #3399FF;
-	border-bottom: solid 5px #3399FF;
-	background-color: #F7F7F7;
+	/* border: solid 1px #3399FF; */
+	/* border-bottom: solid 5px #3399FF; */
+	/* background-color: #F7F7F7; */
+	border-right: solid 1px #C2C6CE;
 	height: 1.3em;
-	padding: 2px;
+	padding: 2px 4px;
 	margin: 1px;
 	font-weight: bold;
 	text-align: center;
@@ -124,8 +133,12 @@ img {
 	
 #nav ul a:hover {
 	color: #3399FF;
-	background-color: #FAFAFA;
 	text-decoration: none;
+	background-image: -webkit-linear-gradient(BOTTOM, #F7F7F7, #C2C6CE);  
+	background-image: -moz-linear-gradient(BOTTOM, #F7F7F7, #C2C6CE);  
+	background-image: -o-linear-gradient(BOTTOM, #F7F7F7, #C2C6CE);  
+	background-image: -ms-linear-gradient(BOTTOM, #F7F7F7, #C2C6CE);  
+	background-image: linear-gradient(BOTTOM, #F7F7F7, #C2C6CE);
 }
 
 #nav ul ul {

@@ -73,8 +73,10 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
                 if ( !in_array($_GET['mod'], array( 'Logout' )) )
                 {
                     session_destroy();
+					session_start();
                     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-                    header('location: index.php');
+					$_SESSION['status_messages']['Session_Loggedout'] = array('INFO' => 'You have been logged out due to inactivity!');
+					header('location: index.php');
                     exit;
                 }
             }

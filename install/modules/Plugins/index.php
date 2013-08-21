@@ -74,7 +74,8 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (10, 8, 'Menus', 'Menus', 'Menu Management', 'index.php?mod=Menu', 0, 1, 0),
 (11, 8, 'Themes', 'Themes', 'Themes Management', 'index.php?mod=Themes', 0, 1, 0),
 (12, 8, 'Settings', 'Settings', 'Settings Management', 'index.php?mod=Settings', 0, 1, 0),
-(13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1, 0);
+(13, 8, 'Plugins', 'Plugins', 'Plugin Management', 'index.php?mod=Plugins', 0, 1, 0),
+(14, 8, 'Update', 'Update', 'ezRPG Updater', 'index.php?mod=Update', 0, 1, 0);
 QUERY;
 
         $db->execute($data1);
@@ -89,7 +90,8 @@ INSERT INTO `<ezrpg>plugins` (`id`, `title`, `active`, `filename`, `type`, `inst
 (5, 'AccountSettings', 1, '', 'module', 1, 1),
 (6, 'Members', 1, '', 'module', 1, 1),
 (7, 'Logout', 1, '', 'module', 1, 1),
-(8, 'Register', 1, '', 'module', 1, 1);
+(8, 'Register', 1, '', 'module', 1, 1),
+(9, 'StatPoints', 1, '', 'module', 1, 1);
 QUERY;
 
         $db->execute($data2);
@@ -103,7 +105,8 @@ INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `d
 (5, 6, 1.2, 'ezRPGTeam', 'Members - ezRPGCore', '', ''),
 (6, 7, 1.2, 'ezRPGTeam', 'Logout Module - ezRPGCore', '', ''),
 (7, 1, 1.2, 'ezRPGTeam', 'ezRPG Core. Disabling this will disable ALL core modules. Deleting with completely REMOVE ALL core modules', '', ''),
-(8, 8, 1.2, 'ezRPGTeam', 'Register Module - ezRPGCore', '', '');
+(8, 8, 1.2, 'ezRPGTeam', 'Register Module - ezRPGCore', '', ''),
+(9, 9, 1.2, 'ezRPGTeam', 'StatPoints Module - ezRPGCore', '', '');
 QUERY;
 
         $db->execute($data3);
