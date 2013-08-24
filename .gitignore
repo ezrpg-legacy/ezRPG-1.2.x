@@ -4,6 +4,7 @@
 /templates/.config/
 /templates/cache/
 /admin/Plugins/temp/*
+/admin/Update/temp/*
 
 config.php
 /cache/*

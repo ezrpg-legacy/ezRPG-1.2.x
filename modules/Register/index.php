@@ -81,7 +81,7 @@ class Module_Register extends Base_Module
         }
         else if ( !isUsername($_POST['username']) )
         { //If username is too short...
-            $errors[] = 'Your username must be longer than 3 characters and may only contain alphanumerical characters!'; //Add to error message
+            $errors[] = 'Your username must be between 3 and 16 characters and may only contain alphanumerical characters!'; //Add to error message
             $error = 1; //Set error check
         }
         else if ( $result->count > 0 )
@@ -98,8 +98,17 @@ class Module_Register extends Base_Module
         }
         else if ( !isPassword($_POST['password']) )
         { //If password is too short...
-            $errors[] = 'Your password must be longer than 3 characters!'; //Add to error message
-            $error = 1; //Set error check
+			$length = $this->settings->setting['validation']['passLenMin']['value'];
+			if($settings->setting['validation']['passLens']['value']['value'] == 'minmax')
+			{
+				$lenmsg = $length . ' and ' . $settings->setting['validation']['passLenMax']['value'];
+				$length .= ','. $settings->setting['validation']['passLenMax']['value'];
+				$errors[] = 'Your password must be between ' . $lenmsg . ' characters!'; //Add to error message
+			}else
+			{
+				$errors[] = 'Your password must be longer than ' . $length . ' characters!'; //Add to error message
+            }
+			$error = 1; //Set error check
         }
 
         if ( $_POST['password2'] != $_POST['password'] )

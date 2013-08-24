@@ -132,12 +132,14 @@ abstract class Base_Module
     {
         if ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === TRUE )
         {
+			$this->getMessages();
             $this->tpl->display('file:[' . $this->theme . ']' . $tpl);
         }
         else
         {
             if ( array_key_exists($modtheme, $this->tpl->getTemplateDir()) )
             {
+				$this->getMessages();
                 $this->tpl->display('file:[' . $modtheme . ']' . $tpl);
             }
             else
@@ -146,25 +148,6 @@ abstract class Base_Module
                 header('Location: index.php?mod=Error404');
                 exit;
             }
-        }
-    }
-
-    /*
-      Function: getPlugin
-      Gets ID of specified plugin
-
-      Paramaters:
-      $plugin_name - The plugin to find
-
-     */
-
-    public function getPlugin($plugin_name = '')
-    {
-        if ( $plugin_name != '' )
-        {
-            $query = $this->db->execute("SELECT * FROM <ezrpg>plugins WHERE title = '" . $plugin_name . "'");
-            $result = $this->db->fetch($query);
-            return $result;
         }
     }
 
@@ -194,6 +177,38 @@ abstract class Base_Module
         array_push($this->messages, array( $level => $message ));
         return true;
     }
+
+   /**
+     * Gets the messages saved in $_SESSION.
+     * Assigns SMARTY variable called 'MSG'
+     * 
+	 * Replaces old header_msg.php hook
+     */	
+	public function getMessages()
+	{
+		 if ( !array_key_exists('status_messages', $_SESSION) )
+			return false;
+
+		// loop through the SESSION variable and push it to the template
+		$status_messages = array( );
+		foreach ( $_SESSION['status_messages'] as $key )
+		{
+			foreach ( $key as $level => $message )
+			{
+				if ( strlen($message) > 0 )
+				{
+					$status = array( $level => $message );
+					array_push($status_messages, $status);
+				}
+			}
+		}
+		if ( empty($status_messages) )
+			$status_messages = null;
+
+		$this->tpl->assign('MSG', $status_messages);
+		// remove the session
+		unset($_SESSION['status_message']);
+	}
 
     public function __destruct()
     {

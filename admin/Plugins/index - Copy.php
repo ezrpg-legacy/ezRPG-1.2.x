@@ -188,22 +188,22 @@ class Admin_Plugins extends Base_Module
 								foreach ( $plug->Plugin->Menus->Menu as $menu )
 								{
 									$menusys = $this->menu;
-									$newMenu = $menu;
+									$menufile = $menu;
 									$menu_p['module_id'] = $p_m['plug_id'];
-									$menu_p['parent_id'] = ($menusys->isMenu((string) $newMenu->MenuParent) ? $menusys->get_menu_id_by_name((string) $newMenu->MenuParent) : '0');
-									$menu_p['title'] = (string) $newMenu->Title;
-									$menu_p['uri'] = (string) $newMenu->URL;
+									$menu_p['parent_id'] = ($menusys->isMenu((string) $menufile->MenuParent) ? $menusys->get_menu_id_by_name((string) $menufile->MenuParent) : '0');
+									$menu_p['title'] = (string) $menufile->Title;
+									$menu_p['uri'] = (string) $menufile->URL;
 									$menu_id = $this->db->insert('<ezrpg>menu', $menu_p);
-									if ( !empty($newMenu->MenuChildren) )
+									if ( !empty($menufile->MenuChildren) )
 									{
-										if ( !empty($newMenu->MenuChildren->Child) )
+										if ( !empty($menufile->MenuChildren->Child) )
 										{
-											foreach ( $newMenu->MenuChildren->Child as $childMenu )
+											foreach ( $menufile->MenuChildren->Child as $menu )
 											{
 												$menu_c['module_id'] = $p_m['plug_id'];
 												$menu_c['parent_id'] = $menu_id;
-												$menu_c['title'] = (string) $childMenu->Title;
-												$menu_c['uri'] = (string) $childMenu->URL;
+												$menu_c['title'] = (string) $menufile->Title;
+												$menu_c['uri'] = (string) $menu->URL;
 												$this->db->insert('<ezrpg>menu', $menu_c);
 											}
 										}

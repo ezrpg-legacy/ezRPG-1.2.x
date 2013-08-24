@@ -60,9 +60,12 @@ class Themes
             }
             else
             {
-                unlink(CACHE_DIR . $cache_file);
-                $this->loadCache();
-                return;
+                if(file_exists(CACHE_DIR . $cache_file))
+				{
+					unlink(CACHE_DIR . $cache_file);
+					$this->loadCache();
+					return;
+				}
             }
         }
         else
@@ -86,12 +89,13 @@ class Themes
         $moduletpldir = scandir(THEME_DIR . 'modules/', 0);
         $entries = array_merge($themetpldir, $moduletpldir);
         $templates = array( );
-
-        foreach ( $this->template as $item => $val )
-        {
-            $templates[$val->name] = $val->name;
-        }
-
+		if (isset($this->template))
+		{
+			foreach ( $this->template as $item => $val )
+			{
+				$templates[$val->name] = $val->name;
+			}
+		}
         foreach ( $entries as $entry )
         {
             if ( $entry != '.' && $entry != '..' && $entry != 'index.php' )

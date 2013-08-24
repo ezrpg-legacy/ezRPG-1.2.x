@@ -40,7 +40,7 @@ class Admin_Settings extends Base_Module
 
     private function list_settings()
     {
-        $query1 = $this->db->execute('select * from <ezrpg>settings where gid = 0');
+        $query1 = $this->db->execute('select * from <ezrpg>settings where gid = 0 ORDER BY disporder');
         $groups = $this->db->fetchAll($query1);
         $this->tpl->assign("groups", $groups);
         $this->loadView('settings.tpl');
@@ -50,7 +50,7 @@ class Admin_Settings extends Base_Module
     {
         $query1 = $this->db->execute('select title from <ezrpg>settings where id = ' . $id);
         $this->tpl->assign('GROUP', $this->db->fetch($query1)->title);
-        $query2 = $this->db->execute('select * from <ezrpg>settings where gid = ' . $id);
+        $query2 = $this->db->execute('select * from <ezrpg>settings where gid = ' . $id . ' ORDER BY disporder');
         $settings = $this->db->fetchAll($query2);
         $query3 = $this->db->execute('select * from <ezrpg>settings');
         $allSettings = $this->db->fetchAll($query3);
