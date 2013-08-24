@@ -151,25 +151,6 @@ abstract class Base_Module
         }
     }
 
-    /*
-      Function: getPlugin
-      Gets ID of specified plugin
-
-      Paramaters:
-      $plugin_name - The plugin to find
-
-     */
-
-    public function getPlugin($plugin_name = '')
-    {
-        if ( $plugin_name != '' )
-        {
-            $query = $this->db->execute("SELECT * FROM <ezrpg>plugins WHERE title = '" . $plugin_name . "'");
-            $result = $this->db->fetch($query);
-            return $result;
-        }
-    }
-
     /**
      * Sets a status message for use later on.
      * 
@@ -196,7 +177,13 @@ abstract class Base_Module
         array_push($this->messages, array( $level => $message ));
         return true;
     }
-	
+
+   /**
+     * Gets the messages saved in $_SESSION.
+     * Assigns SMARTY variable called 'MSG'
+     * 
+	 * Replaces old header_msg.php hook
+     */	
 	public function getMessages()
 	{
 		 if ( !array_key_exists('status_messages', $_SESSION) )
