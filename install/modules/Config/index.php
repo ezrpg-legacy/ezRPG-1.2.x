@@ -28,7 +28,6 @@ class Install_Config extends InstallerFactory
             $error = 0;
 
             //test database connection.
-            define("DB_PREFIX", $dbprefix);
             try
             {
                 $db = DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
@@ -92,7 +91,7 @@ define('SECRET_KEY', '{$secret_key}');
   DEBUG_MODE - Turn on to show database errors and debug information.
 */
 define('DB_PREFIX', '{$dbprefix}');
-define('VERSION', '1.2.0.8');
+define('VERSION', '1.2.1.0');
 define('SHOW_ERRORS', 0);
 define('DEBUG_MODE', 0);
 ?>
@@ -157,7 +156,7 @@ define('SECRET_KEY', '{$secret_key}');<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
 define('DB_PREFIX', '{$dbprefix}');<br />
-define('VERSION', '1.2.0.8');<br />
+define('VERSION', '1.2.1.0');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";

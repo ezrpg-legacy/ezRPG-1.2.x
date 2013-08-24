@@ -207,9 +207,16 @@ class Db_pdo
                 {
                     //Feature: admin logging of errors?
                     $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . var_dump($this->error) . '</strong>';
-                    throw new DbException($error_msg, SQL_ERROR);
-                }
-
+                }elseif( IN_INSTALLER )
+				{
+					$error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
+					$error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
+					$error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
+				}else{
+					$error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
+				}
+				throw new DbException($error_msg, SQL_ERROR);
+				
                 return false;
             }
         }

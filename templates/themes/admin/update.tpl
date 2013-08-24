@@ -1,4 +1,4 @@
-{include file="file:[$THEME]header.tpl" TITLE="Plugin/Module Admin"}
+{include file="file:[$THEME]header.tpl" TITLE="Update Admin"}
 Current Version Installed: {$version}
 <table width="100%" border="1">
 <tbody><tr>
@@ -16,5 +16,5 @@ Updates
 
 <!-- END OF ADMINCP_UPDATE_ROW-->
 </tbody></table>
-<a href="index.php?mod=Updates&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
+<a href="index.php?mod=Update&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
 {include file="file:[$THEME]footer.tpl"}
