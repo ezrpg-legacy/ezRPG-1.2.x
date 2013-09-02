@@ -77,7 +77,7 @@ class Db_pdo
         $this->username = $username;
         $this->password = $password;
         $this->port = $port;
-        $this->prefix = DB_PREFIX;
+        $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');;
     }
 
     /*

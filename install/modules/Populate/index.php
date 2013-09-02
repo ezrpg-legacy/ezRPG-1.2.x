@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>settings` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(120) NOT NULL,
   `title` varchar(120) NOT NULL,
-  `description` text NOT NULL,
+  `description` text NULL DEFAULT NULL,
   `optionscode` text,
   `value` text,
   `disporder` smallint(5) NOT NULL DEFAULT '0',
@@ -139,7 +139,7 @@ QUERY;
         $data1 = <<<QUERY
 INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`,`visible`) VALUES
 (1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1, 1),
-(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'ezRPG 1.2.0', 0, 1, 1, 1),
+(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'ezRPG 1.2.1', 0, 1, 1, 1),
 (3, 'pass_encryption', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1, 1),
 (4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', 1, 0, 3, 1, 1),
 (5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', 2, 0, 3, 1, 1),
@@ -150,7 +150,7 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 7, 1, 1),
 (11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
 (12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1),
-(13, 'version', 'Game Version', '', 'text', '1.2.1.0', 0, 1, 1, 0);
+(13, 'version', 'Game Version', '', 'text', '1.2.1.1', 0, 1, 1, 0);
 QUERY;
 
         $db->execute($data1);
