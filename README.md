@@ -1,4 +1,4 @@
-##ezRPG 1.2.1
+##ezRPG 1.2.1.1
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,20 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1
-####Pushed Aug 24 2013
+##Notes about 1.2.1.1
+####Pushed Sept 2 2013
 ```
 
-- Fixed a Messaging System issue with the hook system.
-- Updated the navigation look and feel of Default theme.
-- Fixed an issue with class.themes.php to check if $this->template is set.
-- Created an Update module to streamline updating ezRPG versions.
-- Added AdminControls for debugging. Now ?admin=flushSettings  flushMenu flushCaches flushPlayer all work.
-- Settings added to isPassword function.
-- Multiple functions added (see Commit history for info)
-- Fixed a Register issue from 1.2.0.
-- Added all modules to db.
-- Expanded on the Cache system.
+- Fixed an issue with ezrpgSettings db not having a field set to NULL default
+- Fixed a warning that was appearing in the db classes
+- Added Players Class as a work in progress.
 
 Special thanks goes to Fuelli and DJPredator for bug testing and reporting.
 
