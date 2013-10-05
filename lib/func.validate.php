@@ -43,7 +43,7 @@ function isPassword($password)
 	{
 		$length .= ','. $settings->setting['validation']['passLenMax']['value'];
 	}
-    return (preg_match("/[a-zA-Z0-9\W]{$length}+/", $password));
+    return (preg_match("/[a-zA-Z0-9\W]{".$length."}+/", $password));
 }
 
 /*
