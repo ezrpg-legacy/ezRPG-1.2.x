@@ -49,7 +49,7 @@ class Admin_Plugins extends Base_Module
 
     private function list_modules()
     {
-        $query = $this->db->execute('select * from <ezrpg>plugins JOIN <ezrpg>plugins_meta ON <ezrpg>plugins_meta.plug_id = <ezrpg>plugins.id');
+        $query = $this->db->execute('select * from <ezrpg>plugins JOIN <ezrpg>plugins_meta ON <ezrpg>plugins.id = <ezrpg>plugins_meta.plug_id WHERE <ezrpg>plugins_meta.pm_id=0');
         $plugins = Array( );
         while ( $m = $this->db->fetch($query) )
         {
@@ -87,6 +87,7 @@ class Admin_Plugins extends Base_Module
 
     private function upload_modules()
     {
+		killSettingsCache();
         if ( isset($_FILES['file']) )
         {
             if ( $_FILES["file"]["error"] > 0 )
@@ -127,18 +128,8 @@ class Admin_Plugins extends Base_Module
                         $p_m['author'] = (string) $plug->Plugin->Author;
                         $p_m['description'] = (string) $plug->Plugin->Description;
                         $p_m['url'] = (string) $plug->Plugin->AccessURL;
-                        if ( !empty($plug->Plugin->ExtendedInstall) )
-                        {
-                            if ( !empty($plug->Plugin->ExtendedInstall->UninstallArg) )
-                                $p_m['uninstall'] = (string) $plug->Plugin->ExtendedInstall->UninstallArg;
-                            else
-                                $p_m['uninstall'] = '';
-
-                            if ( !empty($plug->Plugin->ExtendedInstall->InstallArg) )
-                                $p_d['second_installed'] = 0;
-                        }
                         $p_m['plug_id'] = $this->db->insert('<ezrpg>plugins', $p_d);
-                        $this->db->insert('<ezrpg>plugins_meta', $p_m);
+                        $p_m['meta_id'] = $this->db->insert('<ezrpg>plugins_meta', $p_m);
                         if ( !empty($plug->Plugin->Hook) )
                         {
                             if ( !empty($plug->Plugin->Hook->HookFile) )
@@ -160,8 +151,8 @@ class Admin_Plugins extends Base_Module
                                 foreach ( $plug->Plugin->Lib->LibFile as $libs )
                                 {
                                     $lib['pid'] = $p_m['plug_id'];
-                                    $lib['filename'] = (string) $libs->HookFileName;
-                                    $lib['title'] = (string) $libs->HookTitle;
+                                    $lib['filename'] = (string) $libs->LibFileName;
+                                    $lib['title'] = (string) $libs->LibTitle;
                                     $lib['type'] = 'library';
                                     $this->db->insert('<ezrpg>plugins', $lib);
                                 }
@@ -212,6 +203,55 @@ class Admin_Plugins extends Base_Module
                                 killMenuCache();
                             }
                         }
+						if ( !empty($plug->Plugin->Settings) )
+                        {
+                            if ( !empty($plug->Plugin->Settings->Setting) )
+                            {
+								foreach ( $plug->Plugin->Settings->Setting as $setting )
+								{
+									killSettingsCache();
+									$newSetting = $setting;
+									$setting_p['name'] = (string) $newSetting->Name;
+									$setting_p['title'] = (string) $newSetting->Title;
+									$setting_p['description'] = (string) $newSetting->Description;
+									$setting_p['value'] = (string) $newSetting->Value;
+									if ( !empty($newSetting->Group))
+									{
+										$query = $this->db->execute("SELECT id from <ezrpg>settings where name='".(string) $newSetting->Group."'");
+										$setting_p['gid'] = $this->db->fetch($query)->id;
+									}elseif( !empty($newSetting->GroupID)){
+										$setting_p['gid'] = (string) $newSetting->GroupID;
+									}
+									$setting_id = $this->db->insert('<ezrpg>settings', $setting_p);
+									$setting_u['uninstall'] = addslashes("DELETE FROM <ezrpg>settings WHERE id ='".$setting_id.";");
+									$setting_u['pm_id'] = $p_m['meta_id'];
+									$this->db->insert('<ezrpg>plugins_meta', $setting_u);
+								}
+                            }
+                        }
+						if ( !empty($plug->Plugin->SQL) )
+						{
+							if ( !empty($plug->Plugin->SQL->Install) )
+							{
+								if ( !empty($plug->Plugin->SQL->Install->SQLCALL))
+								{
+									foreach ( $plug->Plugin->SQL->Install->SQLCALL as $sql )
+									{
+										$this->db->execute((string) $sql);
+									}
+								}
+							}
+							if ( !empty($plug->Plugin->SQL->Uninstall) )
+							{
+								if ( !empty($plug->Plugin->SQL->Uninstall->SQLCALL) )
+								{
+									foreach ( $plug->Plugin->SQL->Uninstall->SQLCALL as $sql )
+									{
+										$this->db->execute("INSERT INTO <ezrpg>plugins_meta (plug_id, pm_id, uninstall) VALUES ('". $p_m['plug_id'] ."', '". $p_m['meta_id']."', '".addslashes((string) $sql)."')");
+									}
+								}
+							}
+						}
                         $results .= "installed db data <br />";
                         if ( file_exists($dir . '/modules') )
                             $this->re_copy($dir . '/modules/', MOD_DIR);
@@ -227,12 +267,6 @@ class Admin_Plugins extends Base_Module
                         $this->rrmdir($dir);
                         $results .= "You have successfully uploaded a plugin via the manager! <br />";
                         killModuleCache();
-						 if ( !empty($plug->Plugin->ExtendedInstall->InstallArg) )
-                            {
-								$mod = ModuleFactory::Factory($this->db, $this->tpl, $this->player, $plug->Plugin->Name, $this->menu, $this->settings);
-                                $install_func = (string) $plug->Plugin->ExtendedInstall->InstallArg;
-                                $mod->$install_func();
-							}
 						$this->db->execute('UPDATE <ezrpg>plugins SET installed=1, active=1 WHERE id=' . $p_m['plug_id'] . ' OR pid=' . $p_m['plug_id']);
 						$this->db->execute('UPDATE <ezrpg>menu SET active=1 WHERE module_id=' . $p_m['plug_id']);
 
@@ -276,22 +310,18 @@ class Admin_Plugins extends Base_Module
             $this->list_modules();
             break;
         }
-        $query = $this->db->execute('SELECT uninstall FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
-        $result2 = $this->db->fetch($query);
+        $query1 = $this->db->execute('SELECT * FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
         $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
         $result = $this->db->fetchAll($query_mod);
-		if ( $result2 )
+		if ( $this->db->numRows($query1) != 0 )
         {
-            $mod = ModuleFactory::Factory($this->db, $this->tpl, $this->player, $result[0]->title, $this->menu, $this->settings); 
-            $uninstall_func = (string) $result2->uninstall;
-			if($mod->$uninstall_func() == true)
+			$result2 = $this->db->fetchAll($query1);
+			foreach( $result2 as $item=>$key)
 			{
-				
-				$complete = $this->finish_removal($id, $result);
-			}else{
-				$this->setMessage('Uninstall Failed', 'FAIL');
-				header('Location: index.php?mod=Plugins');
+				if(!empty($key->uninstall))
+					$this->db->execute($key->uninstall);
 			}
+			$complete = $this->finish_removal($id, $result);
         }
         else
         {
@@ -307,7 +337,7 @@ class Admin_Plugins extends Base_Module
 		}
     }
 	
-	private function finish_removal($id, $module)
+	private function finish_removal($id, $result)
 	{
 		try
 		{
@@ -322,7 +352,8 @@ class Admin_Plugins extends Base_Module
 						$this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
 						break;
 					case 'hook':
-						$this->rrmdir(HOOKS_DIR . $file->filename);
+						if(file_exists(HOOKS_DIR .'/'. $file->filename))
+							unlink(HOOKS_DIR . '/'. $file->filename);
 						break;
 				}
 			}

@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.1
+##ezRPG 1.2.1.3
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,15 +8,12 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.1
-####Pushed Sept 2 2013
+##Notes about 1.2.1.3
+####Pushed Oct 5 2013
 ```
 
-- Fixed an issue with ezrpgSettings db not having a field set to NULL default
-- Fixed a warning that was appearing in the db classes
-- Added Players Class as a work in progress.
-
-Special thanks goes to Fuelli and DJPredator for bug testing and reporting.
+- Fixed an issue with the validation system not always working due to a inline php variable and string.
+- Knocked out an issue with the themes class that kept readding themes to the DB during cache reloads.
 
 ```
 =====

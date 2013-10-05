@@ -31,11 +31,11 @@ class Install_Populate extends InstallerFactory
         $structure1 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `username` varchar(30) default NULL,
-  `password` varchar(255) default NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `email` varchar(255) default NULL,
-  `pass_method` tinyint(3) default NULL,
-  `secret_key` text,
+  `pass_method` tinyint(3) NOT NULL,
+  `secret_key` text NOT NULL,
   `rank` smallint(5) unsigned NOT NULL default '1',
   `registered` int(11) unsigned default NULL,
   `force_cache` int(11) unsigned default '0',
@@ -91,14 +91,14 @@ QUERY;
         $structure4 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `active` int(11) NOT NULL,
+  `active` int(11) NOT NULL DEFAULT '1',
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `module_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `AltTitle` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `AltTitle` varchar(255) DEFAULT NULL DEFAULT '',
   `uri` varchar(255) NOT NULL,
-  `pos` int(11) NOT NULL,
+  `pos` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
@@ -150,7 +150,7 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 7, 1, 1),
 (11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
 (12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1),
-(13, 'version', 'Game Version', '', 'text', '1.2.1.1', 0, 1, 1, 0);
+(13, 'version', 'Game Version', '', 'text', '1.2.1.3', 0, 1, 1, 0);
 QUERY;
 
         $db->execute($data1);

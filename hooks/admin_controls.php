@@ -7,7 +7,7 @@ $hooks->add_hook('admin_header', 'admin_controls', 1);
 
 function hook_admin_controls(&$db, &$tpl, &$player, $args = 0)
 {
-    if(isset($_GET['admin']))
+   if(isset($_GET['admin']))
 	{
 		if(isAdmin($player)){
 			switch($_GET['admin'])

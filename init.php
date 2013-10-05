@@ -86,3 +86,4 @@ $menu = new Menu($db, $tpl, $player);
 $debugTimer['Menus Initiated:'] = microtime(1);
 $menu->get_menus();
 $debugTimer['Menus retrieved:'] = microtime(1);
+$players = new Players($db, $tpl, $player);

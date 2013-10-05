@@ -75,7 +75,11 @@ function isEmail($email)
 
 function isClean($input)
 {
-    return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+	if(isset($input)){
+		return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+	}else{
+		return true;
+	}
 }
 
 ?>

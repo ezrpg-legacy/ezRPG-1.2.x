@@ -40,9 +40,9 @@ class Players
 
     public function __construct(&$db, &$tpl, &$player = 0)
     {
-        $this->db = & $db;
-        $this->tpl = & $tpl;
-        $this->player = & $player;
+        $this->db = &$db;
+        $this->tpl = &$tpl;
+        $this->player = &$player;
     }
 	
 	public function updateMeta($data, $id)

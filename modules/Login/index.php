@@ -22,6 +22,7 @@ class Module_Login extends Base_Module
 
     public function start()
     {
+		global $hooks;
         $error = 0;
         if ( empty($_POST['username']) || empty($_POST['password']) )
         {
@@ -68,7 +69,6 @@ class Module_Login extends Base_Module
 
             if ( $error == 0 )
             {
-                global $hooks;
 
                 //Run login hook
                 $player = $hooks->run_hooks('login', $player);
@@ -90,7 +90,9 @@ class Module_Login extends Base_Module
                     exit;
                 }
             }
-        }
+        }else{
+				$hooks->run_hooks('3rdparty_login', $_POST);
+		}
 
         //If we made it this far, then there's an issue
 
@@ -102,7 +104,7 @@ class Module_Login extends Base_Module
             $this->setMessage($errmsg, 'FAIL');
         }
 
-        header('Location: index.php');
+        //header('Location: index.php');
         exit;
     }
 

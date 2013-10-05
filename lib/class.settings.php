@@ -28,7 +28,8 @@ class Settings
     {
         $this->db = & $db;
         $this->settings = $this->loadSettings();
-        $this->setting = $this->get_settings($this->settings);
+        $this->groups = $this->get_settings_by_group($this->settings);
+		$this->setting = $this->get_settings($this->settings);
     }
 
     /*
@@ -54,7 +55,7 @@ class Settings
         }
     }
 
-    public function get_settings($setting)
+    public function get_settings_by_group($setting)
     {
         $settings = array( );
         $special = array( 'select', 'radio' );
@@ -62,6 +63,7 @@ class Settings
         {
             if ( $vals->gid == 0 )
             {
+				$settings[$vals->name] = array('id'=>$vals->id);
                 foreach ( $setting as $item => $val )
                 {
                     if ( $val->gid == $vals->id ) // checks if current setting is related to current group
@@ -78,7 +80,31 @@ class Settings
                 }
             }
         }
-        return $settings;
+		return $settings;
+    }
+	public function get_settings($setting)
+    {
+        $settings = array( );
+        $special = array( 'select', 'radio' );
+        foreach ( $setting as $items => $vals )
+        {
+				$settings[$vals->name] = array('id'=>$vals->id);
+                foreach ( $setting as $item => $val )
+                {
+                    if ( $val->gid == $vals->id ) // checks if current setting is related to current group
+                    {
+                        if ( in_array($val->optionscode, $special, true) ) // checks if current setting is a Radio or Select
+                        {
+                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $this->get_settings_by('id', $val->value, $setting), 'title' => $val->title, 'optionscode' => $val->optionscode );
+                        }
+                        else
+                        {
+                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $val->value, 'title' => $val->title, 'optionscode' => $val->optionscode );
+                        }
+                    }
+                }
+        }
+		return $settings;
     }
 
     public function loadSettings()

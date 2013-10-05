@@ -37,7 +37,8 @@ $clas = array(
     'hooks',
     'menu',
     'settings',
-    'themes'
+    'themes',
+	'players'
 	//,'router'
 );
 
