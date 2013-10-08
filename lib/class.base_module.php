@@ -55,6 +55,8 @@ abstract class Base_Module
         'GOOD' => ''
     );
 
+	protected $scripts;
+	
     /*
       Function: __construct
       The constructor the every module. Saves the database, template and player variables as class variables.
@@ -76,6 +78,7 @@ abstract class Base_Module
         $this->menu = $menu;
         $this->settings = $settings;
         $this->name = get_class($this);
+		$this->scripts = array();
     }
 
     /*
@@ -130,6 +133,7 @@ abstract class Base_Module
 
     public function loadView($tpl, $modtheme = '')
     {
+		$this->add_scripts();
         if ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === TRUE )
         {
 			$this->getMessages();
@@ -222,6 +226,23 @@ abstract class Base_Module
         return true;
     }
 
+	public function appendHeader($source, $priority = 0)
+	{
+		$this->scripts[$source] = $source;
+	}
+	
+	public function add_scripts()
+	{
+		//Sort by priority
+        ksort($this->scripts);
+		$scripts = '';
+		foreach($this->scripts as $script)
+		{
+			$scripts .= $script;
+		}
+		$this->tpl->assign('added_scripts', $scripts);
+	}
+	
 }
 
 ?>
