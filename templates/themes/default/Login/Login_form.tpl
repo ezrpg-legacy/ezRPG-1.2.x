@@ -5,5 +5,5 @@
 <label>Password</label>
 <input type="password" name="password" />
 
-<input name="login" type="submit" class="button" value="Login!">
+<input name="login" type="submit" class="button" value="Login!"> 
 </form>

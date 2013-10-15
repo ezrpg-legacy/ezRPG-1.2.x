@@ -150,7 +150,8 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 7, 1, 1),
 (11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
 (12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1),
-(13, 'version', 'Game Version', '', 'text', '1.2.1.3', 0, 1, 1, 0);
+(13, 'version', 'Game Version', '', 'text', '1.2.1.3', 0, 1, 1, 0),
+(14, 'default_module', 'Default Module', 'Choose a default module for your frontpage', 'text', 'Index', 0, 1, 1, 0);
 QUERY;
 
         $db->execute($data1);

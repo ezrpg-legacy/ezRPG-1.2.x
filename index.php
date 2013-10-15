@@ -28,12 +28,9 @@ require_once 'init.php';
 $debugTimer['init.php Loaded:'] = microtime(1);
 
 //Set Default module and check if Module is selected in URI
-$default_mod = 'Index';
+$default_mod = $settings->setting['general']['default_module']['value'];
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod'])) ? $_GET['mod'] : $default_mod );
-/*
-$router = new Router($db, $player);
-$routes = $router->getRoutes();
-*/
+
 
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
@@ -47,10 +44,6 @@ $debugTimer['header-hooks Loaded:'] = microtime(1);
 $module = ModuleFactory::factory($db, $tpl, $player, $module_name, $menu, $settings);
 if ( isset($_GET['act']))
 {
-	/*if ( in_array($_GET['act'], $router->reservedActions))
-	{
-		$module->$_GET['act']();
-	}else{*/
 		if (method_exists($module, $_GET['act']))
 		{
 			$reflection = new ReflectionMethod($module, $_GET['act']);
@@ -61,7 +54,6 @@ if ( isset($_GET['act']))
 		}else{
 			$module->start();
 		}
-	//}
 }else{
 	$module->start();
 }
@@ -72,9 +64,9 @@ $hooks->run_hooks('footer', $module_name);
 $debugTimer['footer-hooks'] = microtime(1);
 
 // DEBUG_INFO with Timer @since 1.2RC
-if ( DEBUG_MODE == 1 )
+if ( DEBUG_MODE )
 {
-if ($player->rank > 5 ) {
+if (is_object($player) && $player->rank > 5 ) {
     echo "<pre><table border=1><tr><td>name</td><td>Total Time</td><td>Step Time</td><td>%</td></tr>";
     reset($debugTimer);
     $start = $prev = current($debugTimer);

@@ -139,7 +139,12 @@ abstract class Base_Module
 			$this->getMessages();
             $this->tpl->display('file:[' . $this->theme . ']' . $tpl);
         }
-        else
+        elseif ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $modtheme . '/' . $tpl) === TRUE )
+		{
+			$this->getMessages();
+            $this->tpl->display('file:[' . $this->theme . ']' .$modtheme . '/'. $tpl);
+		}
+		else
         {
             if ( array_key_exists($modtheme, $this->tpl->getTemplateDir()) )
             {
@@ -149,7 +154,7 @@ abstract class Base_Module
             else
             {
                 $this->setMessage('Could not find page you requested<br />'.$tpl, 'FAIL');
-                header('Location: index.php?mod=Error404');
+                header('Location: index.php');
                 exit;
             }
         }
@@ -168,7 +173,7 @@ abstract class Base_Module
      * @param integer $level
      * @return boolean 
      */
-    public function setMessage($message, $level = 'INFO')
+    public function setMessage($message, $level = 'info')
     {
         $level = strtoupper($level);
 

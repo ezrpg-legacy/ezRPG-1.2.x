@@ -132,6 +132,10 @@ class Module_Login extends Base_Module
         }
     }
 
+	public function login_form()
+	{
+		$this->loadView('Login_form.tpl', 'Login');
+	}
 }
 
 ?>

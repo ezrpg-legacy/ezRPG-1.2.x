@@ -22,7 +22,7 @@ class Module_Index extends Base_Module
             $this->loadView('home.tpl', 'Home');
         }
         else
-        {
+        {	
             $this->loadView('index.tpl', 'Index');
         }
     }

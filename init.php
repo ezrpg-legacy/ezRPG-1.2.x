@@ -50,6 +50,9 @@ $debugTimer['Settings Loaded:'] = microtime(1);
 // Smarty
 $tpl = new Smarty();
 $tpl->assign('GAMESETTINGS', $settings->setting['general']);
+if(DEBUG_MODE)
+	echo 'GAMESETTINGS Smarty Variable is being deprecated. Use {settings g=\'general\' n=\'Setting_Name\'} for your GameSettings needs.';
+
 $tpl->addTemplateDir(array(
     'admin' => THEME_DIR . 'themes/admin/',
     'default' => THEME_DIR . 'themes/default/'

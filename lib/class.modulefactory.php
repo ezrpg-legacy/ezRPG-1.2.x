@@ -41,13 +41,9 @@ class ModuleFactory
             include_once (MOD_DIR . '/' . $module . '/index.php');
             $classname = 'Module_' . $module;
             return new $classname($db, $tpl, $player, $menu, $settings);
-        }
-        else
-        {
-            // Default module to display (the home page)
-            include_once (MOD_DIR . '/Index/index.php');
-            return new Module_Index($db, $tpl, $player, $menu, $settings);
-        }
+        }else{
+			return false;
+		}
     }
 
     /*
