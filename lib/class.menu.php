@@ -9,24 +9,11 @@ defined('IN_EZRPG') or exit;
 
 class Menu
 {
-    /*
-      Variable: $db
-      Contains the database object.
-     */
-
-    protected $db;
-
-    /*
-      Variable: $tpl
-      The smarty template object.
-     */
-    protected $tpl;
-
-    /*
-      Variable: $player
-      The currently logged in player. Value is 0 if no user is logged in.
-     */
-    protected $player;
+	/*
+	  Variable: $app
+	  Contains the App object
+	*/
+	protected $app;
 
     /*
       Variable: $menu
@@ -44,11 +31,11 @@ class Menu
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($app)
     {
-        $this->db = & $db;
-        $this->tpl = & $tpl;
-        $this->player = & $player;
+        $this->db = $app['db'];
+        $this->tpl = $app['tpl'];
+        $this->player = $app['player'];
         $this->menu = $this->loadCache();
     }
 

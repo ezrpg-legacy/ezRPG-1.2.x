@@ -2,12 +2,13 @@
 
 defined('IN_EZRPG') or exit;
 
-$hooks->add_hook('header', 'admin_controls', 1);
-$hooks->add_hook('admin_header', 'admin_controls', 1);
+$app['hooks']->add_hook('header', 'admin_controls', 1);
+$app['hooks']->add_hook('admin_header', 'admin_controls', 1);
 
-function hook_admin_controls(&$db, &$tpl, &$player, $args = 0)
+function hook_admin_controls($app, $args = 0)
 {
-    if(isset($_GET['admin']))
+	$db = $app['db']; $tpl=$app['tpl']; $player=$args['player'];
+	if(isset($_GET['admin']))
 	{
 		if(isAdmin($player)){
 			switch($_GET['admin'])

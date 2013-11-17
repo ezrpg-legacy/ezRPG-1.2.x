@@ -9,10 +9,9 @@
 
 // This page cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
-global $debugTimer;
 // Start Session
 session_start();
-
+$app[]='';
 
 // Constants
 define('CUR_DIR', realpath(dirname(__FILE__)));
@@ -25,48 +24,47 @@ define('THEME_DIR', CUR_DIR . '/templates/');
 define('CACHE_DIR', CUR_DIR . '/cache/');
 
 require_once CUR_DIR . '/config.php';
-$debugTimer['Config Loaded:'] = microtime(1);
+$app['debugTimer']['Config Loaded:'] = microtime(1);
 // Show errors?
 (SHOW_ERRORS == 0) ? error_reporting(0) : error_reporting(E_ALL);
 
 require_once(CUR_DIR . '/lib.php');
-$debugTimer['Library Loaded:'] = microtime(1);
+$app['debugTimer']['Library Loaded:'] = microtime(1);
 // Database
 try
 {
-    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+    $app['db'] = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 }
 catch ( DbException $e )
 {
     $e->__toString();
 }
-$debugTimer['DB Loaded:'] = microtime(1);
+$app['debugTimer']['DB Loaded:'] = microtime(1);
 // Database password no longer needed, unset variable
 unset($config_password);
 
 // Settings
-$settings = new Settings($db);
-$debugTimer['Settings Loaded:'] = microtime(1);
+$app['settings'] = new Settings($app['db']);
+$app['debugTimer']['Settings Loaded:'] = microtime(1);
 // Smarty
-$tpl = new Smarty();
-$tpl->assign('GAMESETTINGS', $settings->setting['general']);
-$tpl->addTemplateDir(array(
+$app['tpl'] = new Smarty();
+$app['debugTimer']['Smarty Loaded:'] = microtime(1);
+$app['tpl']->addTemplateDir(array(
     'admin' => THEME_DIR . 'themes/admin/',
     'default' => THEME_DIR . 'themes/default/'
 ));
-$debugTimer['Smarty Loaded:'] = microtime(1);
-$tpl->compile_dir = $tpl->cache_dir = CACHE_DIR . 'templates/';
+
+$app['tpl']->compile_dir = $app['tpl']->cache_dir = CACHE_DIR . 'templates/';
 
 // Themes
-$themes = new Themes($db, $tpl);
-$debugTimer['Themes Initiated:'] = microtime(1);
+$app['themes'] = new Themes($app['db'], $app['tpl']);
+$app['debugTimer']['Themes Initiated:'] = microtime(1);
 
-// Initialize $player
-$player = 0;
+
 
 // Create a hooks object
-$hooks = new Hooks($db, $tpl, $player);
-$debugTimer['Hooks Initiated:'] = microtime(1);
+$app['hooks'] = new Hooks($app);
+$app['debugTimer']['Hooks Initiated:'] = microtime(1);
 // Include all hook files
 $hook_files = scandir(HOOKS_DIR);
 foreach ( $hook_files as $hook_file )
@@ -77,12 +75,13 @@ foreach ( $hook_files as $hook_file )
         include_once (HOOKS_DIR . '/' . $hook_file);
     }
 }
-$debugTimer['Hooks Loaded :'] = microtime(1);
+$app['debugTimer']['Hooks Loaded :'] = microtime(1);
 // Run login hooks on player variable
-$player = $hooks->run_hooks('player', 0);
-$debugTimer['Player-Hooks loaded:'] = microtime(1);
+$app['player'] = $app['hooks']->run_hooks('player', 0);
+$app['debugTimer']['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-$menu = new Menu($db, $tpl, $player);
-$debugTimer['Menus Initiated:'] = microtime(1);
-$menu->get_menus();
-$debugTimer['Menus retrieved:'] = microtime(1);
+$app['menu'] = new Menu($app);
+$app['debugTimer']['Menus Initiated:'] = microtime(1);
+$app['menu']->get_menus();
+$app['debugTimer']['Menus retrieved:'] = microtime(1);
+$app['players'] = new Players($app);

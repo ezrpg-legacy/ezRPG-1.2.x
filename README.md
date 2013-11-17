@@ -1,6 +1,6 @@
-##ezRPG 1.2.1.1
+##nuRPG 0.0.1
 
-###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
+####Forked from ezRPG 1.2.1.11
 
 =====
 
@@ -8,16 +8,20 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.1
-####Pushed Sept 2 2013
+##Notes about 0.0.1
+####Pushed Nov 15 2013
 ```
 
-- Fixed an issue with ezrpgSettings db not having a field set to NULL default
-- Fixed a warning that was appearing in the db classes
-- Added Players Class as a work in progress.
-
-Special thanks goes to Fuelli and DJPredator for bug testing and reporting.
-
+- Initial Release
+- Modules are autoloaded with spl_autoload
+- Support for old modules still exist, but will be removed later
+- Modules now are names "MODULENAME.module.php" and are JUST put inside the modules/* directory and nor a subdirectory of that.
+- Module classes don't need "Module_" prefixed to it. It's already in a module folder, extending a Base_Module.
+- Magic methods are to be created: "__activate", "__deactivate", "__uninstall", and "__update". "__activate" will run both install and activate functions, it'll be by design of the developer to distinguish how these will be to avoid re-installation of DB commands.
+- Standard Formatting of PHPDoc comments will be utilized for "Module Name", "Author", "Version" etc.
+- An almost complete Plugin Uploader that does away with the xml idea.
+- Created an $app super variable instead of using a proper IoC container to limit the number of objects being passed by storing objects inside a single variable.
+- Currently we're pretty close to being 100% compatible with 1.2.1.x modules. Some tweaks are needed for hooks and such.
 ```
 =====
 A modular game engine written in PHP.
@@ -31,7 +35,10 @@ Contributing to the ezRPG project couldn't be easier!
 4. We will review your changes, and accept them if they fix the problem without causing any problems
 
 ## Support
-Need some help? Check out the [ezRPG Forums](http://www.ezrpgproject.net/)
+Need some help? http://www.tagsolutions.tk or PM uaktags at http://www.ezrpgproject.net
+
+Original Credits:
+http://www.ezrpgproject.net
 
 ## Installation
 

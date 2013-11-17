@@ -2,11 +2,12 @@
 
 defined('IN_EZRPG') or exit;
 
-$hooks->add_hook('header', 'player_cache');
-$hooks->add_hook('admin_header', 'player_cache', 1);
+$app['hooks']->add_hook('header', 'player_cache');
+$app['hooks']->add_hook('admin_header', 'player_cache', 1);
 
-function hook_player_cache(&$db, &$tpl, &$player, $args = 0)
+function hook_player_cache($app, $args = 0)
 {
+	$db = $app['db']; $tpl=$app['tpl']; $player=$args['player'];
     $sql = $db->execute('SELECT * FROM `<ezrpg>players` WHERE `force_cache` = 1');
     $query = $db->fetchAll($sql);
     if ( $query )

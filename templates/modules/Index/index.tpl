@@ -7,7 +7,6 @@
 Welcome to ezRPG! Login now!
 </p>
 </div>
-
 <div class="right">
 <form method="post" action="index.php?mod=Login">
 <label>Username</label>

@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   This module handles user authentication.
  */
 
-class Module_Login extends Base_Module
+class Login extends Base_Module
 {
     /*
       Function: start
@@ -18,10 +18,11 @@ class Module_Login extends Base_Module
 
       On failure, session data is cleared and the user is redirected back to the login page.
 
-     */
+    */
 
     public function start()
     {
+		$hooks = $this->app['hooks'];
         $error = 0;
         if ( empty($_POST['username']) || empty($_POST['password']) )
         {
@@ -68,7 +69,6 @@ class Module_Login extends Base_Module
 
             if ( $error == 0 )
             {
-                global $hooks;
 
                 //Run login hook
                 $player = $hooks->run_hooks('login', $player);
@@ -90,8 +90,7 @@ class Module_Login extends Base_Module
                     exit;
                 }
             }
-        }
-
+		}
         //If we made it this far, then there's an issue
 
         session_unset();
@@ -108,7 +107,6 @@ class Module_Login extends Base_Module
 
     private function validate()
     {
-        global $settings;
         $query = $this->db->execute('SELECT `id`, `username`, `password`, `secret_key`, `pass_method` FROM `<ezrpg>players` WHERE `username`=?', array( $_POST['username'] ));
 
         if ( $this->db->numRows($query) == 0 )
@@ -117,11 +115,11 @@ class Module_Login extends Base_Module
         else
         {
             $player = $this->db->fetch($query);
-
+			
             // We have different authentication methods at our disposal.
-            $pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
+            $pass_meth = $this->settings->setting['general']['pass_encryption']['value']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password, ($player->pass_method == $pass_meth ? '0' : $player->pass_method));
-            if ( $check != true )
+			if ( $check != true )
             {
                 return false;
             }
@@ -129,7 +127,11 @@ class Module_Login extends Base_Module
             return $player;
         }
     }
-
+	
+	public function login_form()
+	{
+		$this->loadView('Login_form.tpl', 'Login');
+	}
 }
 
 ?>

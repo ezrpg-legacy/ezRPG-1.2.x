@@ -183,7 +183,7 @@ class Admin_Menu extends Base_Module
                 $error = '0';
                 if ( !isClean($_POST['mname']) )
                     $error = '1';
-                if ( !isClean($_POST['mtitle']) )
+                if ( !isClean($_POST['mtitle']) && isset($_POST['mname']) )
                     $error = '2';
                 if ( !isClean($_POST['malt']) )
                     if ( $_POST['malt'] == NULL )
@@ -203,7 +203,16 @@ class Admin_Menu extends Base_Module
                 }
                 else
                 {
-                    
+                    $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_GET['mid']);
+					$menu = $this->db->fetchAll($query);
+					$this->tpl->assign('menus', $menu);
+					$query1 = $this->db->execute('select * from <ezrpg>menu');
+					$menu = $this->db->fetchAll($query1);
+					$this->tpl->assign('menubox', $menu);
+					$this->tpl->assign('errormsg', "");
+					$this->tpl->assign('error', 0);
+					$this->tpl->assign('page', 'edit');
+					$this->loadView('menus-manage.tpl');
                 }
             }
         }

@@ -99,7 +99,8 @@ function isAdmin($player = 0)
 
 function loadMetaCache($kill = 0, $id = 0)
 {
-    global $db, $debugTimer;
+    global $app;
+	$db = $app['db'];
 	if($id != 0)
 	{
 		$playerID = $id;

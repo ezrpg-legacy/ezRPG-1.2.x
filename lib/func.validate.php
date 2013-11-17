@@ -43,7 +43,7 @@ function isPassword($password)
 	{
 		$length .= ','. $settings->setting['validation']['passLenMax']['value'];
 	}
-    return (preg_match("/[a-zA-Z0-9\W]{$length}+/", $password));
+    return (preg_match("/[a-zA-Z0-9\W]{".$length."}+/", $password));
 }
 
 /*
@@ -75,7 +75,11 @@ function isEmail($email)
 
 function isClean($input)
 {
-    return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+	if(isset($input)){
+		return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+	}else{
+		return true;
+	}
 }
 
 ?>

@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   This is a very simple module, designed to simply display a static template page.
  */
 
-class Module_City extends Base_Module
+class City extends Base_Module
 {
     /*
       Function: start

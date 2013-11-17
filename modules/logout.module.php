@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   This module clears the session data to logout the user.
  */
 
-class Module_Logout extends Base_Module
+class Logout extends Base_Module
 {
     /*
       Function: start

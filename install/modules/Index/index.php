@@ -17,7 +17,15 @@ class Install_Index extends InstallerFactory
         }
         if ( !is_writable('../cache/templates') )
         {
-            $files[] = "cache/templates";
+			//Attempt to create file
+            $fh = mkdir('../cache/');
+            if ( !$fh )
+            {
+                $files[] = "cache/";
+            }elseif( !mkdir('../cache/templates'))
+			{
+				$files[] = "cache/templates";
+			}
         }
         if ( !empty($files) )
         {

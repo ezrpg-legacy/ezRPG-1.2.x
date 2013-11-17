@@ -7,7 +7,7 @@
 <meta name="Distribution" content="Global" />
 <meta name="Robots" content="index,follow" />
 <link rel="stylesheet" href="../static/default/style.css" type="text/css" />	
-<title>{$GAMESETTINGS['game_name']['value']} :: {$TITLE|default:""}</title>
+<title>{settings g='general' n='game_name'} :: {$TITLE|default:""}</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script>
 			// Wait until the DOM has loaded before querying the document
@@ -74,7 +74,7 @@
 <div id="wrapper">
 
 <div id="header">
-	<span id="title">{$GAMESETTINGS['game_name']['value']}</span>
+	<span id="title">{settings g='general' n='game_name'}</span>
 	<span id="time">{$smarty.now|date_format:'%A %T'}
 	<br />
 	<strong>Players Online</strong>: {$ONLINE}</span>

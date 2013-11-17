@@ -10,6 +10,12 @@ defined('IN_EZRPG') or exit;
 
 abstract class Base_Module
 {
+	/*
+	  Variable: $app
+	  Contains the App object
+	*/
+	protected $app;
+
     /*
       Variable: $db
       Contains the database object.
@@ -55,6 +61,8 @@ abstract class Base_Module
         'GOOD' => ''
     );
 
+	protected $scripts;
+	
     /*
       Function: __construct
       The constructor the every module. Saves the database, template and player variables as class variables.
@@ -67,15 +75,17 @@ abstract class Base_Module
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0, &$menu, &$settings)
+    public function __construct(&$app)
     {
-        $this->db = $db;
-        $this->tpl = $tpl;
+		$this->app = $app;
+        $this->db = $app['db'];
+        $this->tpl = $app['tpl'];
         $this->theme = $this->getTheme();
-        $this->player = $player;
-        $this->menu = $menu;
-        $this->settings = $settings;
+        $this->player = $app['player'];
+        $this->menu = $app['menu'];
+        $this->settings = $app['settings'];
         $this->name = get_class($this);
+		$this->scripts = array();
     }
 
     /*
@@ -130,12 +140,18 @@ abstract class Base_Module
 
     public function loadView($tpl, $modtheme = '')
     {
+		$this->add_scripts();
         if ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === TRUE )
         {
 			$this->getMessages();
             $this->tpl->display('file:[' . $this->theme . ']' . $tpl);
         }
-        else
+        elseif ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $modtheme . '/' . $tpl) === TRUE )
+		{
+			$this->getMessages();
+            $this->tpl->display('file:[' . $this->theme . ']' .$modtheme . '/'. $tpl);
+		}
+		else
         {
             if ( array_key_exists($modtheme, $this->tpl->getTemplateDir()) )
             {
@@ -145,7 +161,7 @@ abstract class Base_Module
             else
             {
                 $this->setMessage('Could not find page you requested<br />'.$tpl, 'FAIL');
-                header('Location: index.php?mod=Error404');
+                header('Location: index.php');
                 exit;
             }
         }
@@ -164,7 +180,7 @@ abstract class Base_Module
      * @param integer $level
      * @return boolean 
      */
-    public function setMessage($message, $level = 'INFO')
+    public function setMessage($message, $level = 'info')
     {
         $level = strtoupper($level);
 
@@ -222,6 +238,23 @@ abstract class Base_Module
         return true;
     }
 
+	public function appendHeader($source, $priority = 0)
+	{
+		$this->scripts[$source] = $source;
+	}
+	
+	public function add_scripts()
+	{
+		//Sort by priority
+        ksort($this->scripts);
+		$scripts = '';
+		foreach($this->scripts as $script)
+		{
+			$scripts .= $script;
+		}
+		$this->tpl->assign('added_scripts', $scripts);
+	}
+	
 }
 
 ?>

@@ -9,6 +9,12 @@ defined('IN_EZRPG') or exit;
 
 class Hooks
 {
+	/*
+	  Variable: $app
+	  Contains the App object
+	*/
+	protected $app;
+	
     /*
       Variable: $db
       Contains the database object.
@@ -29,7 +35,7 @@ class Hooks
     protected $player;
 
     /*
-      Variable: $hooks
+      Variable: $app['hooks']
       An array of all hooks, ordered by priority.
      */
     protected $hooks;
@@ -44,14 +50,14 @@ class Hooks
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct(&$app)
     {
-        global $debugTimer;
-        $this->db = &$db;
-        $this->tpl = &$tpl;
-        $this->player = &$player;
+		$this->app = $app;
+        $this->db = $app['db'];
+		$this->tpl = $app['tpl'];
+        //$this->player = $app['player'];
         $this->hooks = array( );
-        $debugTimer['Hook Class constructed'] = microtime(1);
+        $app['debugTimer']['Hook Class constructed'] = microtime(1);
     }
 
     /*
@@ -125,8 +131,9 @@ class Hooks
                     continue;
 
                 //Hook should have a return value
-                $func_args = call_user_func($call_func, $this->db, $this->tpl, $this->player, $func_args);
-                $debugTimer[$call_func] = microtime(1);
+				//var_dump($this->app['player']);
+                $func_args = call_user_func($call_func, $this->app, $func_args);
+                $this->app['debugTimer'][$call_func] = microtime(1);
             }
         }
         return $func_args;

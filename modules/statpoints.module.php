@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   Handles distribution of stat points.
  */
 
-class Module_StatPoints extends Base_Module
+class StatPoints extends Base_Module
 {
     /*
       Function: start

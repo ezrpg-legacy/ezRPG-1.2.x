@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   This module handles adding new players to the database.
  */
 
-class Module_Register extends Base_Module
+class register extends Base_Module
 {
     /*
       Function: start()

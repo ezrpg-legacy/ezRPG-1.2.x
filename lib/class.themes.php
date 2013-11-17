@@ -43,48 +43,53 @@ class Themes
       Function that checks for a Cache file and loads/builds it.
      */
 
-    public function loadCache($id = null)
+    public function loadCache($id = 0)
     {
         $query = 'SELECT * FROM <ezrpg>themes';
-        $cache_file = md5($query);
-
-        if ( file_exists(CACHE_DIR . $cache_file) || !is_null($id) )
+        $cache_file = CACHE_DIR.'themes_cache_'.md5($query);
+		
+        if ( !$id )
         {
-            if ( filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24 )
-            {
-                $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if ( DEBUG_MODE == 1 )
-                {
-                    echo 'Loaded Themes Cache! <br />';
-                }
-            }
-            else
-            {
-                if(file_exists(CACHE_DIR . $cache_file))
+			if(file_exists($cache_file))
+			{
+				if ( filemtime( $cache_file) > time() - 60 * 60 * 24 )
 				{
-					unlink(CACHE_DIR . $cache_file);
-					$this->loadCache();
-					return;
+					$array = unserialize(file_get_contents($cache_file));
+					if ( DEBUG_MODE == 1 )
+					{
+						echo 'Loaded Themes Cache! <br />';
+					}
+					return $array;
 				}
-            }
+				else
+				{
+					if(file_exists($cache_file))
+					{
+						unlink($cache_file);
+						return $this->loadCache();
+					}
+				}
+			} else{
+				return $this->loadCache(1);
+			}
         }
         else
         {
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
-            file_put_contents(CACHE_DIR . $cache_file, serialize($array));
+            file_put_contents($cache_file, serialize($array));
             if ( DEBUG_MODE == 1 )
             {
                 echo 'Created Themes Cache! <br />';
             }
+			return $array;
         }
-        return $array;
     }
 
     public function loadTemplates()
     {
         $query = 'SELECT * FROM <ezrpg>themes';
-        $cache_file = md5($query);
+        $cache_file = CACHE_DIR.'themes_cache_'.md5($query);
         $themetpldir = scandir(THEME_DIR . 'themes/', 0);
         $moduletpldir = scandir(THEME_DIR . 'modules/', 0);
         $entries = array_merge($themetpldir, $moduletpldir);
@@ -109,8 +114,12 @@ class Themes
                         $this->tpl->addTemplateDir(array(
                             $entry => $entry_dir,
                         ));
-                        $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('" . $entry . "', '" . $entry_dir . "', 0)");
-                        unlink(CACHE_DIR . $cache_file);
+						$querytheme = $this->db->execute("SELECT * FROM <ezrpg>themes WHERE name='".$entry."'");
+						$curtheme = $this->db->numRows($querytheme);
+						if(!$curtheme){
+							$this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled) VALUES ('" . $entry . "', '" . $entry_dir . "', 0)");
+                        }
+						unlink($cache_file);
                         $this->loadCache(1);
                     }
                     if ( is_dir($entry_dir2) )
@@ -118,8 +127,12 @@ class Themes
                         $this->tpl->addTemplateDir(array(
                             $entry => $entry_dir2,
                         ));
-                        $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir2 . "', 0, 1)");
-                        unlink(CACHE_DIR . $cache_file);
+						$querytheme = $this->db->execute("SELECT * FROM <ezrpg>themes WHERE name='".$entry."'");
+						$curtheme = $this->db->numRows($querytheme);
+						if(!$curtheme){
+							$this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir2 . "', 0, 1)");
+                        }
+						unlink($cache_file);
                         $this->loadCache(1);
                     }
                 }
@@ -127,12 +140,16 @@ class Themes
                 {
                     if ( is_dir($entry_dir) || is_dir($entry_dir2) )
                     {
-                        $this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir . "', 0, ". (is_dir($entry_dir) ? 0 : 1) . ")");
-                        unlink(CACHE_DIR . $cache_file);
+						$querytheme = $this->db->execute("SELECT * FROM <ezrpg>themes WHERE name='".$entry."'");
+						$curtheme = $this->db->numRows($querytheme);
+						if(!$curtheme){
+							$this->db->execute("INSERT INTO <ezrpg>themes (name, dir, enabled, type) VALUES ('" . $entry . "', '" . $entry_dir . "', 0, ". (is_dir($entry_dir) ? 0 : 1) . ")");
+                        }
+						unlink($cache_file);
                         $this->loadCache(1);
                     }else{
 						$this->db->execute("DELETE FROM <ezrpg>themes WHERE name = '" . $entry . "'");
-                        unlink(CACHE_DIR . $cache_file);
+                        unlink($cache_file);
 						echo 'deleted theme ' . $entry;
                         $this->loadCache(1);
 					}
@@ -151,7 +168,7 @@ class Themes
 						));
 					}
 				}
-            }//print_r($templates);
+            }
         }
     }
 

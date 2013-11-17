@@ -2,12 +2,11 @@
 
 defined('IN_EZRPG') or exit;
 
-$hooks->add_hook('player', 'level_up', 2);
-global $debugTimer;
+$app['hooks']->add_hook('player', 'level_up', 2);
 
-function hook_level_up($db, &$tpl, $player, $args = 0)
+function hook_level_up($app, $args = 0)
 {
-    global $debugTimer;
+	$db = $app['db']; $tpl=$app['tpl']; //$player=$app['player'];
     //No player data
     if ( $args === 0 || LOGGED_IN == false )
         return $args;
@@ -33,7 +32,7 @@ function hook_level_up($db, &$tpl, $player, $args = 0)
         addLog(intval($args->id), $msg, $db);
         $debugTimer['Add Log'] = microtime(1);
     }
-
+	
     return $args;
 }
 

@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   A basic module for the default landing page. Just shows the index template or the player's home page.
  */
 
-class Module_Index extends Base_Module
+class Index extends Base_Module
 {
     /*
       Function: start
@@ -22,7 +22,7 @@ class Module_Index extends Base_Module
             $this->loadView('home.tpl', 'Home');
         }
         else
-        {
+        {	
             $this->loadView('index.tpl', 'Index');
         }
     }

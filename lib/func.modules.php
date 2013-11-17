@@ -20,7 +20,8 @@ if ( !defined('IN_EZRPG') )
 
 function loadModuleCache()
 {
-    global $db;
+    global $app;
+	$db = $app['db'];
     $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;
@@ -29,7 +30,7 @@ function loadModuleCache()
         if ( filemtime($cache) > time() - 60 * 60 * 24 )
         {
             $array = unserialize(file_get_contents($cache));
-            if ( DEBUG_MODE == 1 )
+            if ( DEBUG_MODE )
             {
 				$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Loaded Module Cache!');
             }
@@ -40,7 +41,7 @@ function loadModuleCache()
             $query1 = $db->execute($query);
             $array = $db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if ( DEBUG_MODE == 1 )
+            if ( DEBUG_MODE )
             {
                 $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
             }
@@ -51,7 +52,7 @@ function loadModuleCache()
         $query1 = $db->execute($query);
         $array = $db->fetchAll($query1);
         file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-        if ( DEBUG_MODE == 1 )
+        if ( DEBUG_MODE  )
         {
             $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
         }

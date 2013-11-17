@@ -8,7 +8,7 @@ defined('IN_EZRPG') or exit;
   The module is the player's event log, which keeps track of everything that happens to the user.
  */
 
-class Module_EventLog extends Base_Module
+class EventLog extends Base_Module
 {
     /*
       Function: start()

@@ -38,11 +38,11 @@ class Players
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($app)
     {
-        $this->db = & $db;
-        $this->tpl = & $tpl;
-        $this->player = & $player;
+        $this->db = $app['db'];
+        $this->tpl = $app['tpl'];
+        $this->player = $app['player'];
     }
 	
 	public function updateMeta($data, $id)
@@ -59,7 +59,7 @@ class Players
 	
 	public function register($username, $password, $email)
 	{
-		global $settings, $hooks;
+		global $app;
 		
 		$insert = Array( );
 		//Add new user to database
@@ -70,7 +70,7 @@ class Players
 		$insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
 		$insert['registered'] = time();
 		//Run register hook
-		$insert = $hooks->run_hooks('register', $insert);
+		$insert = $app['hooks']->run_hooks('register', $insert);
 		$playerID = $this->db->insert('<ezrpg>players', $insert);
 		$this->createMeta($playerID);
 		return $playerID;
