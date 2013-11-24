@@ -40,20 +40,20 @@ class Db_mysql
     public $isConnected = false;
 
     /*
-      Variable: $db
+      Variable: $dbase
       Contains a MySQL link identifier.
      */
-    protected $db;
+    protected $dbase;
 
     /*
       Variables: Connection Details
       $host - Host name of database server.
-      $dbname - Name of the database.
+      $dbasename - Name of the database.
       $username - Username to connect with.
       $password - Password to connect with.
      */
     protected $host;
-    protected $dbname;
+    protected $dbasename;
     protected $username;
     protected $password;
     protected $prefix;
@@ -66,13 +66,13 @@ class Db_mysql
       $host - Database server
       $username - Username to login with
       $password - Password to login with
-      $dbname - Name of database
+      $dbasename - Name of database
      */
 
-    public function __construct($host = 'localhost', $username = 'root', $password = '', $dbname = '')
+    public function __construct($host = 'localhost', $username = 'root', $password = '', $dbasename = '')
     {
         $this->host = $host;
-        $this->dbname = $dbname;
+        $this->dbname = $dbasename;
         $this->username = $username;
         $this->password = $password;
         $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');
@@ -104,9 +104,9 @@ class Db_mysql
       On an SQL error, it throws a <DbException> with the MySQL error.
 
       Example Usage:
-      > $query = $db->execute('SELECT username FROM <ezrpg>players WHERE id=?', array($player->id));
+      > $query = $dbase->execute('SELECT username FROM <ezrpg>players WHERE id=?', array($player->id));
 
-      > $query = $db->execute('SELECT COUNT(id) AS count FROM <ezrpg>players');
+      > $query = $dbase->execute('SELECT COUNT(id) AS count FROM <ezrpg>players');
 
       See Also:
       - <connect>
@@ -239,8 +239,8 @@ class Db_mysql
       The results from the query in an array.
 
       Example Usage:
-      > $query = $db->execute('SELECT COUNT(id) AS count FROM <ezrpg>players');
-      > $result = $db->fetch($query);
+      > $query = $dbase->execute('SELECT COUNT(id) AS count FROM <ezrpg>players');
+      > $result = $dbase->fetch($query);
       > echo $result->count;
 
       See Also:
@@ -265,8 +265,8 @@ class Db_mysql
       An array with the query results.
 
       Example Usage:
-      > $query = $db->execute('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players`');
-      > $result = $db->fetchArray($query);
+      > $query = $dbase->execute('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players`');
+      > $result = $dbase->fetchArray($query);
       > echo $result['count'];
 
       See Also:
@@ -293,8 +293,8 @@ class Db_mysql
       On a failed query, returns false.
 
       Example Usage:
-      > $query = $db->execute('SELECT `id` FROM `<ezrpg>players`');
-      > $results = $db->fetchAll($query);
+      > $query = $dbase->execute('SELECT `id` FROM `<ezrpg>players`');
+      > $results = $dbase->fetchAll($query);
       > foreach ($results as $row)
       >   echo $row->id;
 
@@ -340,7 +340,7 @@ class Db_mysql
       The results from the query in an array.
 
       Example Usage:
-      > $result = $db->fetchRow('SELECT COUNT(id) AS count FROM <ezrpg>players');
+      > $result = $dbase->fetchRow('SELECT COUNT(id) AS count FROM <ezrpg>players');
       > echo $result->count;
 
       See Also:
@@ -389,7 +389,7 @@ class Db_mysql
       > $insert['password'] = 'a9629b9ff4f0637362a0954224e1cd5792effb62';
       > $insert['email'] = 'andy@ezrpgproject.com';
       > $insert['registered'] = time();
-      > $new_player = $db->insert('<ezrpg>players', $insert);
+      > $new_player = $dbase->insert('<ezrpg>players', $insert);
 
       See Also:
       - <execute>
@@ -455,7 +455,7 @@ class Db_mysql
       $host - Database server
       $username - Username to login with
       $password - Password to login with
-      $dbname - Name of database
+      $dbasename - Name of database
 
       Returns:
       True if there were no errors.
@@ -476,8 +476,8 @@ class Db_mysql
             {
                 $this->isConnected = true;
 
-                $db_selected = mysql_select_db($this->dbname);
-                if ( !$db_selected )
+                $dbase_selected = mysql_select_db($this->dbname);
+                if ( !$dbase_selected )
                 {
                     throw new DbException($this->dbname, DATABASE_ERROR);
                 }

@@ -10,11 +10,11 @@ defined('IN_EZRPG') or exit;
 class Router
 {
     /*
-      Variable: $db
+      Variable: $dbase
       Contains the database object.
      */
 
-    protected $db;
+    protected $dbase;
 
     /*
       Variable: $player
@@ -41,14 +41,14 @@ class Router
       The constructor takes in database, template and player variables to pass onto any hook functions called.
 
       Parameters:
-      $db - An instance of the database class.
+      $dbase - An instance of the database class.
       $tpl - A smarty object.
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$player = 0)
+    public function __construct(&$dbase, &$player = 0)
     {
-        $this->db = & $db;
+        $this->db = & $dbase;
         $this->player = & $player;
         $this->routes = $this->getRoutes();
     }

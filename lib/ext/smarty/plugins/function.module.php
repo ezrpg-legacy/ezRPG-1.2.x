@@ -28,7 +28,7 @@ function smarty_function_module($params, &$smarty) {
 	{
 		if (!empty($params['n']))
 		{
-			global $app, $db, $tpl, $player, $menu, $settings;
+			global $app, $dbase, $tpl, $player, $menu, $settings;
 			if(class_exists($params['n']))
 			{
 				$module = new $params['n']($app);

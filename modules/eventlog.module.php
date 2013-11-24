@@ -4,8 +4,11 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_EventLog
-  The module is the player's event log, which keeps track of everything that happens to the user.
+  Module Name: Event Log
+  Description: The module is the player's event log, which keeps track of everything that happens to the user.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
 class EventLog extends Base_Module

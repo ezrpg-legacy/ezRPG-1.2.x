@@ -20,17 +20,17 @@ Created By: <a href="{if $plugin->url eq null}#{else}{$plugin->url}{/if}">{$plug
 <td valign="top">
 {if $plugin->title != ezRPGCore }
 {if $plugin->active != 1}
-<a href="index.php?mod=Plugins&act=enable&id={$plugin->id}">Activate</a>
+<a href="index.php?mod=PluginManager&act=enable&id={$plugin->id}">Activate</a>
 {else}
-<a href="index.php?mod=Plugins&act=disable&id={$plugin->id}">Deactivate</a>
+<a href="index.php?mod=PluginManager&act=disable&id={$plugin->id}">Deactivate</a>
 {/if}
  |
- <a href="index.php?mod=Plugins&act=remove&id={$plugin->id}">Uninstall</a>
+ <a href="index.php?mod=PluginManager&act=remove&id={$plugin->id}">Uninstall</a>
 {/if}
 </td>
 </tr>
 {/foreach}
 <!-- END OF ADMINCP_PLUGINS_ROW-->
 </tbody></table>
-<a href="index.php?mod=Plugins&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
+<a href="index.php?mod=PluginManager&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
 {include file="file:[$THEME]footer.tpl"}

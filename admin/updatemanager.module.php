@@ -7,7 +7,7 @@ require_once( LIB_DIR . '/pclzip.lib.php' );
   Admin page checking for and installing updates
  */
 
-class Admin_Update extends Base_Module
+class UpdateManager extends Base_Module
 {
     /*
       Function: start

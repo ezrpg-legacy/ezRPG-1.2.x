@@ -7,7 +7,7 @@
 <br />
 {/if}
 <div>
-<form method="post" action="index.php?mod=Themes&act=save">
+<form method="post" action="index.php?mod=ThemeManager&act=save">
 <table width="100%" border="1px">
   <tbody>
 {foreach from=$themes item=sitem}

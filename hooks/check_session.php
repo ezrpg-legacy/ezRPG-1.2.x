@@ -8,9 +8,10 @@ $app['hooks']->add_hook('player', 'check_session', 0);
 //Player hook to check the session and get player data
 function hook_check_session($app, $args = 0)
 {
-    $db = $app['db']; $tpl=$app['tpl']; 
+    $dbase = $app['db']; $tpl=$app['tpl']; 
     // we follow a "guilty" until proven otherwise approach.
     $authenticated = false;
+	$player = 0;
 
     if ( array_key_exists('userid', $_SESSION) && array_key_exists('hash', $_SESSION) )
     {
@@ -37,8 +38,8 @@ function hook_check_session($app, $args = 0)
                 else
                 {
                     unlink($cache);
-                    //$query1 = $db->execute($query);
-                    $array = $db->fetchRow($query);
+                    //$query1 = $dbase->execute($query);
+                    $array = $dbase->fetchRow($query);
                     file_put_contents(CACHE_DIR . $cache_file, serialize($array));
                     if ( DEBUG_MODE == 1 )
                     {
@@ -48,8 +49,8 @@ function hook_check_session($app, $args = 0)
             }
             else
             {
-                //$query1 = $db->execute($query);
-                $array = $db->fetchRow($query);
+                //$query1 = $dbase->execute($query);
+                $array = $dbase->fetchRow($query);
                 file_put_contents(CACHE_DIR . $cache_file, serialize($array));
                 if ( DEBUG_MODE == 1 )
                 {
@@ -93,7 +94,7 @@ function hook_check_session($app, $args = 0)
 
     define('LOGGED_IN', $authenticated);
     $tpl->assign('LOGGED_IN', (LOGGED_IN === true) ? 'TRUE' : 'FALSE');
-
+	$app['debugTimer']['check_session hook Loaded:'] = microtime(1);
     return $player;
 }
 

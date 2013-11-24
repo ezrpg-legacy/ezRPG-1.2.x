@@ -4,11 +4,14 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_AccountSettings
-  Lets the user change their password.
+  Module Name: AccountSettings
+  Description: Lets the user change their password.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
-class Module_AccountSettings extends Base_Module
+class AccountSettings extends Base_Module
 {
     /*
       Function: start

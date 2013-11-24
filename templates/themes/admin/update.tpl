@@ -16,5 +16,5 @@ Updates
 
 <!-- END OF ADMINCP_UPDATE_ROW-->
 </tbody></table>
-<a href="index.php?mod=Update&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
+<a href="index.php?mod=UpdateManager&act=upload"><input name="login" type="submit" class="button" value="Upload New.." /></a>
 {include file="file:[$THEME]footer.tpl"}

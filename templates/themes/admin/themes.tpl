@@ -12,7 +12,7 @@
 				Enabled?
 			</th>
 		</tr>
-<form method="post" action="index.php?mod=Themes&act=save">
+<form method="post" action="index.php?mod=ThemeManager&act=save">
 {foreach from=$groups item=gitem}
 		<tr>
 			<td>

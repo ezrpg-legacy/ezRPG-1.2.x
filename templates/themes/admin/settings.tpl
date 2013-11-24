@@ -17,7 +17,7 @@
 {foreach from=$groups item=gitem}
 		<tr>
 			<td valign="top">
-				<a href="index.php?mod=Settings&act=getGroup&gid={$gitem->id}">{$gitem->title}</a><br>
+				<a href="index.php?mod=SettingsManager&act=getGroup&gid={$gitem->id}">{$gitem->title}</a><br>
 			</td>
 		</tr>
 {/foreach}

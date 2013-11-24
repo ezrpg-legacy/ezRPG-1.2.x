@@ -4,8 +4,11 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_StatPoints
-  Handles distribution of stat points.
+  Module Name: StatPoints
+  Description: Handles distribution of stat points.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
 class StatPoints extends Base_Module

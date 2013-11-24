@@ -3,7 +3,7 @@
 /templates/.cache/
 /templates/.config/
 /templates/cache/
-/admin/Plugins/temp/*
+/admin/PluginTemp/*
 /admin/Update/temp/*
 
 config.php

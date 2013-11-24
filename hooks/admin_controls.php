@@ -7,7 +7,7 @@ $app['hooks']->add_hook('admin_header', 'admin_controls', 1);
 
 function hook_admin_controls($app, $args = 0)
 {
-	$db = $app['db']; $tpl=$app['tpl']; $player=$args['player'];
+	$dbase = $app['db']; $tpl=$app['tpl']; $player=$args['player'];
 	if(isset($_GET['admin']))
 	{
 		if(isAdmin($player)){
@@ -34,7 +34,7 @@ function hook_admin_controls($app, $args = 0)
 			}
 		}
 	}
-
+	$app['debugTimer']['admin_controls hook Loaded:'] = microtime(1);
     return $args;
 }
 

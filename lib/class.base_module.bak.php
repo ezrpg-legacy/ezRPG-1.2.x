@@ -75,7 +75,7 @@ abstract class Base_Module
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$app)
+    public function __construct($app)
     {
 		$this->app = $app;
         $this->db = $app['db'];
@@ -255,20 +255,6 @@ abstract class Base_Module
 		$this->tpl->assign('added_scripts', $scripts);
 	}
 	
-	public function __activate()
-	{
-	
-	}
-	
-	public function __deactivate()
-	{
-	
-	}
-	
-	public function __uninstall()
-	{
-	
-	}
 }
 
 ?>

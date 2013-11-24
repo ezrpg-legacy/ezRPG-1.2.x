@@ -33,18 +33,18 @@ if($settings->setting['api']['apistatus']['value']['value'])
 }
 
 function send_stats($api){
-	global $db;
+	global $dbase;
 	
 	if(!isset($api['user']))
 	{
 		echo json_encode(array('status'=>'failed','error'=>'Missing username'));
 	}else{
-		$query = $db->execute("SELECT id, username FROM <ezrpg>players WHERE username='". $api['user'] ."'");
-		if($db->numRows($query) != 0)
+		$query = $dbase->execute("SELECT id, username FROM <ezrpg>players WHERE username='". $api['user'] ."'");
+		if($dbase->numRows($query) != 0)
 		{
-			$pid = $db->fetch($query);
-			$query2 = $db->execute("SELECT * FROM <ezrpg>players_meta WHERE pid=".$pid->id);
-			$result = $db->fetch($query2);
+			$pid = $dbase->fetch($query);
+			$query2 = $dbase->execute("SELECT * FROM <ezrpg>players_meta WHERE pid=".$pid->id);
+			$result = $dbase->fetch($query2);
 			$stats = array();
 			$stats['username'] = $pid->username;
 			foreach($result as $item=>$key)
@@ -59,7 +59,7 @@ function send_stats($api){
 
 function require_key()
 {
-	global $db, $settings;
+	global $dbase, $settings;
 	if($settings->setting['api'])
 	{
 		if(isset($_GET['api_key']))

@@ -100,7 +100,7 @@ function isAdmin($player = 0)
 function loadMetaCache($kill = 0, $id = 0)
 {
     global $app;
-	$db = $app['db'];
+	$dbase = $app['db'];
 	if($id != 0)
 	{
 		$playerID = $id;
@@ -129,7 +129,7 @@ function loadMetaCache($kill = 0, $id = 0)
         else
         {
             unlink($cache);
-            $array = $db->fetchRow($query);
+            $array = $dbase->fetchRow($query);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
             if ( DEBUG_MODE == 1 )
             {
@@ -139,7 +139,7 @@ function loadMetaCache($kill = 0, $id = 0)
     }
     else
     {
-        $array = $db->fetchRow($query);
+        $array = $dbase->fetchRow($query);
         file_put_contents(CACHE_DIR . $cache_file, serialize($array));
         if ( DEBUG_MODE == 1 )
         {
@@ -151,8 +151,8 @@ function loadMetaCache($kill = 0, $id = 0)
 
 function forcePrunePlayerCache()
 {
-    global $db;
-    $db->execute('UPDATE <ezrpg>players SET force_cache = 1');
+    global $dbase;
+    $dbase->execute('UPDATE <ezrpg>players SET force_cache = 1');
     return true;
 }
 

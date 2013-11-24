@@ -7,7 +7,7 @@
 <br />
 {/if}
 <div>
-		<form method="post" action="index.php?mod=Settings&act=save">
+		<form method="post" action="index.php?mod=SettingsManager&act=save">
 <table width="100%" border="1px">
   <tbody>
 		<tr>

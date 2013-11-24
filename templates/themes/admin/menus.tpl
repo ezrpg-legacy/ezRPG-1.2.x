@@ -61,7 +61,7 @@
 			</td>
 			<td valign="top">
 {if $mitem->id != 0 }
-				<a href="index.php?mod=Menu&act=edit&mid={$mitem->id}">Edit</a> | <a href="index.php?mod=Menu&act=remove&mid={$mitem->id}">Delete</a>
+				<a href="index.php?mod=MenuManager&act=edit&mid={$mitem->id}">Edit</a> | <a href="index.php?mod=MenuManager&act=remove&mid={$mitem->id}">Delete</a>
 {/if}
 			</td>
 {/if}

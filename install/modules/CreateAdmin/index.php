@@ -48,7 +48,7 @@ class Install_CreateAdmin extends InstallerFactory
                 require_once "../lib/func.rand.php";
                 try
                 {
-                    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+                    $dbase = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
                 }
                 catch ( DbException $e )
                 {
@@ -64,17 +64,17 @@ class Install_CreateAdmin extends InstallerFactory
                 $insert['secret_key'] = $secret_key;
                 $insert['registered'] = time();
                 $insert['rank'] = 10;
-                $new_admin = $db->insert("<ezrpg>players", $insert);
+                $new_admin = $dbase->insert("<ezrpg>players", $insert);
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;
-                $db->insert("<ezrpg>players_meta", $admin_meta);
+                $dbase->insert("<ezrpg>players_meta", $admin_meta);
                 $insertconf = array( );
                 $insertconf['name'] = 'site_url';
                 $insertconf['title'] = 'Site URL';
                 $insertconf['optionscode'] = 'text';
                 $insertconf['value'] = $siteurl;
                 $insertconf['gid'] = 1;
-                $db->insert("<ezrpg>settings", $insertconf);
+                $dbase->insert("<ezrpg>settings", $insertconf);
                 $this->header();
                 echo "<p>Your admin account has been created! You may now login to the game.</p>\n";
                 $fh = fopen("lock", "w+");

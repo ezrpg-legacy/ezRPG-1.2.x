@@ -10,11 +10,11 @@ defined('IN_EZRPG') or exit;
 class Themes
 {
     /*
-      Variable: $db
+      Variable: $dbase
       Contains the database object.
      */
 
-    protected $db;
+    protected $dbase;
     /*
       Variable: $tpl
       Contains the smarty object.
@@ -26,13 +26,13 @@ class Themes
       The constructor takes in database and template to pass onto any functions called.
 
       Parameters:
-      $db - An instance of the database class.
+      $dbase - An instance of the database class.
       $this->tpl - A smarty object.
      */
 
-    public function __construct(&$db, &$tpl)
+    public function __construct(&$dbase, &$tpl)
     {
-        $this->db = & $db;
+        $this->db = & $dbase;
         $this->tpl = & $tpl;
         $this->template = $this->loadCache();
         $this->loadTemplates();

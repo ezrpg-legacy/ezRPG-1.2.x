@@ -3,10 +3,11 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_Skeleton
-  This is a skeleton module, which can be used as the starting point for coding new modules.
-  See:
-  <Base_Module>
+  Module Name: Skelton
+  Description: This is a skeleton module, which can be used as the starting point for coding new modules.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
 */
 class Module_Skeleton extends Base_Module
 {
@@ -16,7 +17,7 @@ class Module_Skeleton extends Base_Module
       This is where most of your player-facing code will go.
       
       Since this module extens Module_Base, you can use the following class variables:
-      $db - An instance of the database class.
+      $dbase - An instance of the database class.
       $tpl - A template smarty object.
       $player - A player result set from the database, or 0 if not logged in.
     */

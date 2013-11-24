@@ -21,7 +21,7 @@ class Install_Plugins extends InstallerFactory
         require_once "../config.php";
         try
         {
-            $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+            $dbase = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
         }
         catch ( DbException $e )
         {
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>plugins` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 
-        $db->execute($structure1);
+        $dbase->execute($structure1);
 
 
         $structure2 = <<<QUERY
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>plugins_meta` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 
-        $db->execute($structure2);
+        $dbase->execute($structure2);
 
         $data1 = <<<QUERY
 INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`, `pos`, `active`, `module_id`) VALUES
@@ -78,23 +78,23 @@ INSERT INTO `<ezrpg>menu` (`id`, `parent_id`, `name`, `title`, `AltTitle`, `uri`
 (14, 8, 'Update', 'Update', 'ezRPG Updater', 'index.php?mod=Update', 0, 1, 0);
 QUERY;
 
-        $db->execute($data1);
+        $dbase->execute($data1);
 
 
         $data2 = <<<QUERY
-INSERT INTO `<ezrpg>plugins` (`id`, `title`, `active`, `filename`, `type`, `installed`, `pid`) VALUES
+INSERT INTO `<ezrpg>plugins` (`id`, `title`, `active`, `class`, `type`, `pid`) VALUES
 (1, 'ezRPGCore', 1, '', 'module', 1, 0),
-(2, 'Login', 1, '', 'module', 1, 1),
-(3, 'EventLog', 1, '', 'module', 1, 1),
-(4, 'City', 1, '', 'module', 1, 1),
-(5, 'AccountSettings', 1, '', 'module', 1, 1),
-(6, 'Members', 1, '', 'module', 1, 1),
-(7, 'Logout', 1, '', 'module', 1, 1),
-(8, 'Register', 1, '', 'module', 1, 1),
-(9, 'StatPoints', 1, '', 'module', 1, 1);
+(2, 'Login', 1, 'login', 'module', 1, 1),
+(3, 'EventLog', 1, 'eventlog', 'module', 1, 1),
+(4, 'City', 1, 'city', 'module', 1, 1),
+(5, 'AccountSettings', 1, 'accountsettings', 'module', 1, 1),
+(6, 'Members', 1, 'members', 'module', 1, 1),
+(7, 'Logout', 1, 'logout', 'module', 1, 1),
+(8, 'Register', 1, 'register', 'module', 1, 1),
+(9, 'StatPoints', 1, 'statpoints', 'module', 1, 1);
 QUERY;
 
-        $db->execute($data2);
+        $dbase->execute($data2);
 
         $data3 = <<<QUERY
 INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `description`, `url`, `uninstall`) VALUES
@@ -109,7 +109,7 @@ INSERT INTO `<ezrpg>plugins_meta` (`meta_id`, `plug_id`, `version`, `author`, `d
 (9, 9, 1.2, 'ezRPGTeam', 'StatPoints Module - ezRPGCore', '', '');
 QUERY;
 
-        $db->execute($data3);
+        $dbase->execute($data3);
 		
 		killSettingsCache();
 		killModuleCache();

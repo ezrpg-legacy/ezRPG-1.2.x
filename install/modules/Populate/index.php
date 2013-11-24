@@ -21,7 +21,7 @@ class Install_Populate extends InstallerFactory
         require_once "../config.php";
 		try
         {
-            $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+            $dbase = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
         }
         catch ( DbException $e )
         {
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
-        $db->execute($structure1);
+        $dbase->execute($structure1);
 
 
         $structure2 = <<<QUERY
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>players_meta` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
-        $db->execute($structure2);
+        $dbase->execute($structure2);
 
         $structure3 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>player_log` (
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>player_log` (
   KEY `new_logs` (`player`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 QUERY;
-        $db->execute($structure3);
+        $dbase->execute($structure3);
 
         $structure4 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>menu` (
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
-        $db->execute($structure4);
+        $dbase->execute($structure4);
 
      
         $structure5 = <<<QUERY
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>settings` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
 
-        $db->execute($structure5);
+        $dbase->execute($structure5);
 
         $structure6 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
@@ -133,13 +133,13 @@ CREATE TABLE IF NOT EXISTS `<ezrpg>themes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 QUERY;
-        $db->execute($structure6);
+        $dbase->execute($structure6);
 
      
         $data1 = <<<QUERY
 INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscode`, `value`, `disporder`, `gid`, `isdefault`,`visible`) VALUES
 (1, 'general', 'General Configuration', 'This section contains varius engine related settings',NULL, NULL, 0, 0, 1, 1),
-(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'nuRPG 0.0.1', 0, 1, 1, 1),
+(2, 'game_name', 'Game Title', 'The title for your game', 'text', 'nuRPG 0.0.2', 0, 1, 1, 1),
 (3, 'pass_encryption', 'Password Encryption', 'Determine the type of password encryption to use for User Logins.','select', 4, 0, 1, 1, 1),
 (4, 'legacy', 'ezRPG Legacy', 'ezRPG Legacy Encryption method','option', 1, 0, 3, 1, 1),
 (5, 'pbkdf2', 'PBKDF2 Method', 'PBKDF2','option', 2, 0, 3, 1, 1),
@@ -150,11 +150,11 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (10, 'passLens', 'Password Lengths', 'Determine what lengths the password may be.', 'select', '11', 0, 7, 1, 1),
 (11, 'passMin', 'Minimum Length', '', 'option', 'min', 0, 10, 1, 1),
 (12, 'passMinMax', 'Minimum & Maximum Length', 'Check against both a Min and Max', 'option', 'minmax', 0, 10, 1, 1),
-(13, 'version', 'Game Version', '', 'text', '0.0.1', 0, 1, 1, 0),
+(13, 'version', 'Game Version', '', 'text', '0.0.2', 0, 1, 1, 0),
 (14, 'default_module', 'Default Module', 'Choose a default module for your frontpage', 'text', 'Index', 0, 1, 1, 0);
 QUERY;
 
-        $db->execute($data1);
+        $dbase->execute($data1);
 		
 		killSettingsCache();
 		$this->header();

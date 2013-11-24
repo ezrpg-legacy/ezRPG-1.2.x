@@ -27,7 +27,8 @@ function hook_check_stats($app, $args = 0)
     {
         $app['db']->execute('UPDATE `<ezrpg>players_meta` SET `energy`=?, `hp`=? WHERE `pid`=?', array( $args->energy, $args->hp, $args->id ));
     }
-
+	
+	$app['debugTimer']['check_stat hook Loaded:'] = microtime(1);
     return $args;
 }
 

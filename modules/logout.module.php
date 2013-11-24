@@ -4,8 +4,11 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_Logout
-  This module clears the session data to logout the user.
+  Module Name: Logout
+  Description: This module clears the session data to logout the user.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
 class Logout extends Base_Module
@@ -15,15 +18,14 @@ class Logout extends Base_Module
       Clears session data and redirects back to homepage.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function start()
     {
         unset($_SESSION['hash']);
         unset($_SESSION['userid']);
         session_unset();
         session_destroy();
 
-        global $hooks;
-        $hooks->run_hooks('logout');
+        $this->app['hooks']->run_hooks('logout');
 
         $this->setMessage('You have been logged out!');
         header('Location: index.php');

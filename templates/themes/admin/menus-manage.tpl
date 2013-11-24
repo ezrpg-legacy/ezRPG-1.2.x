@@ -6,7 +6,7 @@
 <b>{$errormsg}</b>
 <br />
 {/if}
-<form action="index.php?mod=Menu" method="post" id="menu">
+<form action="index.php?mod=MenuManager" method="post" id="menu">
 {foreach from=$menus item=mitem}
 <label for="mname">Menu Name:</label>
 <input type="text" name="mname" value="{$mitem->name}" required="true" />
@@ -47,18 +47,18 @@
 {elseif $page eq "delete"}
 {if $error == FALSE}
 <p>Are you sure you want to delete '{$menuname}' menu?</p>
-<a href="index.php?mod=Menu&act=remove&confirm=1&mid={$menuid}"><input name="login" type="submit" class="button" value="Yes" /></a>
-<a href="index.php?mod=Menu"><input name="login" type="submit" class="button" value="No" /></a>
+<a href="index.php?mod=MenuManager&act=remove&confirm=1&mid={$menuid}"><input name="login" type="submit" class="button" value="Yes" /></a>
+<a href="index.php?mod=MenuManager"><input name="login" type="submit" class="button" value="No" /></a>
 {else}
 <p>Sorry but you cannot delete a Menu Group without first deleting it's children!</p>
-<a href="index.php?mod=Menu"><input name="login" type="submit" class="button" value="Menu Manager" /></a>
+<a href="index.php?mod=MenuManager"><input name="login" type="submit" class="button" value="Menu Manager" /></a>
 {/if}
 {elseif $page eq "add"}
 {if $error != 0}
 <b>You have an error with a code of {$error}</b>
 <br />
 {/if}
-<form action="index.php?mod=Menu" method="post" id="menu">
+<form action="index.php?mod=MenuManager" method="post" id="menu">
 <label for="mname">Menu Name:</label>
 <input type="text" name="mname" value="{$mname}" required="true" />
 <label for="mpid">Menu Parent_ID:</label>

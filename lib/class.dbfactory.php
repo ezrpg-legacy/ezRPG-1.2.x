@@ -22,7 +22,7 @@ class DbFactory
       $host - The host of the database server.
       $username - Username to login with.
       $password - Password to login with.
-      $db - Name of the database.
+      $dbase - Name of the database.
 
       Returns:
       A new instance of the database driver class.
@@ -32,7 +32,7 @@ class DbFactory
       Example Usage:
       > try
       > {
-      >     $db = DbFactory::factory('mysql', 'localhost', 'root', 'password', 'ezrpg');
+      >     $dbase = DbFactory::factory('mysql', 'localhost', 'root', 'password', 'ezrpg');
       > }
       > catch (DbException $e)
       > {
@@ -43,12 +43,12 @@ class DbFactory
       - <DbException>
      */
 
-    public static function factory($type = 'mysql', $host = 'localhost', $username = 'root', $password = '', $db = 'ezrpg', $port = '3306')
+    public static function factory($type = 'mysql', $host = 'localhost', $username = 'root', $password = '', $dbase = 'ezrpg', $port = '3306')
     {
         if ( include_once(LIB_DIR . '/db.' . $type . '.php') )
         {
             $classname = 'Db_' . $type;
-            return new $classname($host, $username, $password, $db, $port);
+            return new $classname($host, $username, $password, $dbase, $port);
         }
         else
         {

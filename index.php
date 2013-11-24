@@ -38,14 +38,12 @@ $app['debugTimer']['Init-hooks Loaded:'] = microtime(1);
 //Header hooks
 
 $module_name = $app['hooks']->run_hooks('header', $app);
-
 $app['debugTimer']['header-hooks Loaded:'] = microtime(1);
 //Begin module
 $module = $app['module_name'];
-if(class_exists($module))
+if(class_exists($module) || class_exists($module = 'Module_'.$module))
 	$module = new $module($app);
-elseif(class_exists($module = 'Module_'.$module))
-	$module = new $module($app);
+
 $module->start();
 $app['debugTimer'][$app['module_name'] . 'Loaded'] = microtime(1);
 

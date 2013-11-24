@@ -10,11 +10,11 @@ defined('IN_EZRPG') or exit;
 class Players
 {
     /*
-      Variable: $db
+      Variable: $dbase
       Contains the database object.
      */
 
-    protected $db;
+    protected $dbase;
 
     /*
       Variable: $tpl
@@ -33,7 +33,7 @@ class Players
       The constructor takes in database, template and player variables to pass onto any hook functions called.
 
       Parameters:
-      $db - An instance of the database class.
+      $dbase - An instance of the database class.
       $tpl - A smarty object.
       $player - A player result set from the database, or 0 if not logged in.
      */
@@ -67,7 +67,7 @@ class Players
 		$insert['email'] = $email;
 		$insert['secret_key'] = createKey(16);
 		$insert['password'] = createPassword($insert['secret_key'], $password);
-		$insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
+		$insert['pass_method'] = $app['settings']->setting['general']['pass_encryption']['value']['value'];
 		$insert['registered'] = time();
 		//Run register hook
 		$insert = $app['hooks']->run_hooks('register', $insert);

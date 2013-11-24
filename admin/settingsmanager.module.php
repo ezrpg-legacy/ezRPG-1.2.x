@@ -6,7 +6,7 @@ defined('IN_EZRPG') or exit;
   Admin page for managing plugins and modules
  */
 
-class Admin_Settings extends Base_Module
+class SettingsManager extends Base_Module
 {
     /*
       Function: start

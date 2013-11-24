@@ -29,27 +29,8 @@ foreach ( $func as $item )
     }
 }
 
-//Classes			
-$clas = array(
-    'dbfactory',
-    'modulefactory',
-    'base_module',
-    'hooks',
-    'menu',
-    'settings',
-    'themes',
-	'players'
-	//,'router'
-);
+//Classes	
 
-foreach ( $clas as $item )
-{
-    $filename = LIB_DIR . '/class.' . $item . '.php';
-    if ( is_readable($filename) )
-    {
-        require_once ($filename);
-    }
-}
 //Exceptions
 require_once (LIB_DIR . '/exception.db.php');
 
@@ -60,13 +41,13 @@ require_once (LIB_DIR . '/const.errors.php');
 //Smarty
 require_once (EXT_DIR . '/smarty/Smarty.class.php');
 
-spl_autoload_extensions('.php, .module.php');
+spl_autoload_extensions('.php, .module.php, .hook.php');
 
 /*** class Loader ***/
 function moduleLoader($class)
 {
 	$filename = strtolower($class) . '.module.php';
-	$file ='modules/' . $filename;
+	$file = MOD_DIR . '/' . $filename;
 	if (!file_exists($file))
 	{
 		$deprecated = 'modules/'. $class .'/Index.php';
@@ -77,8 +58,21 @@ function moduleLoader($class)
 			include $deprecated;
 		}
 		$file = 'modules/index.module.php';
+		include $file;
 	}else{
 		include $file;
+	}
+}
+
+function libraryLoader($class)
+{
+	$filename = 'class.' . strtolower($class) . '.php';
+	$file = LIB_DIR . '/' . $filename;
+	if (!file_exists($file))
+	{
+		$_SESSION['status_messages']['Admin_Message'] = array('WARN' => 'Lib '.$file.' not found');
+	}else{
+		include_once $file;
 	}
 }
 
@@ -102,11 +96,11 @@ function adminLoader($class)
 	}
 }
 /*** register the loader functions ***/
-    if(!defined('IN_ADMIN'))
-	spl_autoload_register('moduleLoader');
+	if(!defined('IN_ADMIN'))
+		spl_autoload_register('moduleLoader');
 	if(defined('IN_ADMIN'))
-	spl_autoload_register('adminLoader');
-
-
+		spl_autoload_register('adminLoader');
+	spl_autoload_register('libraryLoader');
+	
 
 ?>

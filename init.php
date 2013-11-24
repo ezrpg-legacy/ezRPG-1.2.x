@@ -12,7 +12,6 @@ defined('IN_EZRPG') or exit;
 // Start Session
 session_start();
 $app[]='';
-
 // Constants
 define('CUR_DIR', realpath(dirname(__FILE__)));
 define('MOD_DIR', CUR_DIR . '/modules/');
@@ -22,13 +21,12 @@ define('EXT_DIR', LIB_DIR . '/ext');
 define('HOOKS_DIR', CUR_DIR . '/hooks');
 define('THEME_DIR', CUR_DIR . '/templates/');
 define('CACHE_DIR', CUR_DIR . '/cache/');
-
+require_once(CUR_DIR . '/lib.php');
 require_once CUR_DIR . '/config.php';
 $app['debugTimer']['Config Loaded:'] = microtime(1);
 // Show errors?
 (SHOW_ERRORS == 0) ? error_reporting(0) : error_reporting(E_ALL);
 
-require_once(CUR_DIR . '/lib.php');
 $app['debugTimer']['Library Loaded:'] = microtime(1);
 // Database
 try

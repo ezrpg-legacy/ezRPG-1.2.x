@@ -10,27 +10,27 @@ class Install_Config extends InstallerFactory
     {
         if ( !isset($_POST['submit']) )
         {
-            $dbhost = "localhost";
-            $dbuser = "root";
-            $dbname = "ezrpg";
-            $dbport = "3306";
-            $dbprefix = "ezrpg_";
+            $dbasehost = "localhost";
+            $dbaseuser = "root";
+            $dbasename = "ezrpg";
+            $dbaseport = "3306";
+            $dbaseprefix = "ezrpg_";
         }
         else
         {
-            $dbhost = $_POST['dbhost'];
-            $dbuser = $_POST['dbuser'];
-            $dbname = $_POST['dbname'];
-            $dbpass = $_POST['dbpass'];
-            $dbprefix = $_POST['dbprefix'];
-            $dbdriver = $_POST['dbdriver'];
-            $dbport = $_POST['dbport'];
+            $dbasehost = $_POST['dbhost'];
+            $dbaseuser = $_POST['dbuser'];
+            $dbasename = $_POST['dbname'];
+            $dbasepass = $_POST['dbpass'];
+            $dbaseprefix = $_POST['dbprefix'];
+            $dbasedriver = $_POST['dbdriver'];
+            $dbaseport = $_POST['dbport'];
             $error = 0;
 
             //test database connection.
             try
             {
-                $db = DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
+                $dbase = DbFactory::factory($dbasedriver, $dbasehost, $dbaseuser, $dbasepass, $dbasename, $dbaseport);
             }
             catch ( DbException $e )
             {
@@ -61,12 +61,12 @@ defined('IN_EZRPG') or exit;
   \$config_driver - Contains the database driver to use to connect to the database.
   \$config_port - Contains the database port your database server port.
 */
-\$config_server = '{$dbhost}';
-\$config_dbname = '{$dbname}';
-\$config_username = '{$dbuser}';
-\$config_password = '{$dbpass}';
-\$config_driver = '{$dbdriver}';
-\$config_port = '{$dbport}';
+\$config_server = '{$dbasehost}';
+\$config_dbname = '{$dbasename}';
+\$config_username = '{$dbaseuser}';
+\$config_password = '{$dbasepass}';
+\$config_driver = '{$dbasedriver}';
+\$config_port = '{$dbaseport}';
 
 /*
   Constant:
@@ -90,8 +90,8 @@ define('SECRET_KEY', '{$secret_key}');
   SHOW_ERRORS - Turn on to show PHP errors.
   DEBUG_MODE - Turn on to show database errors and debug information.
 */
-define('DB_PREFIX', '{$dbprefix}');
-define('VERSION', '0.0.1');
+define('DB_PREFIX', '{$dbaseprefix}');
+define('VERSION', '0.0.2');
 define('SHOW_ERRORS', 0);
 define('DEBUG_MODE', 0);
 ?>
@@ -126,12 +126,12 @@ defined('IN_EZRPG') or exit; <br />
   \$config_driver - Contains the database driver to use to connect to the database.<br />
   \$config_port - Contains the database port your database server port.<br />
 */<br />
-\$config_server = '{$dbhost}';<br />
-\$config_dbname = '{$dbname}';<br />
-\$config_username = '{$dbuser}';<br />
-\$config_password = '{$dbpass}';<br />
-\$config_driver = '{$dbdriver}';<br />
-\$config_port = '{$dbport}';<br />
+\$config_server = '{$dbasehost}';<br />
+\$config_dbname = '{$dbasename}';<br />
+\$config_username = '{$dbaseuser}';<br />
+\$config_password = '{$dbasepass}';<br />
+\$config_driver = '{$dbasedriver}';<br />
+\$config_port = '{$dbaseport}';<br />
 <br />
 /*<br />
   Constant:<br />
@@ -155,8 +155,8 @@ define('SECRET_KEY', '{$secret_key}');<br />
   SHOW_ERRORS - Turn on to show PHP errors.<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
-define('DB_PREFIX', '{$dbprefix}');<br />
-define('VERSION', '0.0.1');<br />
+define('DB_PREFIX', '{$dbaseprefix}');<br />
+define('VERSION', '0.0.2');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";
@@ -179,17 +179,17 @@ define('DEBUG_MODE', 0);<br />
         echo '<label>Driver</label>';
         echo '<select name="dbdriver"><option value="mysql">MySQL</option><option value="mysqli">MySQLi</option><option value="pdo">PDO</option></select>';
         echo '<label>Host</label>';
-        echo '<input type="text" name="dbhost" value="' . $dbhost . '" />';
+        echo '<input type="text" name="dbhost" value="' . $dbasehost . '" />';
         echo '<label>Port</label>';
-        echo '<input type="text" name="dbport" value="' . $dbport . '" />';
+        echo '<input type="text" name="dbport" value="' . $dbaseport . '" />';
         echo '<label>Database Name</label>';
-        echo '<input type="text" name="dbname" value="' . $dbname . '" />';
+        echo '<input type="text" name="dbname" value="' . $dbasename . '" />';
         echo '<label>User</label>';
-        echo '<input type="text" name="dbuser" value="' . $dbuser . '" />';
+        echo '<input type="text" name="dbuser" value="' . $dbaseuser . '" />';
         echo '<label>Password</label>';
         echo '<input type="password" name="dbpass" value="" />';
         echo '<label>Table Prefix (Optional)</label>';
-        echo '<input type="text" name="dbprefix" value="', $dbprefix, '" />';
+        echo '<input type="text" name="dbprefix" value="', $dbaseprefix, '" />';
         echo '<p>You can enter a prefix for your table names if you like.<br />This can be useful if you will be sharing the database with other applications, or if you are running more than one ezRPG instance in a single database.</p>';
         echo '<p><strong>Note</strong> Please make sure that the database exists.</p>';
         echo '<input type="submit" name="submit" value="Submit"  class="button" />';

@@ -20,7 +20,7 @@ class InstallerFactory
       Looks for /admin/modules/Index/index.php, then creates new Install_Index() object.
 
       Parameters:
-      $db - An instance of the database object.
+      $dbase - An instance of the database object.
       $tpl - An instance of the smarty object.
       $module - Name of the module, defaults to Index.
 
@@ -30,7 +30,7 @@ class InstallerFactory
       Shows the Index module if the specified module cannot be found.
 
       Example Usage:
-      > $new_module = ModuleFactory::factory($db, $tpl, $player);
+      > $new_module = ModuleFactory::factory($dbase, $tpl, $player);
       > $new_module->start();
      */
 

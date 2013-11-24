@@ -10,23 +10,23 @@ defined('IN_EZRPG') or exit;
 class Settings
 {
     /*
-      Variable: $db
+      Variable: $dbase
       Contains the database object.
      */
 
-    protected $db;
+    protected $dbase;
 
     /*
       Function: __construct
       The constructor takes in database variable to pass onto any functions called.
 
       Parameters:
-      $db - An instance of the database class.
+      $dbase - An instance of the database class.
      */
 
-    public function __construct(&$db)
+    public function __construct(&$dbase)
     {
-        $this->db = & $db;
+        $this->db = & $dbase;
         $this->settings = $this->loadSettings();
         $this->groups = $this->get_settings_by_group($this->settings);
 		$this->setting = $this->get_settings($this->settings);

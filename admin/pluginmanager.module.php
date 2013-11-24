@@ -7,7 +7,7 @@ require_once( LIB_DIR . '/pclzip.lib.php' );
   Admin page for managing plugins and modules
  */
 
-class Admin_Plugins extends Base_Module
+class PluginManager extends Base_Module
 {
     /*
       Function: start
@@ -49,18 +49,39 @@ class Admin_Plugins extends Base_Module
 
     private function list_modules()
     {
-        $query = $this->db->execute('select * from <ezrpg>plugins JOIN <ezrpg>plugins_meta ON <ezrpg>plugins.id = <ezrpg>plugins_meta.plug_id');
+		$query = $this->app['hooks']->run_hooks('get_plugins');
+        //$query = $this->db->execute('select * from <ezrpg>plugins JOIN <ezrpg>plugins_meta ON <ezrpg>plugins.id = <ezrpg>plugins_meta.plug_id');
         $plugins = Array( );
+		/*
         while ( $m = $this->db->fetch($query) )
         {
             $plugins[] = $m;
         }
-        $this->tpl->assign("plugins", $plugins);
+		*/
+		
+		foreach($query as $key)
+		{
+			$plugins[]=$key;
+		}
+		//die(print_r($plugins));
+		$this->tpl->assign("plugins", $plugins);
         $this->loadView('plugins.tpl');
     }
 
     private function enable_modules($id)
     {
+		$module_query = $this->db->execute('SELECT class FROM <ezrpg>plugins WHERE id='.$id);
+		$result = $this->db->fetchArray($module_query);
+		if(file_exists(MOD_DIR.'/'.$result['class'].'.module.php'))
+			include MOD_DIR.'/'.$result['class'].'.module.php';
+		if(class_exists($result['class']))
+			$plugin = $result['class'];
+		if(isset($plugin))
+		{
+			$plugin = new $plugin($this->app);
+			if(method_exists($plugin, '__activate'))
+				$plugin->__activate();
+		}
         $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 1 WHERE <ezrpg>plugins.id = ' . $id . ' OR <ezrpg>plugins.pid = ' . $id);
         $this->db->fetch($query);
         $query2 = $this->db->execute('UPDATE <ezrpg>menu SET <ezrpg>menu.active = 1 WHERE <ezrpg>menu.module_id = ' . $id);
@@ -68,20 +89,32 @@ class Admin_Plugins extends Base_Module
         killMenuCache();
         $this->setMessage("Module enabled!");
         killModuleCache();
-        header('Location: index.php?mod=Plugins');
+        header('Location: index.php?mod=PluginManager');
         exit;
     }
 
     private function disable_modules($id)
     {
-        $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.id = ' . $id . ' OR <ezrpg>plugins.pid = ' . $id);
+		$module_query = $this->db->execute('SELECT class FROM <ezrpg>plugins WHERE id='.$id);
+		$result = $this->db->fetchArray($module_query);
+		if(file_exists(MOD_DIR.'/'.$result['class'].'.module.php'))
+			include MOD_DIR.'/'.$result['class'].'.module.php';
+		if(class_exists($result['class']))
+			$plugin = $result['class'];
+		if(isset($plugin))
+		{
+			$plugin = new $plugin($this->app);
+			if(method_exists($plugin, '__deactivate'))
+				$plugin->__deactivate();
+		}		
+		$query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.id = ' . $id . ' OR <ezrpg>plugins.pid = ' . $id);
         $this->db->fetch($query);
         $query2 = $this->db->execute('UPDATE <ezrpg>menu SET <ezrpg>menu.active = 0 WHERE <ezrpg>menu.module_id = ' . $id);
         $this->db->fetch($query2);
         killMenuCache();
         $this->setMessage("Module disabled!");
         killModuleCache();
-        header('Location: index.php?mod=Plugins');
+        header('Location: index.php?mod=PluginManager');
         exit;
     }
 
@@ -110,7 +143,7 @@ class Admin_Plugins extends Base_Module
                 {
                     $zip = new PclZip($_FILES["file"]["tmp_name"]);
                     $ziptempdir = substr(uniqid('', true), -5);
-                    $dir = "Plugins/temp/" . $ziptempdir;
+                    $dir = "PluginTemp/" . $ziptempdir;
                     $results = "";
                     if ( $zip->extract(PCLZIP_OPT_PATH, $dir) == 0 )
                     {
@@ -133,14 +166,25 @@ class Admin_Plugins extends Base_Module
 						$plugin = new $plugin($this->app);
 						$error=0;
 						$errors[]= '';
+						$module_data = get_module_data($dir.'/'.$plugin_file);
 						$result=true;
 						if(method_exists($plugin, '__activate'))
 							$result = $plugin->__activate();
 						if($result==false)
+						{
+							$insert_plug = $this->db->INSERT('<ezrpg>plugins', array('title'=>$plugin, 'type'=>'module', 'active'=>0));
+							$meta = $this->db->INSERT('<ezrpg>plugins_meta', array('plug_id'=>$insert_plug));
 							$results .= "There was an issue activating your plugin!<br />";
-						else
+						}else{
+							$insert_plug = $this->db->INSERT('<ezrpg>plugins', array('title'=>$module_data['Name'], 'type'=>'module', 'active'=>1));
+							$insert_meta['plug_id'] = $insert_plug;
+							$insert_meta['version'] = (!empty($module_data['Version'])?$module_data['Version']:'0');
+							$insert_meta['description'] = (!empty($module_data['Description'])?$module_data['Description']:'');
+							$this->db->INSERT('<ezrpg>plugins_meta', $insert_meta);
+							killModuleCache();
 							$results .= "Plugin has been activated!";
-						$results .= "<a href='index.php?mod=Plugins'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
+						}
+						$results .= "<a href='index.php?mod=PluginManager'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
                     }
                     else
                     {
@@ -148,7 +192,7 @@ class Admin_Plugins extends Base_Module
                         $results .= "This is not a valid Plugin <br />";
                         $this->rrmdir($dir);
                         $results .= "All temporary files have been deleted. <br />";
-                        $results .= "<a href='index.php?mod=Plugins'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
+                        $results .= "<a href='index.php?mod=PluginManager'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
                     }
                 }
                 else
@@ -156,7 +200,7 @@ class Admin_Plugins extends Base_Module
 					$results = "Filetype detected: " . $_FILES['file']['type'] . '<br />';
                     $results .= "Uploaded Unsupported filetype. Only upload .zips at this time.<br />";
 					$results .= "If you feel that this message is in error, please ask for support from ezRPGProject.net!<br />";
-                    $results .= "<a href='index.php?mod=Plugins'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
+                    $results .= "<a href='index.php?mod=PluginManager'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
                 }
                 $this->tpl->assign("RESULTS", $results);
                 $this->loadView('plugin_results.tpl');
@@ -175,6 +219,18 @@ class Admin_Plugins extends Base_Module
             $this->list_modules();
             break;
         }
+		$module_query = $this->db->execute('SELECT class FROM <ezrpg>plugins WHERE id='.$id);
+		$result = $this->db->fetchArray($module_query);
+		if(file_exists(MOD_DIR.'/'.$result['class'].'.module.php'))
+			include MOD_DIR.'/'.$result['class'].'.module.php';
+		if(class_exists($result['class']))
+			$plugin = $result['class'];
+		if(isset($plugin))
+		{
+			$plugin = new $plugin($this->app);
+			if(method_exists($plugin, '__uninstall'))
+				$plugin->__uninstall();
+		}
         $query1 = $this->db->execute('SELECT * FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
         $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
         $result = $this->db->fetchAll($query_mod);
@@ -195,10 +251,10 @@ class Admin_Plugins extends Base_Module
 		if ($complete == true)
 		{
 			$this->setMessage('Uninstall Complete', 'GOOD');
-			header('Location: index.php?mod=Plugins');
+			header('Location: index.php?mod=PluginManager');
 		}else{
 			$this->setMessage('Uninstall Failed', 'FAIL');
-			header('Location: index.php?mod=Plugins');
+			header('Location: index.php?mod=PluginManager');
 		}
     }
 	
@@ -212,6 +268,7 @@ class Admin_Plugins extends Base_Module
 				{
 					case 'module':
 						$this->rrmdir(MOD_DIR . $file->title);
+						$this->rrmdir(MOD_DIR . $file->class . '.module.php');
 						break;
 					case 'templates':
 						$this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
@@ -226,6 +283,7 @@ class Admin_Plugins extends Base_Module
 			$this->db->execute('DELETE FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
 			$this->db->execute('DELETE FROM <ezrpg>menu WHERE module_id=' . $id);
 			killMenuCache();
+			killModuleCache();
 			return true;
 		}catch (Exception $e)
 		{
@@ -260,7 +318,9 @@ class Admin_Plugins extends Base_Module
             }
             reset($objects);
             rmdir($dir);
-        }
+        }else{
+			unlink($dir);
+		}
     }
 
     private function re_copy($src, $dst)
@@ -305,4 +365,47 @@ function get_php_classes($php_code) {
   }
   return $classes;
 }
+
+function processPHPDoc(ReflectionMethod $reflect)
+{
+    $phpDoc = array('params' => array(), 'return' => null, 'title'=>array(), 'author'=>array());
+    $docComment = $reflect->getDocComment();
+    if (trim($docComment) == '') {
+        return null;
+    }
+    $docComment = preg_replace('#[ \t]*(?:\/\*\*|\*\/|\*)?[ ]{0,1}(.*)?#', '$1', $docComment);
+    $docComment = ltrim($docComment, "\r\n");
+    $parsedDocComment = $docComment;
+    $lineNumber = $firstBlandLineEncountered = 0;
+    while (($newlinePos = strpos($parsedDocComment, "\n")) !== false) {
+        $lineNumber++;
+        $line = substr($parsedDocComment, 0, $newlinePos);
+ 
+        $matches = array();
+        if ((strpos($line, '@') === 0) && (preg_match('#^(@\w+.*?)(\n)(?:@|\r?\n|$)#s', $parsedDocComment, $matches))) {
+            $tagDocblockLine = $matches[1];
+            $matches2 = array();
+ 
+            if (!preg_match('#^@(\w+)(\s|$)#', $tagDocblockLine, $matches2)) {
+                break;
+            }
+            $matches3 = array();
+            if (!preg_match('#^@(\w+)\s+([\w|\\\]+)(?:\s+(\$\S+))?(?:\s+(.*))?#s', $tagDocblockLine, $matches3)) {
+                break;
+            }
+            if ($matches3[1] != 'param') {
+                if (strtolower($matches3[1]) == 'return') {
+                    $phpDoc['return'] = array('type' => $matches3[2]);
+                }
+            } else {
+                $phpDoc['params'][] = array('name' => $matches3[3], 'type' => $matches3[2]);
+            }
+ 
+            $parsedDocComment = str_replace($matches[1] . $matches[2], '', $parsedDocComment);
+        }
+    }
+    return $phpDoc;
+}
+
+
 }

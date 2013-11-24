@@ -7,7 +7,7 @@ defined('IN_EZRPG') or exit;
   Admin page for managing members
  */
 
-class Admin_Members extends Base_Module
+class MemberManager extends Base_Module
 {
     /*
       Function: start

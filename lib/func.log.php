@@ -18,23 +18,23 @@ defined('IN_EZRPG') or exit;
   Parameters:
   $player - The ID number of the player (NOT the player object!).
   $msg - A string containing the message to be inserted.
-  $db - The database object.
+  $dbase - The database object.
 
   Returns:
   The ID number of the newly inserted log entry.
 
   Example Usage:
   > $message = 'This is an example log message!';
-  > $new_log = addLog($player->id, $message, $db);
+  > $new_log = addLog($player->id, $message, $dbase);
  */
 
-function addLog($player, $msg, &$db)
+function addLog($player, $msg, &$dbase)
 {
     $insert['player'] = $player;
     $insert['time'] = time();
     $insert['message'] = $msg;
 
-    return $db->insert('<ezrpg>player_log', $insert);
+    return $dbase->insert('<ezrpg>player_log', $insert);
 }
 
 /*
@@ -43,18 +43,18 @@ function addLog($player, $msg, &$db)
 
   Parameters:
   $player - The ID number of the player.
-  $db - The database object.
+  $dbase - The database object.
 
   Returns:
   The number of new log messages.
 
   Example Usage:
-  > echo 'New Log Events: ', checkLog($player->id, $db);
+  > echo 'New Log Events: ', checkLog($player->id, $dbase);
  */
 
-function checkLog($player, &$db)
+function checkLog($player, &$dbase)
 {
-    $result = $db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0', array( intval($player) ));
+    $result = $dbase->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0', array( intval($player) ));
     return $result->count;
 }
 

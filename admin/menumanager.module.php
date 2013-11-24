@@ -7,7 +7,7 @@ require_once (LIB_DIR . '/pclzip.lib.php');
   Admin page for managing plugins and modules
  */
 
-class Admin_Menu extends Base_Module
+class MenuManager extends Base_Module
 {
     /*
       Function: start

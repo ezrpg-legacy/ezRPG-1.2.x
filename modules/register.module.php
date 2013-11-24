@@ -4,11 +4,14 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_Register
-  This module handles adding new players to the database.
+  Module Name: Register
+  Description: This module handles adding new players to the database.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
-class register extends Base_Module
+class Register extends Base_Module
 {
     /*
       Function: start()
@@ -30,7 +33,7 @@ class register extends Base_Module
         {
             //If the form was submitted, process it in register().
             if ( isset($_POST['register']) )
-                $this->register();
+               $this->register2(); 
             else
                 $this->render();
         }
@@ -43,7 +46,7 @@ class register extends Base_Module
       Also repopulates the form with submitted data if necessary.
      */
 
-    private function render()
+    public function render()
     {
         //Add form default values
         if ( !empty($_GET['username']) )
@@ -67,11 +70,11 @@ class register extends Base_Module
       At the end, use a *redirect* in order to be able to display a message through $_GET['msg'].
      */
 
-    private function register()
+    public function register2()
     {
         $error = 0;
         $errors = Array( );
-
+		
         //Check username
         $result = $this->db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players` WHERE `username`=?', array( $_POST['username'] ));
         if ( empty($_POST['username']) )

@@ -8,21 +8,26 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 0.0.1
-####Pushed Nov 15 2013
+##Notes about 0.0.2
+####Pushed Nov 23 2013
 ```
 
-- Initial Release
-- Modules are autoloaded with spl_autoload
-- Support for old modules still exist, but will be removed later
-- Modules now are names "MODULENAME.module.php" and are JUST put inside the modules/* directory and nor a subdirectory of that.
-- Module classes don't need "Module_" prefixed to it. It's already in a module folder, extending a Base_Module.
-- Magic methods are to be created: "__activate", "__deactivate", "__uninstall", and "__update". "__activate" will run both install and activate functions, it'll be by design of the developer to distinguish how these will be to avoid re-installation of DB commands.
-- Standard Formatting of PHPDoc comments will be utilized for "Module Name", "Author", "Version" etc.
-- An almost complete Plugin Uploader that does away with the xml idea.
-- Created an $app super variable instead of using a proper IoC container to limit the number of objects being passed by storing objects inside a single variable.
-- Currently we're pretty close to being 100% compatible with 1.2.1.x modules. Some tweaks are needed for hooks and such.
+- PluginManager.module.php now implements the activate, deactivate, and uninstall functions (update to come later).
+- PHPDoc comments are parsed and utilized as part of the installer process.
+- KillModuleCache has been added to the PluginManager to address issues found during development.
+- Added a 'class' column to <ezrpg>plugins.
+- Deleted 'filename', 'installed', and 'secondary_install' from <ezrpg>plugins.
+- 'active' now takes the place of any 'installed' information. When a plugin is uploaded, the system checks for __active() method. If exists, it runs and checks for a True/False return. It's on the plugin developers to implement their error tracking features to return correct information. A FALSE return results in Active remaining as 0 (or NOT installed) and TRUE results as 1 (installed and active). If a plugin gets deactivated, then it's still installed, but the tables it installed during it's initial activation should still be intact. The developer must currently do a check to ensure tables aren't recreated. See example.module.php for an example.
+
 ```
+
+##ToDo for 0.0.3<
+```
+- Implement __update function to pluginmanager.
+- Fix an issue in the pluginmanager where the Library Autoloader is trying to load the uploaded module and producing an error.
+- Fix the update function to work in a similar matter of downloading the update via a .zip, extracting it to a temp file, and then running update operations found in a update.php file before deleting said file.
+- Hit milestone 1.0 and decide to remerge back with ezRPG or continue as a separate fork.
+
 =====
 A modular game engine written in PHP.
 

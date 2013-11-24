@@ -4,8 +4,12 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_City
-  This is a very simple module, designed to simply display a static template page.
+  Module Name: City
+  Description: This is a very simple module, designed to simply display a static template page.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
+  
  */
 
 class City extends Base_Module

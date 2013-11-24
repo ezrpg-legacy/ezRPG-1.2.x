@@ -4,8 +4,11 @@
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: Module_Index
-  A basic module for the default landing page. Just shows the index template or the player's home page.
+  Module Name: Index
+  Description: A basic module for the default landing page. Just shows the index template or the player's home page.
+  Author: Zeggy, UAKTags
+  Package: nuRPG
+  Version: 0.1
  */
 
 class Index extends Base_Module
