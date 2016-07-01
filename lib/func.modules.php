@@ -31,7 +31,7 @@ function loadModuleCache()
             $array = unserialize(file_get_contents($cache));
             if ( DEBUG_MODE == 1 )
             {
-				$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Loaded Module Cache!');
+				$_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Admin: Loaded Module Cache!');
             }
         }
         else
@@ -168,7 +168,6 @@ function isModuleActive($name, $modules = 0)
 {
     if ( $modules == 0 )
         $modules = (array) loadModuleCache();
-
     foreach ( $modules as $key => $item )
     {
         if ( in_array($name, (array) $item) )

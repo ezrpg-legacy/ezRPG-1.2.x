@@ -49,6 +49,7 @@ $settings = new Settings($db);
 $debugTimer['Settings Loaded:'] = microtime(1);
 // Smarty
 $tpl = new Smarty();
+$tpl->caching = 0;  
 $tpl->assign('GAMESETTINGS', $settings->setting['general']);
 if(DEBUG_MODE)
 	echo 'GAMESETTINGS Smarty Variable is being deprecated. Use {settings g=\'general\' n=\'Setting_Name\'} for your GameSettings needs.';

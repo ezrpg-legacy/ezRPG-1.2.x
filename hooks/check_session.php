@@ -68,7 +68,8 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
 
             // check the last time the user was active.
             // if they weren't active for a certain time period, prompt for password again.
-            if ( $_SESSION['last_active'] < (time() - 300) )
+            // Changed to 10Minutes
+            if ( $_SESSION['last_active'] < (time() - 600) )
             {
                 if ( !in_array($_GET['mod'], array( 'Logout' )) )
                 {

@@ -10,3 +10,4 @@ config.php
 /cache/*
 /cache/templates/*.php
 install/lock
+.idea/
