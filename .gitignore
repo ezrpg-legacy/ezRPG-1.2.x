@@ -1,4 +1,5 @@
 !.gitignore
+!.keep
 /templates/.compiled/
 /templates/.cache/
 /templates/.config/
