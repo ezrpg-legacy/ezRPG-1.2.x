@@ -1,5 +1,7 @@
 <?php
 
+namespace ezRPG\lib;
+
 defined('IN_EZRPG') or exit;
 
 /*
@@ -38,11 +40,11 @@ class Players
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($container)
     {
-        $this->db = &$db;
-        $this->tpl = &$tpl;
-        $this->player = &$player;
+        $this->db = $container['db'];
+        $this->tpl = $container['tpl'];
+        $this->player = $container['player'];
     }
 	
 	public function updateMeta($data, $id)

@@ -20,7 +20,8 @@ if ( !defined('IN_EZRPG') )
 
 function loadModuleCache()
 {
-    global $db;
+    global $container;
+    $db = $container['db'];
     $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;

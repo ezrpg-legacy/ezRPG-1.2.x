@@ -7,34 +7,45 @@
  */
 
 namespace ezRPG;
+use Pimple\Container;
 
 
 class Application
 {
 
-    public $hooks;
-    public $database;
-    public $tpl;
-    public $player;
+    public $container;
 
-    public function __construct($db, $tpl, $player)
+    public function __construct(Container $container)
     {
-        $this->database = $db; // = $this->getDatabase;
-        $this->tpl = $tpl;
-        $this->player = $player;
+        $this->container = $container;
     }
 
-    private function getDatabase()
+    public function getDatabase()
     {
-
+        return $this->container['db'];
     }
 
-    private function getTemplateSystem()
+    public function getContainer()
     {
-
+        return $this->container;
     }
 
-    private function getPlayer()
+    public function getTemplateSystem()
+    {
+        return $this->container['tpl'];
+    }
+    
+    public function setTemplateSystem($tpl)
+    {
+        $this->container['tpl']= $tpl;
+    }
+
+    public function getPlayer()
+    {
+        return $this->container['player'];
+    }
+
+    public function setPlayer($args)
     {
 
     }
@@ -42,7 +53,7 @@ class Application
     public function getHooks()
     {
         // Create a hooks object
-        $hooks = new \ezRPG\lib\Hooks($this->database, $this->tpl, $this->player);
+        $hooks = new \ezRPG\lib\Hooks($this->container);
         $debugTimer['Hooks Initiated:'] = microtime(1);
         // Include all hook files
         $hook_files = scandir(HOOKS_DIR);
@@ -55,5 +66,12 @@ class Application
             }
         }
         return $hooks;
+    }
+
+    public function getThemes()
+    {
+        $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
+        $debugTimer['Themes Initiated:'] = microtime(1);
+        return $this->container['themes'];
     }
 }

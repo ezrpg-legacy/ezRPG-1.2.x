@@ -99,7 +99,7 @@ function isAdmin($player = 0)
 
 function loadMetaCache($kill = 0, $id = 0)
 {
-    global $db, $debugTimer;
+    global $container, $debugTimer;
 	if($id != 0)
 	{
 		$playerID = $id;
@@ -112,11 +112,11 @@ function loadMetaCache($kill = 0, $id = 0)
     $query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $playerID;
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;
-    if ( $kill == 1 )
-        unlink($cache);
 
     if ( file_exists($cache) )
     {
+        if ( $kill == 1 )
+            unlink($cache);
         if ( filemtime($cache) > time() - 60 * 60 * 24 )
         {
             $array = unserialize(file_get_contents($cache));
@@ -128,7 +128,7 @@ function loadMetaCache($kill = 0, $id = 0)
         else
         {
             unlink($cache);
-            $array = $db->fetchRow($query);
+            $array = $container['db']->fetchRow($query);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
             if ( DEBUG_MODE == 1 )
             {
@@ -138,7 +138,7 @@ function loadMetaCache($kill = 0, $id = 0)
     }
     else
     {
-        $array = $db->fetchRow($query);
+        $array = $container['db']->fetchRow($query);
         file_put_contents(CACHE_DIR . $cache_file, serialize($array));
         if ( DEBUG_MODE == 1 )
         {
@@ -150,8 +150,8 @@ function loadMetaCache($kill = 0, $id = 0)
 
 function forcePrunePlayerCache()
 {
-    global $db;
-    $db->execute('UPDATE <ezrpg>players SET force_cache = 1');
+    global $container;
+    $container['db']->execute('UPDATE <ezrpg>players SET force_cache = 1');
     return true;
 }
 

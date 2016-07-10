@@ -4,7 +4,7 @@ defined('IN_EZRPG') or exit;
 
 $hooks->add_hook('player', 'check_stats', 2);
 
-function hook_check_stats($db, &$tpl, $player, $args = 0)
+function hook_check_stats($container, $args = 0)
 {
     if ( $args === 0 || LOGGED_IN == false )
         return $args;
@@ -25,7 +25,7 @@ function hook_check_stats($db, &$tpl, $player, $args = 0)
 
     if ( $changed === true )
     {
-        $db->execute('UPDATE `<ezrpg>players_meta` SET `energy`=?, `hp`=? WHERE `pid`=?', array( $args->energy, $args->hp, $args->id ));
+        $container['db']->execute('UPDATE `<ezrpg>players_meta` SET `energy`=?, `hp`=? WHERE `pid`=?', array( $args->energy, $args->hp, $args->id ));
         killPlayerCache($args->id);
     }
 

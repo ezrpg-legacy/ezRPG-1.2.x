@@ -13,6 +13,10 @@ defined('IN_EZRPG') or exit;
 
 class Module_Login extends Base_Module
 {
+    public function __construct($container, $menu)
+    {
+        parent::__construct($container, $menu);
+    }
     /*
       Function: start
       Checks player details to login the player.
@@ -124,7 +128,7 @@ class Module_Login extends Base_Module
             $player = $this->db->fetch($query);
 
             // We have different authentication methods at our disposal.
-            $pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
+            $pass_meth = $this->settings->setting['general']['pass_encryption']['value']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password, ($player->pass_method == $pass_meth ? '0' : $player->pass_method));
             if ( $check != true )
             {

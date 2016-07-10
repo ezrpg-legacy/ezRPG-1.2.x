@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\admin;
+use \ezRPG\lib\Base_Module;
+
 defined('IN_EZRPG') or exit;
 require_once (LIB_DIR . '/pclzip.lib.php');
 /*
@@ -222,7 +225,6 @@ class Admin_Menu extends Base_Module
             $this->tpl->assign('error', 1);
             $this->tpl->assign('page', 'edit');
             $this->list_menus();
-            break;
         }
     }
 

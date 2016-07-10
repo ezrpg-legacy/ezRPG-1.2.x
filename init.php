@@ -8,6 +8,7 @@
  */
 
 namespace ezRPG;
+use Pimple\Container;
 
 // This page cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -33,10 +34,13 @@ $debugTimer['Config Loaded:'] = microtime(1);
 
 require_once(CUR_DIR . '/lib.php');
 $debugTimer['Library Loaded:'] = microtime(1);
+
+$container = new Container();
+$ezrpg = new \ezRPG\Application($container);
 // Database
 try
 {
-    $db = \ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+    $ezrpg->container['db'] = \ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 }
 catch ( DbException $e )
 {
@@ -45,14 +49,13 @@ catch ( DbException $e )
 $debugTimer['DB Loaded:'] = microtime(1);
 // Database password no longer needed, unset variable
 unset($config_password);
-
 // Settings
-$settings = new \ezRPG\lib\Settings($db);
+$ezrpg->container['settings'] = new \ezRPG\lib\Settings($ezrpg->container['db']);
 $debugTimer['Settings Loaded:'] = microtime(1);
 // Smarty
-$tpl = new \Smarty();
+$tpl = $ezrpg->container['tpl'] = new \Smarty();
 $tpl->caching = 0;  
-$tpl->assign('GAMESETTINGS', $settings->setting['general']);
+$tpl->assign('GAMESETTINGS', $ezrpg->container['settings']->setting['general']);
 if(DEBUG_MODE)
 	echo 'GAMESETTINGS Smarty Variable is being deprecated. Use {settings g=\'general\' n=\'Setting_Name\'} for your GameSettings needs.';
 
@@ -64,11 +67,10 @@ $debugTimer['Smarty Loaded:'] = microtime(1);
 $tpl->compile_dir = $tpl->cache_dir = CACHE_DIR . 'templates/';
 
 // Themes
-$themes = new \ezRPG\lib\Themes($db, $tpl);
-$debugTimer['Themes Initiated:'] = microtime(1);
+$ezrpg->container['themes'] = $ezrpg->getThemes();
 
 // Initialize $player
-$player = 0;
+$ezrpg->container['player'] = 0;
 
 /*
 // Create a hooks object
@@ -85,16 +87,17 @@ foreach ( $hook_files as $hook_file )
     }
 }
 */
-$ezrpg = new \ezRPG\Application($db, $tpl, $player);
+
 $hooks = $ezrpg->getHooks();
 
 $debugTimer['Hooks Loaded :'] = microtime(1);
 // Run login hooks on player variable
-$player = $hooks->run_hooks('player', 0);
+$ezrpg->setPlayer($hooks->run_hooks('player', 0));
+
 $debugTimer['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-$menu = new \Menu($db, $tpl, $player);
+$menu = new \ezRPG\lib\Menu($container);
 $debugTimer['Menus Initiated:'] = microtime(1);
 $menu->get_menus();
 $debugTimer['Menus retrieved:'] = microtime(1);
-$players = new \Players($db, $tpl, $player);
+$players = new \ezRPG\lib\Players($container);

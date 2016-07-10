@@ -28,8 +28,8 @@ function smarty_function_module($params, &$smarty) {
 	{
 		if (!empty($params['n']))
 		{
-			global $db, $tpl, $player, $menu, $settings;
-			$module = ezRPG\lib\ModuleFactory::factory($db, $tpl, $player, $params['n'], $menu, $settings);
+            global $container;
+			$module = ezRPG\lib\ModuleFactory::factory($container, $params['n'], $menu);
 			if(!empty($params['f']))
 			{
 				$print = $module->$params['f']();

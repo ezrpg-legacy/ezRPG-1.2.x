@@ -48,13 +48,9 @@ class Module_Register extends Base_Module
 
     private function render()
     {
-        //Add form default values
-        if ( !empty($_GET['username']) )
-            $this->tpl->assign('GET_USERNAME', $_GET['username']);
-        if ( !empty($_GET['email']) )
-            $this->tpl->assign('GET_EMAIL', $_GET['email']);
-        if ( !empty($_GET['email2']) )
-            $this->tpl->assign('GET_EMAIL2', $_GET['email2']);
+        $this->tpl->assign('GET_USERNAME', (!empty($_GET['username'])?$_GET['username']:''));
+        $this->tpl->assign('GET_EMAIL', (!empty($_GET['email'])?$_GET['email']:''));
+        $this->tpl->assign('GET_EMAIL2', (!empty($_GET['email2'])?$_GET['email2']: ''));
 
         $this->loadView('register.tpl', 'Register');
     }

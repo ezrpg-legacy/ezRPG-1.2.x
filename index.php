@@ -31,7 +31,7 @@ require_once 'init.php';
 $debugTimer['init.php Loaded:'] = microtime(1);
 
 //Set Default module and check if Module is selected in URI
-$default_mod = $settings->setting['general']['default_module']['value'];
+$default_mod = $container['settings']->setting['general']['default_module']['value'];
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod'])) ? $_GET['mod'] : $default_mod );
 
 //Init Hooks - Runs before Header
@@ -43,7 +43,7 @@ $module_name = $hooks->run_hooks('header', $module_name);
 $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
-$module = ModuleFactory::factory($db, $tpl, $player, $module_name, $menu, $settings);
+$module = ModuleFactory::factory($container, $module_name, $menu);
 if ( isset($_GET['act']))
 {
 		if (method_exists($module, $_GET['act']))

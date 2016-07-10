@@ -1,5 +1,6 @@
 <?php
 
+namespace ezRPG\lib;
 defined('IN_EZRPG') or exit;
 
 /*
@@ -34,6 +35,8 @@ class Menu
      */
     protected $menu;
 
+    protected $container;
+
     /*
       Function: __construct
       The constructor takes in database, template and player variables to pass onto any hook functions called.
@@ -44,11 +47,12 @@ class Menu
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($container)
     {
-        $this->db = & $db;
-        $this->tpl = & $tpl;
-        $this->player = & $player;
+        $this->db = $container['db'];
+        $this->tpl = $container['tpl'];
+        $this->player = $container['player'];
+        $this->container = $container;
         $this->menu = $this->loadCache();
     }
 
@@ -288,21 +292,19 @@ class Menu
                             {
                                 $menuarray['To Game'] = '../index.php';
                             }
-                            if ( $this->player->rank > 5 )
-                            {
-                                if ( defined('IN_ADMIN') )
-                                {
-                                    $menuarray['To Game'] = '../index.php';
-                                    $menuarray['Logout'] = '../index.php?mod=Logout';
+                            if($this->player) {
+                                if ($this->player->rank > 5) {
+                                    if (defined('IN_ADMIN')) {
+                                        $menuarray['To Game'] = '../index.php';
+                                        $menuarray['Logout'] = '../index.php?mod=Logout';
+                                    } else {
+                                        $menuarray['Admin'] = 'admin/';
+                                        $menuarray['Logout'] = 'index.php?mod=Logout';
+                                    }
+                                } else {
+                                    $menuarray['Logout'] = 'index.php?mod=Logout';
                                 }
-                                else
-                                {
-                                    $menuarray['Admin'] = 'admin/';
-									$menuarray['Logout'] = 'index.php?mod=Logout';
-                                }
-                            }else{
-								$menuarray['Logout'] = 'index.php?mod=Logout';
-							}
+                            }
                             $this->tpl->assign('TOP_MENU_' . (($customtag != 0) ? $customtag : $ival->name), $menuarray);
                             unset($menuarray);
                         }

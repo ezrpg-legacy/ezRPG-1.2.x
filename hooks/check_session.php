@@ -6,12 +6,12 @@ defined('IN_EZRPG') or exit;
 $hooks->add_hook('player', 'check_session', 0);
 
 //Player hook to check the session and get player data
-function hook_check_session($db, &$tpl, $player, $args = 0)
+function hook_check_session($container, $args = 0)
 {
     global $debugTimer;
     // we follow a "guilty" until proven otherwise approach.
     $authenticated = false;
-
+    
     if ( array_key_exists('userid', $_SESSION) && array_key_exists('hash', $_SESSION) )
     {
         // The client has prompted that they have authorization details.
@@ -61,10 +61,11 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
             $debugTimer['Selected DB in Check_Session'] = microtime(1);
             $player = (object) array_merge((array) $array, (array) $player_meta);
             */
-            $player_base = $db->fetchRow($query);
-            $player_meta = $db->fetchRow('SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid']);
+            $player_base = $container['db']->fetchRow($query);
+            $player_meta = $container['db']->fetchRow('SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid']);
             $player= (object) array_merge((array) $player_base, (array) $player_meta);
-            $tpl->assign('player', $player);
+            $container['tpl']->assign('player', $player);
+            $container['player'] = $player;
 
             // Set logged-in flag
             $authenticated = true;
@@ -96,9 +97,10 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
     }
 
     define('LOGGED_IN', $authenticated);
-    $tpl->assign('LOGGED_IN', (LOGGED_IN === true) ? 'TRUE' : 'FALSE');
 
-    return $player;
+    $container['tpl']->assign('LOGGED_IN', (LOGGED_IN === true) ? 'TRUE' : 'FALSE');
+
+    return $container['player'];
 }
 
 ?>

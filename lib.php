@@ -51,6 +51,8 @@ foreach ( $clas as $item )
     }
 }
 
+require __DIR__ . '/vendor/autoload.php';
+
 require_once (CUR_DIR .'/Application.php');
 
 //Exceptions
