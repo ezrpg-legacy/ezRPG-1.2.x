@@ -50,6 +50,9 @@ foreach ( $clas as $item )
         require_once ($filename);
     }
 }
+
+require_once (CUR_DIR .'/Application.php');
+
 //Exceptions
 require_once (LIB_DIR . '/exception.db.php');
 

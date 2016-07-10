@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.3
+##ezRPG 1.2.1.4
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,12 +8,11 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.3
-####Pushed Oct 5 2013
+##Notes about 1.2.1.4
+####Pushed July 10 2016
 ```
 
-- Fixed an issue with the validation system not always working due to a inline php variable and string.
-- Knocked out an issue with the themes class that kept readding themes to the DB during cache reloads.
+- I'm starting to go off the reservation with this. Added Namespaces, started working on the application logic, etc.
 
 ```
 =====

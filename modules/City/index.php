@@ -13,6 +13,10 @@ defined('IN_EZRPG') or exit;
 
 class Module_City extends Base_Module
 {
+    public function __construct($db, $tpl, $player, $menu, $settings)
+    {
+        parent::__construct($db, $tpl, $player, $menu, $settings);
+    }
     /*
       Function: start
       Displays the city.tpl template. That's all!

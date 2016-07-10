@@ -1,5 +1,7 @@
 <?php
 
+namespace ezRPG\lib;
+
 defined('IN_EZRPG') or exit;
 
 /*

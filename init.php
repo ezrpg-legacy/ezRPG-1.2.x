@@ -7,6 +7,8 @@
   Package: ezRPG-Core
  */
 
+namespace ezRPG;
+
 // This page cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 global $debugTimer;
@@ -34,7 +36,7 @@ $debugTimer['Library Loaded:'] = microtime(1);
 // Database
 try
 {
-    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+    $db = \ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
 }
 catch ( DbException $e )
 {
@@ -45,10 +47,10 @@ $debugTimer['DB Loaded:'] = microtime(1);
 unset($config_password);
 
 // Settings
-$settings = new Settings($db);
+$settings = new \ezRPG\lib\Settings($db);
 $debugTimer['Settings Loaded:'] = microtime(1);
 // Smarty
-$tpl = new Smarty();
+$tpl = new \Smarty();
 $tpl->caching = 0;  
 $tpl->assign('GAMESETTINGS', $settings->setting['general']);
 if(DEBUG_MODE)
@@ -62,12 +64,13 @@ $debugTimer['Smarty Loaded:'] = microtime(1);
 $tpl->compile_dir = $tpl->cache_dir = CACHE_DIR . 'templates/';
 
 // Themes
-$themes = new Themes($db, $tpl);
+$themes = new \ezRPG\lib\Themes($db, $tpl);
 $debugTimer['Themes Initiated:'] = microtime(1);
 
 // Initialize $player
 $player = 0;
 
+/*
 // Create a hooks object
 $hooks = new Hooks($db, $tpl, $player);
 $debugTimer['Hooks Initiated:'] = microtime(1);
@@ -81,13 +84,17 @@ foreach ( $hook_files as $hook_file )
         include_once (HOOKS_DIR . '/' . $hook_file);
     }
 }
+*/
+$ezrpg = new \ezRPG\Application($db, $tpl, $player);
+$hooks = $ezrpg->getHooks();
+
 $debugTimer['Hooks Loaded :'] = microtime(1);
 // Run login hooks on player variable
 $player = $hooks->run_hooks('player', 0);
 $debugTimer['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-$menu = new Menu($db, $tpl, $player);
+$menu = new \Menu($db, $tpl, $player);
 $debugTimer['Menus Initiated:'] = microtime(1);
 $menu->get_menus();
 $debugTimer['Menus retrieved:'] = microtime(1);
-$players = new Players($db, $tpl, $player);
+$players = new \Players($db, $tpl, $player);
