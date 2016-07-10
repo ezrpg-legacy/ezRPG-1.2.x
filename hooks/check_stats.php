@@ -26,6 +26,7 @@ function hook_check_stats($db, &$tpl, $player, $args = 0)
     if ( $changed === true )
     {
         $db->execute('UPDATE `<ezrpg>players_meta` SET `energy`=?, `hp`=? WHERE `pid`=?', array( $args->energy, $args->hp, $args->id ));
+        killPlayerCache($args->id);
     }
 
     return $args;
