@@ -71,7 +71,7 @@ $debugTimer['footer-hooks'] = microtime(1);
 // DEBUG_INFO with Timer @since 1.2RC
 if ( DEBUG_MODE )
 {
-if (is_object($player) && $player->rank > 5 ) {
+if (is_object($container['player']) && $container['player']->rank > 5 ) {
     echo "<pre><table border=1><tr><td>name</td><td>Total Time</td><td>Step Time</td><td>%</td></tr>";
     reset($debugTimer);
     $start = $prev = current($debugTimer);
