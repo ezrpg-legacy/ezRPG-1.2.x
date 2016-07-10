@@ -7,6 +7,9 @@
   Package: ezRPG-Core
  */
 
+namespace ezRPG;
+use ezRPG\lib\ModuleFactory;
+
 // Define IN_EZRPG as TRUE
 define('IN_EZRPG', true);
 

@@ -13,6 +13,7 @@
 /modules/Housing/
 /modules/Store/
 /modules/Profile/
+/modules/Mining/
 
 config.php
 /cache/*

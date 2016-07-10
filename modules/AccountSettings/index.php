@@ -1,5 +1,7 @@
 <?php
 
+namespace ezRPG\Modules;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 

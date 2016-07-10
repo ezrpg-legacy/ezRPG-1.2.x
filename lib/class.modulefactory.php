@@ -1,5 +1,7 @@
 <?php
 
+namespace ezRPG\lib;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -39,7 +41,7 @@ class ModuleFactory
         if ( file_exists(MOD_DIR . '/' . $module . '/index.php') )
         {
             include_once (MOD_DIR . '/' . $module . '/index.php');
-            $classname = 'Module_' . $module;
+            $classname = 'ezRPG\\Modules\\Module_' . $module;
             return new $classname($db, $tpl, $player, $menu, $settings);
         }else{
 			return false;
@@ -83,5 +85,3 @@ class ModuleFactory
     }
 	
 }
-
-?>

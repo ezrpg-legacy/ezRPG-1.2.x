@@ -1,5 +1,7 @@
 <?php
 
+namespace ezRPG\lib;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -249,5 +251,3 @@ abstract class Base_Module
 	}
 	
 }
-
-?>

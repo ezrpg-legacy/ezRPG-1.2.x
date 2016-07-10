@@ -29,7 +29,7 @@ function smarty_function_module($params, &$smarty) {
 		if (!empty($params['n']))
 		{
 			global $db, $tpl, $player, $menu, $settings;
-			$module = ModuleFactory::factory($db, $tpl, $player, $params['n'], $menu, $settings);
+			$module = ezRPG\lib\ModuleFactory::factory($db, $tpl, $player, $params['n'], $menu, $settings);
 			if(!empty($params['f']))
 			{
 				$print = $module->$params['f']();
