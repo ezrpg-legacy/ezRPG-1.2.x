@@ -7,6 +7,12 @@
 /templates/cache/
 /admin/Plugins/temp/*
 /admin/Update/temp/*
+/modules/Bank/
+/modules/Attack/
+/modules/Items/
+/modules/Housing/
+/modules/Store/
+/modules/Profile/
 
 config.php
 /cache/*
