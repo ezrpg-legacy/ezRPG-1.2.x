@@ -112,11 +112,10 @@ function loadMetaCache($kill = 0, $id = 0)
     $query = 'SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $playerID;
     $cache_file = md5($query);
     $cache = CACHE_DIR . $cache_file;
-
+    if ( file_exists($cache) && $kill == 1)
+            unlink($cache);
     if ( file_exists($cache) )
     {
-        if ( $kill == 1 )
-            unlink($cache);
         if ( filemtime($cache) > time() - 60 * 60 * 24 )
         {
             $array = unserialize(file_get_contents($cache));

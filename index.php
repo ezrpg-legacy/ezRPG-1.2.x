@@ -13,9 +13,7 @@ use ezRPG\lib\ModuleFactory;
 // Define IN_EZRPG as TRUE
 define('IN_EZRPG', true);
 
-if(file_exists(__DIR__ . '/vendor/autoload.php'))
-    require __DIR__ . '/vendor/autoload.php';
-else
+if(!file_exists(__DIR__ . '/vendor/autoload.php'))
     die('You must initialize composer!');
 
 // Start the Debug Timer. @since 1.2RC

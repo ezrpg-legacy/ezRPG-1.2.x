@@ -98,10 +98,10 @@ class Module_Register extends Base_Module
         else if ( !isPassword($_POST['password']) )
         { //If password is too short...
 			$length = $this->settings->setting['validation']['passLenMin']['value'];
-			if($settings->setting['validation']['passLens']['value']['value'] == 'minmax')
+			if($this->settings->setting['validation']['passLens']['value']['value'] == 'minmax')
 			{
-				$lenmsg = $length . ' and ' . $settings->setting['validation']['passLenMax']['value'];
-				$length .= ','. $settings->setting['validation']['passLenMax']['value'];
+				$lenmsg = $length . ' and ' . $this->settings->setting['validation']['passLenMax']['value'];
+				$length .= ','. $this->settings->setting['validation']['passLenMax']['value'];
 				$errors[] = 'Your password must be between ' . $lenmsg . ' characters!'; //Add to error message
 			}else
 			{
@@ -167,7 +167,7 @@ class Module_Register extends Base_Module
             $insert['email'] = $_POST['email'];
             $insert['secret_key'] = createKey(16);
             $insert['password'] = createPassword($insert['secret_key'], $_POST['password']);
-			global $settings;
+			$settings = $this->settings;
 			$insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
             $insert['registered'] = time();
 

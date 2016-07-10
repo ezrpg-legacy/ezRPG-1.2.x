@@ -10,6 +10,11 @@
 namespace ezRPG;
 use Pimple\Container;
 
+if(file_exists(__DIR__ . '/vendor/autoload.php'))
+    require __DIR__ . '/vendor/autoload.php';
+else
+    die('You must initialize composer!');
+
 // This page cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 global $debugTimer;
