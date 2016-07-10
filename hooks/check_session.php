@@ -24,7 +24,7 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
 			FROM `<ezrpg>players` WHERE id = ' . $_SESSION['userid'];
             $cache_file = md5($query);
             $cache = CACHE_DIR . $cache_file;
-            if ( file_exists($cache) )
+            /*if ( file_exists($cache) )
             {
                 if ( filemtime($cache) > time() - 60 * 60 * 24 )
                 {
@@ -60,7 +60,10 @@ function hook_check_session($db, &$tpl, $player, $args = 0)
             $player_meta = loadMetaCache();
             $debugTimer['Selected DB in Check_Session'] = microtime(1);
             $player = (object) array_merge((array) $array, (array) $player_meta);
-
+            */
+            $player_base = $db->fetchRow($query);
+            $player_meta = $db->fetchRow('SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid']);
+            $player= (object) array_merge((array) $player_base, (array) $player_meta);
             $tpl->assign('player', $player);
 
             // Set logged-in flag
