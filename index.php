@@ -35,7 +35,8 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 
 //Set Default module and check if Module is selected in URI
 $default_mod = $container['settings']->setting['general']['default_module']['value'];
-$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod'])) ? $_GET['mod'] : $default_mod );
+
+$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])/* && isModuleActive($_GET['mod'])*/) ? $_GET['mod'] : $default_mod );
 
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');

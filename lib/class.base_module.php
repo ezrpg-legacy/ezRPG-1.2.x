@@ -58,6 +58,8 @@ abstract class Base_Module
     );
 
 	protected $scripts;
+
+    protected $container;
 	
     /*
       Function: __construct
@@ -81,6 +83,7 @@ abstract class Base_Module
         $this->settings = $container['settings'];
         $this->name = get_class($this);
 		$this->scripts = array();
+        $this->container = $container;
     }
 
     /*

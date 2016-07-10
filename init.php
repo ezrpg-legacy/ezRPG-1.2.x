@@ -93,7 +93,7 @@ foreach ( $hook_files as $hook_file )
 }
 */
 
-$hooks = $ezrpg->getHooks();
+$container['hooks'] = $hooks = $ezrpg->getHooks();
 
 $debugTimer['Hooks Loaded :'] = microtime(1);
 // Run login hooks on player variable
