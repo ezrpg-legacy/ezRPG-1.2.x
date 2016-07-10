@@ -51,7 +51,10 @@ foreach ( $clas as $item )
     }
 }
 
-require __DIR__ . '/vendor/autoload.php';
+if(file_exists(__DIR__ . '/vendor/autoload.php'))
+    require __DIR__ . '/vendor/autoload.php';
+else
+    die('You must initialize composer!');
 
 require_once (CUR_DIR .'/Application.php');
 

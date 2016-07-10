@@ -1,0 +1,19 @@
+{
+  "name": "ezRPG/ezRPG-Engine",
+  "description": "TextBased MMORPG Engine for PHP",
+  "license": "GNU GPL v3",
+  "authors": [
+    {
+      "name": "Zeggy",
+      "role": "Founder"
+    },
+    {
+      "name": "Tim Garrity",
+      "email": "timgarrity89@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "pimple/pimple": "~3.0"
+  }
+}
