@@ -6,12 +6,12 @@ defined('IN_EZRPG') or exit;
 $hooks->add_hook('init', 'check_module', 0);
 
 //Player hook to check the module for install/enabled
-function hook_check_module($db, &$tpl, $player, $args = 0)
+function hook_check_module($container, $args = 0)
 {
     //Select Module Cache
     $modules = loadModuleCache();
 
-    return $player;
+    return $container;
 }
 
 ?>

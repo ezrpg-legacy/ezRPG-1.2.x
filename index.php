@@ -13,6 +13,9 @@ use ezRPG\lib\ModuleFactory;
 // Define IN_EZRPG as TRUE
 define('IN_EZRPG', true);
 
+if(!file_exists(__DIR__ . '/vendor/autoload.php'))
+    die('You must initialize composer!');
+
 // Start the Debug Timer. @since 1.2RC
 $debugTimer['ezRPG start'] = microtime(1);
 
@@ -31,8 +34,9 @@ require_once 'init.php';
 $debugTimer['init.php Loaded:'] = microtime(1);
 
 //Set Default module and check if Module is selected in URI
-$default_mod = $settings->setting['general']['default_module']['value'];
-$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod'])) ? $_GET['mod'] : $default_mod );
+$default_mod = $container['settings']->setting['general']['default_module']['value'];
+
+$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])/* && isModuleActive($_GET['mod'])*/) ? $_GET['mod'] : $default_mod );
 
 //Init Hooks - Runs before Header
 $hooks->run_hooks('init');
@@ -43,7 +47,7 @@ $module_name = $hooks->run_hooks('header', $module_name);
 $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
-$module = ModuleFactory::factory($db, $tpl, $player, $module_name, $menu, $settings);
+$module = ModuleFactory::factory($container, $module_name, $menu);
 if ( isset($_GET['act']))
 {
 		if (method_exists($module, $_GET['act']))
@@ -68,7 +72,7 @@ $debugTimer['footer-hooks'] = microtime(1);
 // DEBUG_INFO with Timer @since 1.2RC
 if ( DEBUG_MODE )
 {
-if (is_object($player) && $player->rank > 5 ) {
+if (is_object($container['player']) && $container['player']->rank > 5 ) {
     echo "<pre><table border=1><tr><td>name</td><td>Total Time</td><td>Step Time</td><td>%</td></tr>";
     reset($debugTimer);
     $start = $prev = current($debugTimer);

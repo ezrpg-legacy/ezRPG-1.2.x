@@ -36,6 +36,8 @@ class Hooks
      */
     protected $hooks;
 
+    protected $container;
+
     /*
       Function: __construct
       The constructor takes in database, template and player variables to pass onto any hook functions called.
@@ -46,12 +48,10 @@ class Hooks
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($container)
     {
         global $debugTimer;
-        $this->db = &$db;
-        $this->tpl = &$tpl;
-        $this->player = &$player;
+        $this->container = $container;
         $this->hooks = array( );
         $debugTimer['Hook Class constructed'] = microtime(1);
     }
@@ -104,13 +104,15 @@ class Hooks
             $func_args = $arg_list[1];
         }
 
-
         //This hook doesn't exist!
         if ( !array_key_exists($hook_name, $this->hooks) )
             return $func_args;
 
         //Sort by priority
         ksort($this->hooks[$hook_name]);
+
+        //if($hook_name=='header')
+            //die(var_dump($this->player));
 
         foreach ( $this->hooks[$hook_name] as $priority )
         {
@@ -127,7 +129,7 @@ class Hooks
                     continue;
 
                 //Hook should have a return value
-                $func_args = call_user_func($call_func, $this->db, $this->tpl, $this->player, $func_args);
+                $func_args = call_user_func($call_func, $this->container, $func_args);
                 $debugTimer[$call_func] = microtime(1);
             }
         }

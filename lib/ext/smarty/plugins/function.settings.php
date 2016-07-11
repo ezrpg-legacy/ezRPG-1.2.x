@@ -18,7 +18,7 @@
  * <div>{settings g="general" n="game_name"} ago </div>
  */
 function smarty_function_settings($params, &$smarty) {
-	global $settings;
+	global $container;
 	$print = 'Setting Doesn\'t exist';
 	if(!empty($params))
 	{
@@ -26,7 +26,7 @@ function smarty_function_settings($params, &$smarty) {
 		{
 		if (!empty($params['n']))
 		{
-			$print = $settings->setting[$params['g']][$params['n']]['value'];
+			$print = $container['settings']->setting[$params['g']][$params['n']]['value'];
 		}
 		}
 	}

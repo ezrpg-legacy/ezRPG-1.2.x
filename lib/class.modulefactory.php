@@ -36,13 +36,13 @@ class ModuleFactory
       > $new_module->start();
      */
 
-    public static function factory(&$db, &$tpl, &$player, $module = 'Index', &$menu, &$settings)
+    public static function factory($container, $module = 'Index', &$menu)
     {
-        if ( file_exists(MOD_DIR . '/' . $module . '/index.php') )
+       if ( file_exists(MOD_DIR . '/' . $module . '/index.php') )
         {
             include_once (MOD_DIR . '/' . $module . '/index.php');
             $classname = 'ezRPG\\Modules\\Module_' . $module;
-            return new $classname($db, $tpl, $player, $menu, $settings);
+            return new $classname($container, $menu);
         }else{
 			return false;
 		}
@@ -68,19 +68,19 @@ class ModuleFactory
       > $admin_module->start();
      */
 
-    public static function adminFactory(&$db, &$tpl, &$player, $module = 'Index', &$menu, &$settings)
+    public static function adminFactory($container, $module = 'Index', &$menu)
     {
         if ( file_exists(ADMIN_DIR . '/' . $module . '/index.php') )
         {
             include_once (ADMIN_DIR . '/' . $module . '/index.php');
-            $classname = 'Admin_' . $module;
-            return new $classname($db, $tpl, $player, $menu, $settings);
+            $classname = 'ezRPG\\admin\\Admin_' . $module;
+            return new $classname($container, $menu);
         }
         else
         {
             include_once (ADMIN_DIR . '/Index/index.php');
             $tpl->getTemplateDir('admin');
-            return new Admin_Index($db, $tpl, $player, $menu, $settings);
+            return new Admin_Index($container, $menu);
         }
     }
 	

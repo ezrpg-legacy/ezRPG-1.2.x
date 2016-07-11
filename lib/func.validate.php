@@ -37,7 +37,8 @@ function isUsername($username)
 
 function isPassword($password)
 {
-	global $settings;
+	global $container;
+    $settings = $container['settings'];
 	$length = $settings->setting['validation']['passLenMin']['value'];
 	if($settings->setting['validation']['passLens']['value']['value'] == 'minmax')
 	{

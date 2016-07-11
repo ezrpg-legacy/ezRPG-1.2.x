@@ -185,8 +185,8 @@ function compareLegacyPassword($secret, $input, $password)
 
 function createPassword($secret, $password)
 {
-    global $settings;
-    $pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
+    global $container;
+    $pass_meth = $container['settings']->setting['general']['pass_encryption']['value']['value'];
 
     switch ( $pass_meth )
     {
@@ -204,8 +204,8 @@ function createPassword($secret, $password)
 
 function checkPassword($secret, $input, $password, $override = '0')
 {
-    global $settings;
-    $pass_meth = $settings->setting['general']['pass_encryption']['value']['value'];
+    global $container;
+    $pass_meth = $container['settings']->setting['general']['pass_encryption']['value']['value'];
     switch ( ($override == '0' ? $pass_meth : $override ) )
     {
         case 1:

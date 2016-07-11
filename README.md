@@ -1,5 +1,7 @@
 ##ezRPG 1.2.1.4
 
+###INSTALL IS CURRENTLY BROKEN AND NOT UPDATED YET!
+
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
 =====

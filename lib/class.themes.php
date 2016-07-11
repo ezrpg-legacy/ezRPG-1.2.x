@@ -32,10 +32,10 @@ class Themes
       $this->tpl - A smarty object.
      */
 
-    public function __construct(&$db, &$tpl)
+    public function __construct($container)
     {
-        $this->db = & $db;
-        $this->tpl = & $tpl;
+        $this->db = $container['db'];
+        $this->tpl = $container['tpl'];
         $this->template = $this->loadCache();
         $this->loadTemplates();
     }

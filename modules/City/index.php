@@ -13,9 +13,9 @@ defined('IN_EZRPG') or exit;
 
 class Module_City extends Base_Module
 {
-    public function __construct($db, $tpl, $player, $menu, $settings)
+    public function __construct($container, $menu)
     {
-        parent::__construct($db, $tpl, $player, $menu, $settings);
+        parent::__construct($container, $menu);
     }
     /*
       Function: start
