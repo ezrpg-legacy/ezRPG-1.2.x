@@ -29,6 +29,7 @@ if ( !file_exists('config.php') OR filesize('config.php') == 0 )
 
 // Load init.php
 require_once 'init.php';
+global $container;
 
 // Start the Debug Timer. @since 1.2RC
 $debugTimer['init.php Loaded:'] = microtime(1);
@@ -37,13 +38,13 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 $default_mod = $container['settings']->setting['general']['default_module']['value'];
 
 $module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])/* && isModuleActive($_GET['mod'])*/) ? $_GET['mod'] : $default_mod );
-
+$container['tpl']->assign('module_name', $module_name);
 //Init Hooks - Runs before Header
-$hooks->run_hooks('init');
+$container['hooks']->run_hooks('init');
 $debugTimer['Init-hooks Loaded:'] = microtime(1);
 
 //Header hooks
-$module_name = $hooks->run_hooks('header', $module_name);
+$module_name = $container['hooks']->run_hooks('header', $module_name);
 $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
@@ -66,7 +67,7 @@ if ( isset($_GET['act']))
 $debugTimer[$module_name . 'Loaded'] = microtime(1);
 
 //Footer hooks
-$hooks->run_hooks('footer', $module_name);
+$container['hooks']->run_hooks('footer', $module_name);
 $debugTimer['footer-hooks'] = microtime(1);
 
 // DEBUG_INFO with Timer @since 1.2RC
