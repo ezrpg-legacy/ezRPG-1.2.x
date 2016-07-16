@@ -31,7 +31,7 @@ define('HOOKS_DIR', CUR_DIR . '/hooks');
 define('THEME_DIR', CUR_DIR . '/templates/');
 define('CACHE_DIR', CUR_DIR . '/cache/');
 
-require_once CUR_DIR . '/config.php';
+//require_once CUR_DIR . '/config.php';
 $debugTimer['Config Loaded:'] = microtime(1);
 // Show errors?
 (SHOW_ERRORS == 0) ? error_reporting(0) : error_reporting(E_ALL);

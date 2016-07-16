@@ -75,9 +75,9 @@ class Application
         return $this->container['themes'];
     }
 
-    public function setDatabase($db)
+    public function setDatabase()
     {
-        $this->container['db'] = $db;
+        $this->container['db'] = \ezRPG\lib\DbFactory::factory($this->container['config']);
         return $this->container['db'];
     }
 
@@ -85,5 +85,10 @@ class Application
     {
         $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
         return $this->container['settings'];
+    }
+    
+    public function getConfig($filelocation)
+    {
+        return $this->container['config'] = new \ezRPG\lib\Config(CUR_DIR . '/config.php');
     }
 }

@@ -19,9 +19,6 @@ $rootPath = dirname(__DIR__);
 if(!file_exists(__DIR__ . '/vendor/autoload.php'))
     die('You must initialize composer!');
 
-// Start the Debug Timer. @since 1.2RC
-$debugTimer['ezRPG start'] = microtime(1);
-
 // Check for config and if it has data. @since 1.2RC
 if ( !file_exists('config.php') OR filesize('config.php') == 0 )
 {
@@ -34,8 +31,9 @@ try {
 
     $container = new \Pimple\Container;
     $ezrpg = new Application($container);
+    $ezrpg->getConfig(CUR_DIR . '/config.php');
 // Database
-    $ezrpg->setDatabase(\ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port));
+    $ezrpg->setDatabase();
 
     // Database password no longer needed, unset variable
     unset($config_password);

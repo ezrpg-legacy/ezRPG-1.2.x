@@ -45,16 +45,17 @@ class DbFactory
       - <DbException>
      */
 
-    public static function factory($type = 'mysql', $host = 'localhost', $username = 'root', $password = '', $db = 'ezrpg', $port = '3306')
+    public static function factory($config)
     {
-        if ( include_once(LIB_DIR . '/db.' . $type . '.php') )
+        $dbconfig = $config->readConfig();
+        if ( include_once(LIB_DIR . '/db.' . $dbconfig['dbdriver'] . '.php') )
         {
-            $classname = 'Db_' . $type;
-            return new $classname($host, $username, $password, $db, $port);
+            $classname = 'Db_' . $dbconfig['dbdriver'];
+            return new $classname($dbconfig['dbserver'], $dbconfig['dbuser'], $dbconfig['dbpass'], $dbconfig['dbname'], $dbconfig['dbport']);
         }
         else
         {
-            throw new DbException($type, DRIVER_ERROR);
+            throw new DbException($dbconfig['dbdriver'], DRIVER_ERROR);
         }
     }
 

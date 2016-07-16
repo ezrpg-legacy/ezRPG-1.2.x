@@ -9,13 +9,12 @@ require_once '../init.php';
 
 $container = new \Pimple\Container;
 $ezrpg = new \ezRPG\lib\Application($container);
+
+$ezrpg->getConfig(CUR_DIR . '/config.php');
 // Database
-$ezrpg->setDatabase(\ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port));
+$ezrpg->setDatabase();
 
 $debugTimer['DB Loaded:'] = microtime(1);
-
-// Database password no longer needed, unset variable
-unset($config_password);
 
 // Settings
 $ezrpg->getSettings();
