@@ -31,7 +31,8 @@ foreach ( $func as $item )
 
 function ezrpg_Autoloader ($pClassName) {
     $class = str_replace("ezRPG\\lib\\", "",$pClassName);
-    include(__DIR__ . "/lib/" . $class . ".php");
+    if(file_exists(__DIR__ . "/lib/" . $class . ".php"))
+        include(__DIR__ . "/lib/" . $class . ".php");
 }
 spl_autoload_register("ezrpg_Autoloader");
 
@@ -46,5 +47,5 @@ require_once (LIB_DIR . '/const.errors.php');
 
 //External Libraries
 //Smarty
-require_once (EXT_DIR . '/smarty/Smarty.class.php');
+//require_once (EXT_DIR . '/smarty/Smarty.class.php');
 ?>

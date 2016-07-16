@@ -52,6 +52,7 @@ try {
     $debugTimer['Settings Loaded:'] = microtime(1);
 // Smarty
     $tpl = $ezrpg->container['tpl'] = new \Smarty();
+    $tpl->addPluginsDir(LIB_DIR. '/ext/smarty');
     $tpl->caching = 0;
     $tpl->assign('GAMESETTINGS', $ezrpg->container['settings']->setting['general']);
     if (DEBUG_MODE)
@@ -69,23 +70,7 @@ try {
 
 // Initialize $player
     $ezrpg->container['player'] = 0;
-
-    /*
-    // Create a hooks object
-    $hooks = new Hooks($db, $tpl, $player);
-    $debugTimer['Hooks Initiated:'] = microtime(1);
-    // Include all hook files
-    $hook_files = scandir(HOOKS_DIR);
-    foreach ( $hook_files as $hook_file )
-    {
-        $path_parts = pathinfo(HOOKS_DIR . '/' . $hook_file);
-        if ( $path_parts['extension'] == 'php' && $path_parts['basename'] != 'index.php' )
-        {
-            include_once (HOOKS_DIR . '/' . $hook_file);
-        }
-    }
-    */
-
+    
     $container['hooks'] = $hooks = $ezrpg->getHooks();
 
     $debugTimer['Hooks Loaded :'] = microtime(1);
