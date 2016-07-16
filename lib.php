@@ -29,11 +29,11 @@ foreach ( $func as $item )
     }
 }
 
-function my_autoload ($pClassName) {
+function ezrpg_Autoloader ($pClassName) {
     $class = str_replace("ezRPG\\lib\\", "",$pClassName);
     include(__DIR__ . "/lib/" . $class . ".php");
 }
-spl_autoload_register("my_autoload");
+spl_autoload_register("ezrpg_Autoloader");
 
 
 require_once (CUR_DIR .'/lib/Application.php');
