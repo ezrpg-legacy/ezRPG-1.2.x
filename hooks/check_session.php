@@ -73,21 +73,19 @@ function hook_check_session($container, $args = 0)
             // check the last time the user was active.
             // if they weren't active for a certain time period, prompt for password again.
             // Changed to 10Minutes
-            if ( $_SESSION['last_active'] < (time() - 600) )
-            {
-                if ( !in_array($_GET['mod'], array( 'Logout' )) )
-                {
-                    session_destroy();
-					session_start();
-                    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-					$_SESSION['status_messages']['Session_Loggedout'] = array('INFO' => 'You have been logged out due to inactivity!');
-					header('location: index.php');
-                    exit;
+            if ( $_SESSION['last_active'] < (time() - 600) ) {
+                if (isset($GET['mod'])) {
+                    if (!in_array($_GET['mod'], array('Logout'))) {
+                        session_destroy();
+                        session_start();
+                        $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+                        $_SESSION['status_messages']['Session_Loggedout'] = array('INFO' => 'You have been logged out due to inactivity!');
+                        header('location: index.php');
+                        exit;
+                    }
+                } else {
+                    $_SESSION['last_active'] = time();
                 }
-            }
-            else
-            {
-                $_SESSION['last_active'] = time();
             }
         }
         else

@@ -29,29 +29,14 @@ foreach ( $func as $item )
     }
 }
 
-//Classes			
-$clas = array(
-    'dbfactory',
-    'modulefactory',
-    'base_module',
-    'hooks',
-    'menu',
-    'settings',
-    'themes',
-	'players'
-	//,'router'
-);
-
-foreach ( $clas as $item )
-{
-    $filename = LIB_DIR . '/class.' . $item . '.php';
-    if ( is_readable($filename) )
-    {
-        require_once ($filename);
-    }
+function my_autoload ($pClassName) {
+    $class = str_replace("ezRPG\\lib\\", "",$pClassName);
+    include(__DIR__ . "/lib/" . $class . ".php");
 }
+spl_autoload_register("my_autoload");
 
-require_once (CUR_DIR .'/Application.php');
+
+require_once (CUR_DIR .'/lib/Application.php');
 
 //Exceptions
 require_once (LIB_DIR . '/exception.db.php');

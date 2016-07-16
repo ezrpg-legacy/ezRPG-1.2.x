@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\admin;
+namespace ezRPG\Modules\Settings\Admin;
 use \ezRPG\lib\Base_Module;
 
 defined('IN_EZRPG') or exit;

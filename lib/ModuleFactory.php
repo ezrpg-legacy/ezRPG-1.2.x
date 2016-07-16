@@ -70,15 +70,15 @@ class ModuleFactory
 
     public static function adminFactory($container, $module = 'Index', &$menu)
     {
-        if ( file_exists(ADMIN_DIR . '/' . $module . '/index.php') )
+        if ( file_exists(MOD_DIR . '/' . $module . '/Admin/index.php') )
         {
-            include_once (ADMIN_DIR . '/' . $module . '/index.php');
-            $classname = 'ezRPG\\admin\\Admin_' . $module;
+            include_once (MOD_DIR . '/' . $module . '/Admin/index.php');
+            $classname = 'ezRPG\\Modules\\' . $module . '\\Admin\\Admin_' . $module;
             return new $classname($container, $menu);
         }
         else
         {
-            include_once (ADMIN_DIR . '/Index/index.php');
+            include_once (MOD_DIR . '/Index/Admin/index.php');
             $tpl->getTemplateDir('admin');
             return new Admin_Index($container, $menu);
         }
