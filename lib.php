@@ -18,32 +18,34 @@ $func = array(
     'player',
     'validate',
     'security',
-	'modules');
+    'modules'
+);
 
-foreach ( $func as $item )
-{
+foreach ($func as $item) {
     $filename = LIB_DIR . '/functions/func.' . $item . '.php';
-    if ( is_readable($filename) )
-    {
-        require_once ($filename);
+    if (is_readable($filename)) {
+        require_once($filename);
     }
 }
 
-function ezrpg_Autoloader ($pClassName) {
-    $class = str_replace("ezRPG\\lib\\", "",$pClassName);
-    if(file_exists(__DIR__ . "/lib/" . $class . ".php"))
+function ezrpg_Autoloader($pClassName)
+{
+    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
+    if (file_exists(__DIR__ . "/lib/" . $class . ".php")) {
         include(__DIR__ . "/lib/" . $class . ".php");
+    }
 }
+
 spl_autoload_register("ezrpg_Autoloader");
 
 
-require_once (CUR_DIR .'/lib/Application.php');
+require_once(CUR_DIR . '/lib/Application.php');
 
 //Exceptions
-require_once (LIB_DIR . '/exception.db.php');
+require_once(LIB_DIR . '/exception.db.php');
 
 //Constants
-require_once (LIB_DIR . '/const.errors.php');
+require_once(LIB_DIR . '/const.errors.php');
 
 //External Libraries
 //Smarty

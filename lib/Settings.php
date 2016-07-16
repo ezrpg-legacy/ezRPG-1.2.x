@@ -28,10 +28,10 @@ class Settings
 
     public function __construct(&$db)
     {
-        $this->db = & $db;
+        $this->db = &$db;
         $this->settings = $this->loadSettings();
         $this->groups = $this->get_settings_by_group($this->settings);
-		$this->setting = $this->get_settings($this->settings);
+        $this->setting = $this->get_settings($this->settings);
     }
 
     /*
@@ -46,67 +46,85 @@ class Settings
 
     public function get_settings_by($column, $value, $setting)
     {
-        $settings = array( );
+        $settings = array();
 
-        foreach ( $setting as $item => $val )
-        {
-            if ( $val->$column == $value )
-            {
-                return array( 'id' => $val->id, 'value' => $val->value, 'title' => $val->title, 'optionscode' => $val->optionscode );
+        foreach ($setting as $item => $val) {
+            if ($val->$column == $value) {
+                return array(
+                    'id' => $val->id,
+                    'value' => $val->value,
+                    'title' => $val->title,
+                    'optionscode' => $val->optionscode
+                );
             }
         }
     }
 
     public function get_settings_by_group($setting)
     {
-        $settings = array( );
-        $special = array( 'select', 'radio' );
-        foreach ( $setting as $items => $vals )
-        {
-            if ( $vals->gid == 0 )
-            {
-				$settings[$vals->name] = array('id'=>$vals->id);
-                foreach ( $setting as $item => $val )
-                {
-                    if ( $val->gid == $vals->id ) // checks if current setting is related to current group
+        $settings = array();
+        $special = array('select', 'radio');
+        foreach ($setting as $items => $vals) {
+            if ($vals->gid == 0) {
+                $settings[$vals->name] = array('id' => $vals->id);
+                foreach ($setting as $item => $val) {
+                    if ($val->gid == $vals->id) // checks if current setting is related to current group
                     {
-                        if ( in_array($val->optionscode, $special, true) ) // checks if current setting is a Radio or Select
+                        if (in_array($val->optionscode, $special,
+                            true)) // checks if current setting is a Radio or Select
                         {
-                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $this->get_settings_by('id', $val->value, $setting), 'title' => $val->title, 'optionscode' => $val->optionscode );
-                        }
-                        else
-                        {
-                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $val->value, 'title' => $val->title, 'optionscode' => $val->optionscode );
+                            $settings[$vals->name][$val->name] = array(
+                                'id' => $val->id,
+                                'value' => $this->get_settings_by('id', $val->value, $setting),
+                                'title' => $val->title,
+                                'optionscode' => $val->optionscode
+                            );
+                        } else {
+                            $settings[$vals->name][$val->name] = array(
+                                'id' => $val->id,
+                                'value' => $val->value,
+                                'title' => $val->title,
+                                'optionscode' => $val->optionscode
+                            );
                         }
                     }
                 }
             }
         }
-		return $settings;
+
+        return $settings;
     }
-	public function get_settings($setting)
+
+    public function get_settings($setting)
     {
-        $settings = array( );
-        $special = array( 'select', 'radio' );
-        foreach ( $setting as $items => $vals )
-        {
-				$settings[$vals->name] = array('id'=>$vals->id);
-                foreach ( $setting as $item => $val )
+        $settings = array();
+        $special = array('select', 'radio');
+        foreach ($setting as $items => $vals) {
+            $settings[$vals->name] = array('id' => $vals->id);
+            foreach ($setting as $item => $val) {
+                if ($val->gid == $vals->id) // checks if current setting is related to current group
                 {
-                    if ( $val->gid == $vals->id ) // checks if current setting is related to current group
+                    if (in_array($val->optionscode, $special, true)) // checks if current setting is a Radio or Select
                     {
-                        if ( in_array($val->optionscode, $special, true) ) // checks if current setting is a Radio or Select
-                        {
-                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $this->get_settings_by('id', $val->value, $setting), 'title' => $val->title, 'optionscode' => $val->optionscode );
-                        }
-                        else
-                        {
-                            $settings[$vals->name][$val->name] = array( 'id' => $val->id, 'value' => $val->value, 'title' => $val->title, 'optionscode' => $val->optionscode );
-                        }
+                        $settings[$vals->name][$val->name] = array(
+                            'id' => $val->id,
+                            'value' => $this->get_settings_by('id', $val->value, $setting),
+                            'title' => $val->title,
+                            'optionscode' => $val->optionscode
+                        );
+                    } else {
+                        $settings[$vals->name][$val->name] = array(
+                            'id' => $val->id,
+                            'value' => $val->value,
+                            'title' => $val->title,
+                            'optionscode' => $val->optionscode
+                        );
                     }
                 }
+            }
         }
-		return $settings;
+
+        return $settings;
     }
 
     public function loadSettings()
@@ -114,32 +132,26 @@ class Settings
         $query = 'SELECT * FROM `<ezrpg>settings`';
         $cache_file = md5($query);
 
-        if ( file_exists(CACHE_DIR . $cache_file) )
-        {
-            if ( filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24 )
-            {
+        if (file_exists(CACHE_DIR . $cache_file)) {
+            if (filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24) {
                 $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if ( DEBUG_MODE == 1 )
-                {
+                if (DEBUG_MODE == 1) {
                     echo 'Loaded Settings Cache! <br />';
                 }
-            }
-            else
-            {
+            } else {
                 unlink(CACHE_DIR . $cache_file);
+
                 return $this->loadSettings();
             }
-        }
-        else
-        {
+        } else {
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if ( DEBUG_MODE == 1 )
-            {
+            if (DEBUG_MODE == 1) {
                 echo 'Created Settings Cache! <br />';
             }
         }
+
         return $array;
     }
 

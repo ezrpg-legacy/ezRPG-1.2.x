@@ -23,8 +23,9 @@ $debugTimer['Settings Loaded:'] = microtime(1);
 $tpl = $ezrpg->container['tpl'] = new \Smarty();
 $tpl->caching = 0;
 $tpl->assign('GAMESETTINGS', $ezrpg->container['settings']->setting['general']);
-if (DEBUG_MODE)
+if (DEBUG_MODE) {
     echo 'GAMESETTINGS Smarty Variable is being deprecated. Use {settings g=\'general\' n=\'Setting_Name\'} for your GameSettings needs.';
+}
 
 $tpl->addTemplateDir(array(
     'admin' => THEME_DIR . 'themes/admin/',
@@ -70,22 +71,20 @@ $debugTimer['Menus retrieved:'] = microtime(1);
 $players = new \ezRPG\lib\Players($container);
 
 // Check player exists
-if ( $container['player'] == '0' )
-{
+if ($container['player'] == '0') {
     header('Location: ../index.php');
     exit;
 }
 
 //Require admin rank
-if ( $container['player']->rank < 5 )
-{
+if ($container['player']->rank < 5) {
     header('Location: ../index.php');
     exit;
 }
 
 $default_mod = 'Index';
 
-$module_name = ( (isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod );
+$module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'] : $default_mod);
 
 //Admin header hook
 $module_name = $hooks->run_hooks('admin_header', $module_name);

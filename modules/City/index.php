@@ -17,6 +17,7 @@ class Module_City extends Base_Module
     {
         parent::__construct($container, $menu);
     }
+
     /*
       Function: start
       Displays the city.tpl template. That's all!
@@ -26,9 +27,9 @@ class Module_City extends Base_Module
     {
         //Require the user to be logged in
         requireLogin();
-        $args['begin'] = FALSE;
-        $args['endings'] = FALSE;
-        $args['showchildren'] = FALSE;
+        $args['begin'] = false;
+        $args['endings'] = false;
+        $args['showchildren'] = false;
         $this->menu->get_menus("UserMenu", $args);
         $this->menu->get_menus("WorldMenu", $args);
         $this->menu->get_menus("City", $args);

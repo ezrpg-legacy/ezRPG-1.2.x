@@ -17,19 +17,18 @@
  *
  * <div>{settings g="general" n="game_name"} ago </div>
  */
-function smarty_function_settings($params, &$smarty) {
-	global $container;
-	$print = 'Setting Doesn\'t exist';
-	if(!empty($params))
-	{
-		if (!empty($params['g']))
-		{
-		if (!empty($params['n']))
-		{
-			$print = $container['settings']->setting[$params['g']][$params['n']]['value'];
-		}
-		}
-	}
+function smarty_function_settings($params, &$smarty)
+{
+    global $container;
+    $print = 'Setting Doesn\'t exist';
+    if (!empty($params)) {
+        if (!empty($params['g'])) {
+            if (!empty($params['n'])) {
+                $print = $container['settings']->setting[$params['g']][$params['n']]['value'];
+            }
+        }
+    }
+
     return $print;
 }
 

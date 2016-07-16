@@ -19,9 +19,9 @@ class Admin_Index extends Base_Module
 
     public function start()
     {
-        $CustomMenuArgs['showchildren'] = FALSE;
+        $CustomMenuArgs['showchildren'] = false;
         $CustomMenuArgs['customtag'] = 'AdminModules';
-        $this->menu->get_menus("AdminMenu", $CustomMenuArgs, FALSE, FALSE, 1);
+        $this->menu->get_menus("AdminMenu", $CustomMenuArgs, false, false, 1);
         $this->loadview('index.tpl');
     }
 

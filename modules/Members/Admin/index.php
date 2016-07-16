@@ -1,6 +1,7 @@
 <?php
 
 namespace ezRPG\Modules\Members\Admin;
+
 use \ezRPG\lib\Base_Module;
 
 defined('IN_EZRPG') or exit;
@@ -19,19 +20,15 @@ class Admin_Members extends Base_Module
 
     public function start()
     {
-        if ( isset($_GET['act']) )
-        {
-            if ( $_GET['act'] == 'edit' )
-            {
+        if (isset($_GET['act'])) {
+            if ($_GET['act'] == 'edit') {
                 $this->editMember();
+            } else {
+                if ($_GET['act'] == 'delete') {
+                    $this->deleteMember();
+                }
             }
-            else if ( $_GET['act'] == 'delete' )
-            {
-                $this->deleteMember();
-            }
-        }
-        else
-        {
+        } else {
             $this->listMembers();
         }
     }
@@ -43,16 +40,17 @@ class Admin_Members extends Base_Module
 
     private function listMembers()
     {
-        if ( isset($_GET['page']) )
+        if (isset($_GET['page'])) {
             $page = (intval($_GET['page']) > 0) ? intval($_GET['page']) : 0;
-        else
+        } else {
             $page = 0;
+        }
 
-        $query = $this->db->execute('SELECT `id`, `username`, `email` FROM `<ezrpg>players` ORDER BY `id` ASC LIMIT ?,50', array( $page * 50 ));
+        $query = $this->db->execute('SELECT `id`, `username`, `email` FROM `<ezrpg>players` ORDER BY `id` ASC LIMIT ?,50',
+            array($page * 50));
 
-        $members = Array( );
-        while ( $m = $this->db->fetch($query) )
-        {
+        $members = Array();
+        while ($m = $this->db->fetch($query)) {
             $members[] = $m;
         }
 
@@ -76,24 +74,22 @@ class Admin_Members extends Base_Module
 
     private function editMember()
     {
-        if ( !isset($_GET['id']) )
-        {
+        if (!isset($_GET['id'])) {
             header('Location: index.php?mod=Members');
             exit;
         }
 
-        $member = $this->db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, <ezrpg>players.email, <ezrpg>players_meta.rank, <ezrpg>players_meta.money, <ezrpg>players_meta.level FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?', array( intval($_GET['id']) ));
+        $member = $this->db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, <ezrpg>players.email, <ezrpg>players_meta.rank, <ezrpg>players_meta.money, <ezrpg>players_meta.level FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?',
+            array(intval($_GET['id'])));
 
         //No rows found
-        if ( $member == false )
-        {
+        if ($member == false) {
             header('Location: index.php?mod=Members');
             exit;
         }
 
         //No form was submitted, so just display the edit form
-        if ( !isset($_POST['edit']) )
-        {
+        if (!isset($_POST['edit'])) {
             $this->tpl->assign('member', $member);
             $this->loadView('members_edit.tpl');
             exit;
@@ -102,51 +98,44 @@ class Admin_Members extends Base_Module
         $msg = '';
         $errors = 0;
         //Form was submitted! \o/
-        if ( empty($_POST['email']) )
-        {
+        if (empty($_POST['email'])) {
             $errors = 1;
             $msg .= 'You forgot to enter an email address.<br />';
         }
 
         $_POST['rank'] = (!empty($_POST['rank'])) ? intval($_POST['rank']) : $member->rank;
-        if ( !isset($_POST['rank']) )
-        {
+        if (!isset($_POST['rank'])) {
             $errors = 1;
             $msg .= 'You didn\'t enter a rank for this player.<br />';
         }
 
         //If the rank of the player you're editing is higher or equal to your own rank, then you are not allowed to edit their rank
-        if ( $member->rank > $this->player->rank )
-        {
-            if ( $_POST['rank'] != $member->rank )
-            {
+        if ($member->rank > $this->player->rank) {
+            if ($_POST['rank'] != $member->rank) {
                 //Reset rank to original rank
                 $_POST['rank'] = $member->rank;
             }
-        }
-        else if ( $_POST['rank'] > $this->player->rank )
-        {
-            $errors = 1;
-            $msg .= 'You can\'t set a member\'s rank to higher than your own!<br />';
+        } else {
+            if ($_POST['rank'] > $this->player->rank) {
+                $errors = 1;
+                $msg .= 'You can\'t set a member\'s rank to higher than your own!<br />';
+            }
         }
 
         $_POST['money'] = intval($_POST['money']);
-        if ( $_POST['money'] < 0 )
-        {
+        if ($_POST['money'] < 0) {
             $errors = 1;
             $msg .= 'The player must have a positive amount of money!<br />';
         }
 
         $_POST['level'] = intval($_POST['level']);
-        if ( $_POST['level'] < 0 )
-        {
+        if ($_POST['level'] < 0) {
             $errors = 1;
             $msg .= 'The player must have a level higher than 0!<br />';
         }
 
         //The form wasn't filled out correctly
-        if ( $errors == 1 )
-        {
+        if ($errors == 1) {
             $member->email = $_POST['email'];
             $member->rank = $_POST['rank'];
             $member->money = $_POST['money'];
@@ -156,11 +145,10 @@ class Admin_Members extends Base_Module
             $this->tpl->assign('GET_MSG', $msg);
             $this->loadView('members_edit.tpl');
             exit;
-        }
-        else
-        {
+        } else {
             //No errors, update player info
-            $query = $this->db->execute('UPDATE `<ezrpg>players` SET `email`=?, `rank`=?, `money`=?, `level`=? WHERE `id`=?', array( $_POST['email'], $_POST['rank'], $_POST['money'], $_POST['level'], $member->id ));
+            $query = $this->db->execute('UPDATE `<ezrpg>players` SET `email`=?, `rank`=?, `money`=?, `level`=? WHERE `id`=?',
+                array($_POST['email'], $_POST['rank'], $_POST['money'], $_POST['level'], $member->id));
 
             $this->setMessage('You have updated the player\'s info.', 'GOOD');
             header('Location: index.php?mod=Members');
@@ -175,31 +163,26 @@ class Admin_Members extends Base_Module
 
     private function deleteMember()
     {
-        $member = $this->db->fetchRow('SELECT `id`, `username` FROM `<ezrpg>players` WHERE `id`=?', array( $_GET['id'] ));
+        $member = $this->db->fetchRow('SELECT `id`, `username` FROM `<ezrpg>players` WHERE `id`=?', array($_GET['id']));
 
-        if ( $member == false )
-        {
+        if ($member == false) {
             header('Location: index.php?mod=Members');
             exit;
         }
 
-        if ( $member->id == $this->player->id )
-        {
+        if ($member->id == $this->player->id) {
             //Cannot delete self
             $this->setMessage('You cannot delete yourself!', 'WARN');
             header('Location: index.php?mod=Members');
             exit;
         }
 
-        if ( !isset($_POST['confirm']) )
-        {
+        if (!isset($_POST['confirm'])) {
             $this->tpl->assign('member', $member);
             $this->loadView('members_delete.tpl');
             exit;
-        }
-        else
-        {
-            $query = $this->db->execute('DELETE FROM `<ezrpg>players` WHERE `id`=?', array( $member->id ));
+        } else {
+            $query = $this->db->execute('DELETE FROM `<ezrpg>players` WHERE `id`=?', array($member->id));
             $this->setMessage('You have deleted <strong>' . $member->username . '</strong>.', 'GOOD');
             header('Location: index.php?mod=Members');
             exit;

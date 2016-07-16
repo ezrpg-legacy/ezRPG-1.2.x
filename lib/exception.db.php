@@ -38,8 +38,7 @@ class DbException extends Exception
 
     public function __toString()
     {
-        switch ( $this->code )
-        {
+        switch ($this->code) {
             case DRIVER_ERROR: //Could not connect to server
                 $this->message = 'Could not find driver: ' . $this->message;
                 break;
@@ -74,8 +73,7 @@ class DbException extends Exception
 OUT;
 
         //Only show line number and file if debug mode is on
-        if ( DEBUG_MODE )
-        {
+        if (DEBUG_MODE) {
             $ret .= <<<OUT
 <strong>File</strong>: $this->file<br />
 <strong>Line</strong>: $this->line<br />
@@ -89,8 +87,7 @@ $this->message
 OUT;
 
         //Only show stack trace if debug mode is on
-        if ( DEBUG_MODE )
-        {
+        if (DEBUG_MODE) {
             $ret .= <<<OUT
 <br /><br />
 <strong>Stack Trace:</strong><br />

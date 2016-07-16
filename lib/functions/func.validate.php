@@ -1,7 +1,8 @@
 <?php
 
-if ( !defined('IN_EZRPG') )
+if (!defined('IN_EZRPG')) {
     exit;
+}
 
 /*
   Title: Validation functions
@@ -37,14 +38,14 @@ function isUsername($username)
 
 function isPassword($password)
 {
-	global $container;
+    global $container;
     $settings = $container['settings'];
-	$length = $settings->setting['validation']['passLenMin']['value'];
-	if($settings->setting['validation']['passLens']['value']['value'] == 'minmax')
-	{
-		$length .= ','. $settings->setting['validation']['passLenMax']['value'];
-	}
-    return (preg_match("/[a-zA-Z0-9\W]{".$length."}+/", $password));
+    $length = $settings->setting['validation']['passLenMin']['value'];
+    if ($settings->setting['validation']['passLens']['value']['value'] == 'minmax') {
+        $length .= ',' . $settings->setting['validation']['passLenMax']['value'];
+    }
+
+    return (preg_match("/[a-zA-Z0-9\W]{" . $length . "}+/", $password));
 }
 
 /*
@@ -76,11 +77,11 @@ function isEmail($email)
 
 function isClean($input)
 {
-	if(isset($input)){
-		return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
-	}else{
-		return true;
-	}
+    if (isset($input)) {
+        return (preg_match("/^[_a-zA-Z0-9]+$/", $input));
+    } else {
+        return true;
+    }
 }
 
 ?>

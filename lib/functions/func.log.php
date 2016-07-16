@@ -54,7 +54,9 @@ function addLog($player, $msg, &$db)
 
 function checkLog($player, &$db)
 {
-    $result = $db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0', array( intval($player) ));
+    $result = $db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>player_log` WHERE `player`=? AND `status`=0',
+        array(intval($player)));
+
     return $result->count;
 }
 

@@ -61,33 +61,27 @@ class Menu
         $query = 'SELECT * FROM `<ezrpg>menu` WHERE active = 1 ORDER BY `pos`';
         $cache_file = md5($query);
 
-        if ( file_exists(CACHE_DIR . $cache_file) )
-        {
-            if ( filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24 )
-            {
+        if (file_exists(CACHE_DIR . $cache_file)) {
+            if (filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24) {
                 $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if ( DEBUG_MODE == 1 )
-                {
+                if (DEBUG_MODE == 1) {
                     echo 'Loaded Menu Cache! <br />';
                 }
-            }
-            else
-            {
+            } else {
                 unlink(CACHE_DIR . $cache_file);
                 $this->loadCache();
+
                 return;
             }
-        }
-        else
-        {
+        } else {
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if ( DEBUG_MODE == 1 )
-            {
+            if (DEBUG_MODE == 1) {
                 echo 'Created Menu Cache! <br />';
             }
         }
+
         return $array;
     }
 
@@ -110,14 +104,11 @@ class Menu
       $add_menu ($bid, 'Deposit', 'Deposit Money', '', 'index.php?mod=Bank&act=Deposit');
      */
 
-    function add_menu($pid = 0, $name, $title = '', $alttitle = NULL, $uri = '', $pos = '', $mod_id = '')
+    function add_menu($pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $mod_id = '')
     {
-        if ( is_numeric($pid) )
-        {
+        if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
-        }
-        else
-        {
+        } else {
             $item['parent_id'] = $this->get_menu_id_by_name($pid);
         }
         $item['AltTitle'] = $alttitle;
@@ -125,18 +116,15 @@ class Menu
         $item['title'] = $title;
         $item['uri'] = $uri;
         $item['module_id'] = $mod_id;
-        if ( $pos == '' )
-        {
-            if ( $item['parent_id'] == NULL )
-            {
+        if ($pos == '') {
+            if ($item['parent_id'] == null) {
                 $pos = '0';
-            }
-            else
-            {
+            } else {
                 $pos = $this->get_next_pos($item['parent_id']);
             }
         }
         $item['pos'] = $pos;
+
         return $this->db->insert("<ezrpg>menu", $item);
     }
 
@@ -145,33 +133,27 @@ class Menu
       Applies new values to menu
      */
 
-    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = NULL, $uri = '', $pos = '', $active = '')
+    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '')
     {
-        if ( is_numeric($pid) )
-        {
+        if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
-        }
-        else
-        {
+        } else {
             $item['parent_id'] = $this->get_menu_id_by_name($pid);
         }
         $item['AltTitle'] = $alttitle;
         $item['name'] = $name;
         $item['title'] = $title;
         $item['uri'] = $uri;
-        if ( $pos == '' )
-        {
-            if ( $item['parent_id'] == 0 )
-            {
+        if ($pos == '') {
+            if ($item['parent_id'] == 0) {
                 $pos = '0';
-            }
-            else
-            {
+            } else {
                 $pos = $this->get_next_pos($item['parent_id']);
             }
         }
         $item['pos'] = $pos;
         $item['active'] = $active;
+
         return $this->db->update("<ezrpg>menu", $item, "id = " . $mid);
     }
 
@@ -191,25 +173,17 @@ class Menu
       $this->menu->delete_menu(get_menu_id_by_name('Bank')); Deletes Menu named "Bank"
      */
 
-    function delete_menu($id = NULL, $pid = NULL)
+    function delete_menu($id = null, $pid = null)
     {
-        if ( isset($id) && isset($pid) )
-        {
+        if (isset($id) && isset($pid)) {
             return $this->db->execute('DELETE FROM `<ezrpg>menu` WHERE parent_id=' . $pid . ' AND id=' . $id);
-        }
-        else
-        {
-            if ( isset($id) )
-            {
+        } else {
+            if (isset($id)) {
                 return $this->db->execute('DELETE FROM `<ezrpg>menu` WHERE id=' . $id);
-            }
-            elseif ( isset($pid) )
-            {
+            } elseif (isset($pid)) {
                 return $this->db->execute('DELETE FROM `<ezrpg>menu` WHERE id=' . $id);
-            }
-            else
-            {
-                return FALSE;
+            } else {
+                return false;
             }
         }
     }
@@ -225,10 +199,16 @@ class Menu
       $menu (Optional) Initializes the $menu array variable
      */
 
-    function get_menus($parent = null, $args = 0, $begin = TRUE, $endings = TRUE, $title = "", $customtag = "", $showchildren = TRUE)
-    {
-        if ( $args != 0 )
-        {
+    function get_menus(
+        $parent = null,
+        $args = 0,
+        $begin = true,
+        $endings = true,
+        $title = "",
+        $customtag = "",
+        $showchildren = true
+    ) {
+        if ($args != 0) {
             (isset($args['begin']) ? $begin = $args['begin'] : '');
             (isset($args['endings']) ? $endings = $args['endings'] : '');
             (isset($args['title']) ? $title = $args['title'] : '');
@@ -237,62 +217,46 @@ class Menu
         }
         $result = '';
         $menu = $this->menu;
-        $menuarray = array( );
-        if ( LOGGED_IN != "TRUE" )
-        {
+        $menuarray = array();
+        if (LOGGED_IN != "TRUE") {
             $menuarray['Home'] = 'index.php';
             $menuarray['Register'] = 'index.php?mod=Register';
             $this->tpl->assign('TOP_MENU_LOGGEDOUT', $menuarray);
-        }
-        else
-        {
-            foreach ( $menu as $item => $ival )
-            {
+        } else {
+            foreach ($menu as $item => $ival) {
                 $menuarray[(defined('IN_ADMIN') ? "Admin" : "Home")] = 'index.php';
-                if ( $ival->active == 1 )
-                {
+                if ($ival->active == 1) {
                     $this->tpl->assign('Menu' . $ival->name, $parent . " : " . $ival->parent_id);
-                    if ( $parent != null || $ival->parent_id != 0 )
-                    {
-                        if ( !is_numeric($parent) )
-                        {
-                            if ( $ival->name == $parent )
-                            {
+                    if ($parent != null || $ival->parent_id != 0) {
+                        if (!is_numeric($parent)) {
+                            if ($ival->name == $parent) {
                                 $result = $this->get_children($ival->id, $title, $showchildren);
-                                foreach ( $result as $mitem => $mval )
-                                {
+                                foreach ($result as $mitem => $mval) {
                                     $menuarray[$mitem] = $mval;
                                 }
-                                $this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag), $menuarray);
+                                $this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag),
+                                    $menuarray);
                                 unset($menuarray);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $result = $this->get_children($ival->id, $title, $showchildren);
-                            foreach ( $result as $mitem => $mval )
-                            {
+                            foreach ($result as $mitem => $mval) {
                                 $menuarray[$mitem] = $mval;
                             }
                             $this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag), $mentarray);
                             unset($menuarray);
                         }
-                    }
-                    else
-                    {
-                        if ( $ival->parent_id == 0 )
-                        { //it's a group
+                    } else {
+                        if ($ival->parent_id == 0) { //it's a group
                             $result = $this->get_children($ival->id, $title, $showchildren);
 
-                            foreach ( $result as $mitem => $mval )
-                            {
+                            foreach ($result as $mitem => $mval) {
                                 $menuarray[$mitem] = $mval;
                             }
-                            if ( defined('IN_ADMIN') )
-                            {
+                            if (defined('IN_ADMIN')) {
                                 $menuarray['To Game'] = '../index.php';
                             }
-                            if($this->player) {
+                            if ($this->player) {
                                 if ($this->player->rank > 5) {
                                     if (defined('IN_ADMIN')) {
                                         $menuarray['To Game'] = '../index.php';
@@ -305,7 +269,8 @@ class Menu
                                     $menuarray['Logout'] = 'index.php?mod=Logout';
                                 }
                             }
-                            $this->tpl->assign('TOP_MENU_' . (($customtag != 0) ? $customtag : $ival->name), $menuarray);
+                            $this->tpl->assign('TOP_MENU_' . (($customtag != 0) ? $customtag : $ival->name),
+                                $menuarray);
                             unset($menuarray);
                         }
                     }
@@ -325,35 +290,28 @@ class Menu
       $showchildren (Optional): Determines if we're displaying any children menus.
      */
 
-    function get_children($parent = 0, $title = 0, $showchildren = TRUE, $menu = 0)
+    function get_children($parent = 0, $title = 0, $showchildren = true, $menu = 0)
     {
         $result = "";
-        if ( $menu == 0 )
-        {
+        if ($menu == 0) {
             $menu = $this->menu;
         }
-        $menuarray = array( );
-        foreach ( $menu as $item => $ival )
-        {
-            if ( $ival->active == 1 )
-            {
-                if ( !is_numeric($parent) )
-                {
-                    if ( $ival->name == $parent )
-                    {
+        $menuarray = array();
+        foreach ($menu as $item => $ival) {
+            if ($ival->active == 1) {
+                if (!is_numeric($parent)) {
+                    if ($ival->name == $parent) {
                         $this->get_children($ival->id);
                         break;
                     }
-                }
-                else
-                {
-                    if ( $ival->parent_id == $parent )
-                    {
+                } else {
+                    if ($ival->parent_id == $parent) {
                         $menuarray[($title == 0 ? $ival->title : $this->get_title($ival))] = $ival->uri;
                     }
                 }
             }
         }
+
         return $menuarray;
     }
 
@@ -369,12 +327,9 @@ class Menu
 
     function get_title($menu)
     {
-        if ( !is_null($menu->AltTitle) )
-        {
+        if (!is_null($menu->AltTitle)) {
             return $menu->AltTitle;
-        }
-        else
-        {
+        } else {
             return $menu->title;
         }
     }
@@ -390,15 +345,15 @@ class Menu
 
     function has_children($parent = null, $menu = 0)
     {
-        if ( $menu == 0 )
-        {
+        if ($menu == 0) {
             $menu = $this->menu;
         }
-        foreach ( $menu as $item => $ival )
-        {
-            if ( $ival->parent_id == $parent )
-                return TRUE;
+        foreach ($menu as $item => $ival) {
+            if ($ival->parent_id == $parent) {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -413,10 +368,8 @@ class Menu
 
     function get_menu_id_by_name($pid)
     {
-        foreach ( $this->menu as $item => $ival )
-        {
-            if ( $ival->name == $pid )
-            {
+        foreach ($this->menu as $item => $ival) {
+            if ($ival->name == $pid) {
                 return $ival->id;
             }
         }
@@ -433,13 +386,12 @@ class Menu
     function countmenus($pid = "")
     {
         $result = 0;
-        foreach ( $this->menu as $item => $ival )
-        {
-            if ( $ival->parent_id == $pid )
-            {
+        foreach ($this->menu as $item => $ival) {
+            if ($ival->parent_id == $pid) {
                 $result++;
             }
         }
+
         return $result;
     }
 
@@ -455,24 +407,19 @@ class Menu
     function get_next_pos($pid = "", $pos = "")
     {
         $result = 0;
-        if ( $pos == "" )
-        {
+        if ($pos == "") {
             $pos = 0;
         }
-        foreach ( $this->menu as $item => $ival )
-        {
-            if ( $ival->parent_id == $pid )
-            {
-                if ( $ival->pos == $pos )
-                {
+        foreach ($this->menu as $item => $ival) {
+            if ($ival->parent_id == $pid) {
+                if ($ival->pos == $pos) {
                     $result = $this->get_next_pos($pid, ++$pos);
-                }
-                else
-                {
+                } else {
                     $result = $pos;
                 }
             }
         }
+
         return $result;
     }
 
@@ -480,17 +427,14 @@ class Menu
     {
         $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
         $array = $this->db->fetchAll($query, true);
-        foreach ( $array as $item => $ival )
-        {
-            if ( $ival['name'] == $name )
-            {
+        foreach ($array as $item => $ival) {
+            if ($ival['name'] == $name) {
                 return true;
-            }
-            elseif ( $ival['id'] == $name )
-            {
+            } elseif ($ival['id'] == $name) {
                 return true;
             }
         }
+
         return false;
     }
 

@@ -25,12 +25,9 @@ defined('IN_EZRPG') or exit;
 
 function createKey($length, $option = 0)
 {
-    if ( $option == 1 )
-    {
+    if ($option == 1) {
         $chars = "cefhklmnrtuvwxyCEFHKLMNRTUVWXY349";
-    }
-    else
-    {
+    } else {
         $chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|:><,./?`~";
     }
 
@@ -38,25 +35,22 @@ function createKey($length, $option = 0)
     $i = 0;
     $pass = '';
 
-    while ( $i < $length )
-    {
+    while ($i < $length) {
         $num = mt_rand() % (strlen($chars) - 1);
         $tmp = substr($chars, $num, 1);
         $pass = $pass . $tmp;
         $i++;
     }
+
     return $pass;
 }
 
 function randColor()
 {
     $rand1 = mt_rand(0, 1);
-    if ( $rand1 == 1 )
-    {
+    if ($rand1 == 1) {
         return mt_rand(0, 70);
-    }
-    else
-    {
+    } else {
         return mt_rand(180, 255);
     }
 }

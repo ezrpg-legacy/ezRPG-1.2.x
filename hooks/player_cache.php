@@ -9,14 +9,13 @@ function hook_player_cache($container, $args = 0)
 {
     $sql = $container['db']->execute('SELECT * FROM `<ezrpg>players` WHERE `force_cache` = 1');
     $query = $container['db']->fetchAll($sql);
-    if ( $query )
-    {
-        foreach ( $query as $item )
-        {
+    if ($query) {
+        foreach ($query as $item) {
             killPlayerCache($item->id);
-            $container['db']->execute('UPDATE <ezrpg>players SET force_cache = 0 WHERE id=?', array( $item->id ));
+            $container['db']->execute('UPDATE <ezrpg>players SET force_cache = 0 WHERE id=?', array($item->id));
         }
     }
+
     return $args;
 }
 

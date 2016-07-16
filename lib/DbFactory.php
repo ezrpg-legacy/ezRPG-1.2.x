@@ -48,13 +48,12 @@ class DbFactory
     public static function factory($config)
     {
         $dbconfig = $config->readConfig();
-        if ( include_once(LIB_DIR . '/db.' . $dbconfig['dbdriver'] . '.php') )
-        {
+        if (include_once(LIB_DIR . '/db.' . $dbconfig['dbdriver'] . '.php')) {
             $classname = 'Db_' . $dbconfig['dbdriver'];
-            return new $classname($dbconfig['dbserver'], $dbconfig['dbuser'], $dbconfig['dbpass'], $dbconfig['dbname'], $dbconfig['dbport']);
-        }
-        else
-        {
+
+            return new $classname($dbconfig['dbserver'], $dbconfig['dbuser'], $dbconfig['dbpass'], $dbconfig['dbname'],
+                $dbconfig['dbport']);
+        } else {
             throw new DbException($dbconfig['dbdriver'], DRIVER_ERROR);
         }
     }

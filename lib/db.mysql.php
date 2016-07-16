@@ -85,8 +85,9 @@ class Db_mysql
 
     public function __destruct()
     {
-        if ( $this->isConnected )
+        if ($this->isConnected) {
             mysql_close($this->db);
+        }
     }
 
     /*
@@ -114,42 +115,40 @@ class Db_mysql
 
     public function execute($query, $params = 0)
     {
-        if ( $this->isConnected === false )
+        if ($this->isConnected === false) {
             $this->connect();
+        }
 
-        try
-        {
+        try {
             //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
             $query = str_replace('<ezrpg>', DB_PREFIX, $query);
 
             //Parameter binding
-            if ( $params != 0 )
-            {
+            if ($params != 0) {
                 //Split the query
                 $parts = explode('?', $query);
 
                 //Make sure query parts and parameters match, otherwise adjust the arrays
                 $count1 = count($parts);
                 $count2 = count($params);
-                if ( $count1 <= $count2 ) //Too many parameters, drop the extras
+                if ($count1 <= $count2) //Too many parameters, drop the extras
+                {
                     $params = array_slice($params, 0, $count1);
+                }
 
-                if ( $count1 > ($count2 + 1) ) //Too little parameters, add extra '?' symbols
+                if ($count1 > ($count2 + 1)) //Too little parameters, add extra '?' symbols
                 { //OR throw an SQL exception?
                     $diff = $count2 - $count1;
                     array_fill($params, $diff, '?');
                 }
 
                 //Sanitize parameters
-                for ( $i = 0; $i < $count2; $i++ )
-                {
+                for ($i = 0; $i < $count2; $i++) {
                     $val = $params[$i];
 
-                    if ( is_string($val) )
-                    {
+                    if (is_string($val)) {
                         //magic quotes
-                        if ( get_magic_quotes_gpc() )
-                        {
+                        if (get_magic_quotes_gpc()) {
                             $val = stripslashes($val);
                         }
 
@@ -160,19 +159,17 @@ class Db_mysql
                         //{
                         $val = '\'' . mysql_real_escape_string($val, $this->db) . '\'';
                         //} //Otherwise the string is acting as a digit, so leave it alone
-                    }
-                    else if ( is_int($val) || is_float($val) )
-                    {
-                        //Value is an integer, no sanitation is necessary.
-                        //Only need to convert to string so the parameter can be concatenated onto the query string.
-                        //(Not really necessary, but otherwise this block would be empty ;])
-                        $val = strval($val);
-                    }
-                    else
-                    {
-                        //Parameter is not a valid type.
-                        $val = '?';
-                        //OR throw an SQL exception?
+                    } else {
+                        if (is_int($val) || is_float($val)) {
+                            //Value is an integer, no sanitation is necessary.
+                            //Only need to convert to string so the parameter can be concatenated onto the query string.
+                            //(Not really necessary, but otherwise this block would be empty ;])
+                            $val = strval($val);
+                        } else {
+                            //Parameter is not a valid type.
+                            $val = '?';
+                            //OR throw an SQL exception?
+                        }
                     }
 
                     $params[$i] = $val;
@@ -180,8 +177,7 @@ class Db_mysql
 
                 $query = '';
                 //Reconstruct query
-                for ( $i = 0; $i < $count2; $i++ )
-                {
+                for ($i = 0; $i < $count2; $i++) {
                     $query .= $parts[$i] . $params[$i];
                 }
                 $query .= $parts[($count1 - 1)];
@@ -189,36 +185,32 @@ class Db_mysql
 
             $this->query = $query;
 
-            if ( DEBUG_MODE === 1 )
+            if (DEBUG_MODE === 1) {
                 echo $query . '<br />';
+            }
 
             //Execute query
             $result = mysql_query($query, $this->db);
 
-            if ( $result === false )
-            { //If there was an error with the query
+            if ($result === false) { //If there was an error with the query
                 $this->error = mysql_error();
 
                 //If in debug mode, send exception, otherwise ignore
-                if ( SHOW_ERRORS === 1 )
-                {
+                if (SHOW_ERRORS === 1) {
                     //Feature: admin logging of errors?
                     $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . $this->error . '</strong>';
-                }elseif( isset($_SESSION['in_installer']) && $_SESSION['in_installer'] )
-				{
-					$error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . $this->error . '</strong> <br />';
-					$error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
-					$error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
-				}else{
-					$error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
-				}
-				throw new DbException($error_msg, SQL_ERROR);
+                } elseif (isset($_SESSION['in_installer']) && $_SESSION['in_installer']) {
+                    $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . $this->error . '</strong> <br />';
+                    $error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
+                    $error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
+                } else {
+                    $error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
+                }
+                throw new DbException($error_msg, SQL_ERROR);
 
                 return false;
             }
-        }
-        catch ( SQLException $e )
-        {
+        } catch (SQLException $e) {
             $e->__toString();
         }
 
@@ -251,6 +243,7 @@ class Db_mysql
     public function fetch(&$result)
     {
         $ret = mysql_fetch_object($result);
+
         return $ret;
     }
 
@@ -277,6 +270,7 @@ class Db_mysql
     public function fetchArray(&$result)
     {
         $ret = mysql_fetch_array($result);
+
         return $ret;
     }
 
@@ -306,21 +300,22 @@ class Db_mysql
 
     public function fetchAll(&$result, $return_array = false)
     {
-        $ret = array( );
+        $ret = array();
 
-        if ( $result === false )
+        if ($result === false) {
             return $ret;
+        }
 
-        if ( $return_array === true )
-        {
-            while ( $row = $this->fetchArray($result) )
+        if ($return_array === true) {
+            while ($row = $this->fetchArray($result)) {
                 $ret[] = $row;
-        }
-        else
-        {
-            while ( $row = $this->fetch($result) )
+            }
+        } else {
+            while ($row = $this->fetch($result)) {
                 $ret[] = $row;
+            }
         }
+
         return $ret;
     }
 
@@ -353,6 +348,7 @@ class Db_mysql
         $result = $this->execute($query, $params);
         $ret = $this->fetch($result);
         mysql_free_result($result);
+
         return $ret;
     }
 
@@ -397,17 +393,17 @@ class Db_mysql
 
     public function insert($table, $data)
     {
-        if ( $this->isConnected === false )
+        if ($this->isConnected === false) {
             $this->connect();
+        }
 
         $query = 'INSERT INTO ' . $table . ' (';
         $cols = count($data);
         $part1 = ''; //List of column names
         $part2 = ''; //List of question marks for parameter binding
-        $params = Array( );
+        $params = Array();
         $i = 0; //Counter
-        foreach ( $data as $col => $val )
-        {
+        foreach ($data as $col => $val) {
             //Append column name
             $part1 .= mysql_real_escape_string($col, $this->db);
 
@@ -416,8 +412,7 @@ class Db_mysql
 
             $params[] = $val;
 
-            if ( $i != ($cols - 1) )
-            {
+            if ($i != ($cols - 1)) {
                 $part1 .= ', ';
                 $part2 .= ', ';
             }
@@ -465,30 +460,21 @@ class Db_mysql
 
     protected function connect()
     {
-        if ( $this->isConnected === false )
-        {
+        if ($this->isConnected === false) {
             $this->db = mysql_connect($this->host, $this->username, $this->password);
-            if ( !$this->db )
-            {
+            if (!$this->db) {
                 throw new DbException($this->db, SERVER_ERROR);
-            }
-            else
-            {
+            } else {
                 $this->isConnected = true;
 
                 $db_selected = mysql_select_db($this->dbname);
-                if ( !$db_selected )
-                {
+                if (!$db_selected) {
                     throw new DbException($this->dbname, DATABASE_ERROR);
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -516,21 +502,23 @@ class Db_mysql
 
     function update($table, $fields, $where)
     {
-        if ( $this->isConnected === false )
+        if ($this->isConnected === false) {
             $this->connect();
+        }
 
         $table = str_replace('<ezrpg>', DB_PREFIX, $table);
         $i = 0;
         $var = "";
         $numFields = count($fields);
-        foreach ( $fields as $key => $val )
-        {
-            if ( ++$i === $numFields )
+        foreach ($fields as $key => $val) {
+            if (++$i === $numFields) {
                 $var .= $key . "='" . $val . "'";
-            else
+            } else {
                 $var .= $key . "='" . $val . "', ";
+            }
         }
         $sql = "Update " . mysql_real_escape_string($table, $this->db) . " SET " . $var . " WHERE " . $where;
+
         return $this->execute($sql);
     }
 

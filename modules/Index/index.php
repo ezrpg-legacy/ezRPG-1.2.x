@@ -1,6 +1,7 @@
 <?php
 
 namespace ezRPG\Modules;
+
 use ezRPG\lib\Base_Module;
 
 //This file cannot be viewed, it must be included
@@ -20,20 +21,17 @@ class Module_Index extends Base_Module
 
     public function start()
     {
-        if ( LOGGED_IN )
-        {
+        if (LOGGED_IN) {
             $this->loadView('home.tpl', 'Home');
-        }
-        else
-        {	
+        } else {
             $this->loadView('index.tpl', 'Index');
         }
     }
 
-	public function test()
-	{
-		echo 'test';
-	}
+    public function test()
+    {
+        echo 'test';
+    }
 }
 
 ?>

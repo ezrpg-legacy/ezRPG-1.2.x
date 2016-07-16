@@ -30,19 +30,16 @@ defined('IN_EZRPG') or exit;
 
 function shorten($text, $length = 50)
 {
-    if ( strlen($text) > $length )
-    {
+    if (strlen($text) > $length) {
         $ret = '';
-        while ( substr($text, $length, 1) != ' ' )
-        {
+        while (substr($text, $length, 1) != ' ') {
             --$length;
         }
         $ret = substr($text, 0, $length);
         $ret .= "...";
+
         return $ret;
-    }
-    else
-    {
+    } else {
         return $text;
     }
 }

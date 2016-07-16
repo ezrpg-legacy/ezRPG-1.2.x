@@ -6,77 +6,76 @@
 define('IN_EZRPG', true);
 require_once '../init.php';
 global $settings;
-if(isset($_GET['api_key']))
-	$api['key'] = $_GET['api_key'];
-	
-if(isset($_GET['api_user']))
-	$api['user'] = $_GET['api_user'];
-	
-if(isset($_GET['api_pass']))
-	$api['pass'] = $_GET['api_pass'];
-	
-if($settings->setting['api']['apistatus']['value']['value'])
-{
-	if(isset($_GET['api_method']))
-	{
-		switch($_GET['api_method']){
-			case 'stats':
-				send_stats($api);
-				break;
-			//case 'mybblogin':
-				//mybblogin();
-				//break;
-		}
-	}else{
-		echo json_encode(array('status'=>'failed','msg'=>'No method given'));
-	}
+if (isset($_GET['api_key'])) {
+    $api['key'] = $_GET['api_key'];
 }
 
-function send_stats($api){
-	global $db;
-	
-	if(!isset($api['user']))
-	{
-		echo json_encode(array('status'=>'failed','error'=>'Missing username'));
-	}else{
-		$query = $db->execute("SELECT id, username FROM <ezrpg>players WHERE username='". $api['user'] ."'");
-		if($db->numRows($query) != 0)
-		{
-			$pid = $db->fetch($query);
-			$query2 = $db->execute("SELECT * FROM <ezrpg>players_meta WHERE pid=".$pid->id);
-			$result = $db->fetch($query2);
-			$stats = array();
-			$stats['username'] = $pid->username;
-			foreach($result as $item=>$key)
-			{
-				$stats[$item] = $key;
-			}
-			
-			echo json_encode(array('status'=>'success', 'player'=>$stats));
-		}
-	}
+if (isset($_GET['api_user'])) {
+    $api['user'] = $_GET['api_user'];
+}
+
+if (isset($_GET['api_pass'])) {
+    $api['pass'] = $_GET['api_pass'];
+}
+
+if ($settings->setting['api']['apistatus']['value']['value']) {
+    if (isset($_GET['api_method'])) {
+        switch ($_GET['api_method']) {
+            case 'stats':
+                send_stats($api);
+                break;
+            //case 'mybblogin':
+            //mybblogin();
+            //break;
+        }
+    } else {
+        echo json_encode(array('status' => 'failed', 'msg' => 'No method given'));
+    }
+}
+
+function send_stats($api)
+{
+    global $db;
+
+    if (!isset($api['user'])) {
+        echo json_encode(array('status' => 'failed', 'error' => 'Missing username'));
+    } else {
+        $query = $db->execute("SELECT id, username FROM <ezrpg>players WHERE username='" . $api['user'] . "'");
+        if ($db->numRows($query) != 0) {
+            $pid = $db->fetch($query);
+            $query2 = $db->execute("SELECT * FROM <ezrpg>players_meta WHERE pid=" . $pid->id);
+            $result = $db->fetch($query2);
+            $stats = array();
+            $stats['username'] = $pid->username;
+            foreach ($result as $item => $key) {
+                $stats[$item] = $key;
+            }
+
+            echo json_encode(array('status' => 'success', 'player' => $stats));
+        }
+    }
 }
 
 function require_key()
 {
-	global $db, $settings;
-	if($settings->setting['api'])
-	{
-		if(isset($_GET['api_key']))
-		{
-			if($settings->setting['api']['api_key']['value'] != $_GET['api_key'])
-			{
-				echo json_encode(array('status'=>'failed','msg'=>'API Key mismatch'));
-				return false;
-			}else{
-				return true;
-			}			
-		}else{
-			echo json_encode(array('status'=>'failed','msg'=>'No API Key given'));
-			return false;
-		}
-	}else{
-	return true;
-	}
+    global $db, $settings;
+    if ($settings->setting['api']) {
+        if (isset($_GET['api_key'])) {
+            if ($settings->setting['api']['api_key']['value'] != $_GET['api_key']) {
+                echo json_encode(array('status' => 'failed', 'msg' => 'API Key mismatch'));
+
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            echo json_encode(array('status' => 'failed', 'msg' => 'No API Key given'));
+
+            return false;
+        }
+    } else {
+        return true;
+    }
 }
+
 ?>

@@ -8,6 +8,7 @@ function hook_cron_energy($container, $args = 0)
 {
     $query = "UPDATE <ezrpg>players_meta SET energy = energy + 1 WHERE energy < max_energy";
     $container['db']->execute($query);
+
     return $args;
 }
 

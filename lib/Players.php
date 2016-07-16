@@ -46,36 +46,39 @@ class Players
         $this->tpl = $container['tpl'];
         $this->player = $container['player'];
     }
-	
-	public function updateMeta($data, $id)
-	{
-		$this->db->update('<ezrpg>players_meta', $data, 'id='.$id);
-		killPlayerCache($id);
-		return true;
-	}
-	
-	public function createMeta($id)
-	{
-		return $this->db->insert('<ezrpg>players_meta', array('pid'=>$id));
-	}
-	
-	public function register($username, $password, $email)
-	{
-		global $settings, $hooks;
-		
-		$insert = Array( );
-		//Add new user to database
-		$insert['username'] = $username;
-		$insert['email'] = $email;
-		$insert['secret_key'] = createKey(16);
-		$insert['password'] = createPassword($insert['secret_key'], $password);
-		$insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
-		$insert['registered'] = time();
-		//Run register hook
-		$insert = $hooks->run_hooks('register', $insert);
-		$playerID = $this->db->insert('<ezrpg>players', $insert);
-		$this->createMeta($playerID);
-		return $playerID;
-	}
+
+    public function updateMeta($data, $id)
+    {
+        $this->db->update('<ezrpg>players_meta', $data, 'id=' . $id);
+        killPlayerCache($id);
+
+        return true;
+    }
+
+    public function createMeta($id)
+    {
+        return $this->db->insert('<ezrpg>players_meta', array('pid' => $id));
+    }
+
+    public function register($username, $password, $email)
+    {
+        global $settings, $hooks;
+
+        $insert = Array();
+        //Add new user to database
+        $insert['username'] = $username;
+        $insert['email'] = $email;
+        $insert['secret_key'] = createKey(16);
+        $insert['password'] = createPassword($insert['secret_key'], $password);
+        $insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
+        $insert['registered'] = time();
+        //Run register hook
+        $insert = $hooks->run_hooks('register', $insert);
+        $playerID = $this->db->insert('<ezrpg>players', $insert);
+        $this->createMeta($playerID);
+
+        return $playerID;
+    }
 }
+
 ?>

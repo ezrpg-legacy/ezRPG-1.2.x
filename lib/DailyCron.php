@@ -7,6 +7,7 @@
  */
 
 namespace ezRPG\lib;
+
 use ezRPG\lib\Application,
     Pimple\Container;
 
@@ -19,11 +20,12 @@ class DailyCron
     {
         $this->container = $container;
     }
+
     public function start()
     {
         try {
             $this->container['hooks']->run_hooks('cron_daily');
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $ex->getMessage();
         }
     }

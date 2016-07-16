@@ -52,7 +52,7 @@ class Hooks
     {
         global $debugTimer;
         $this->container = $container;
-        $this->hooks = array( );
+        $this->hooks = array();
         $debugTimer['Hook Class constructed'] = microtime(1);
     }
 
@@ -88,8 +88,9 @@ class Hooks
     {
         global $debugTimer;
         $num_args = func_num_args();
-        if ( $num_args == 0 )
+        if ($num_args == 0) {
             return;
+        }
 
         //Get function arguments
         $arg_list = func_get_args();
@@ -98,41 +99,42 @@ class Hooks
 
         $func_args = 0;
 
-        if ( $num_args == 2 )
-        {
+        if ($num_args == 2) {
             //Single argument or an rrray of arguments to pass to hook functions
             $func_args = $arg_list[1];
         }
 
         //This hook doesn't exist!
-        if ( !array_key_exists($hook_name, $this->hooks) )
+        if (!array_key_exists($hook_name, $this->hooks)) {
             return $func_args;
+        }
 
         //Sort by priority
         ksort($this->hooks[$hook_name]);
 
         //if($hook_name=='header')
-            //die(var_dump($this->player));
+        //die(var_dump($this->player));
 
-        foreach ( $this->hooks[$hook_name] as $priority )
-        {
+        foreach ($this->hooks[$hook_name] as $priority) {
             //Call each hook function separately
-            foreach ( $priority as $hook_function )
-            {
+            foreach ($priority as $hook_function) {
                 $call_func = 'hook_' . $hook_function;
 
                 //Debug mode? Show what's going on
-                if ( DEBUG_MODE == 1 )
+                if (DEBUG_MODE == 1) {
                     echo 'Calling hook: ', $call_func, '<br />';
+                }
 
-                if ( !function_exists($call_func) )
+                if (!function_exists($call_func)) {
                     continue;
+                }
 
                 //Hook should have a return value
                 $func_args = call_user_func($call_func, $this->container, $func_args);
                 $debugTimer[$call_func] = microtime(1);
             }
         }
+
         return $func_args;
     }
 

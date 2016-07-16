@@ -49,7 +49,7 @@ abstract class Base_Module
       The name variable used in loadView()
      */
     protected $name;
-    protected $messages = array( );
+    protected $messages = array();
     protected $messageLevels = array(
         'INFO' => '',
         'WARN' => '',
@@ -57,10 +57,10 @@ abstract class Base_Module
         'GOOD' => ''
     );
 
-	protected $scripts;
+    protected $scripts;
 
     protected $container;
-	
+
     /*
       Function: __construct
       The constructor the every module. Saves the database, template and player variables as class variables.
@@ -82,7 +82,7 @@ abstract class Base_Module
         $this->menu = $menu;
         $this->settings = $container['settings'];
         $this->name = get_class($this);
-		$this->scripts = array();
+        $this->scripts = array();
         $this->container = $container;
     }
 
@@ -100,26 +100,21 @@ abstract class Base_Module
 
     public function getTheme($theme = 'default')
     {
-        if ( defined('IN_ADMIN') )
-        {
+        if (defined('IN_ADMIN')) {
             $this->theme = 'admin';
-        }
-        else
-        {
+        } else {
             $query = $this->db->execute('SELECT name FROM <ezrpg>themes WHERE enabled=1');
             $this->theme = $this->db->fetch($query);
-            if ( !is_object($this->theme) )
-            {
+            if (!is_object($this->theme)) {
                 $this->theme = 'default';
                 $this->db->execute("UPDATE <ezrpg>themes SET enabled=1 WHERE name='default'");
-            }
-            else
-            {
+            } else {
                 $this->theme = $this->theme->name;
             }
         }
         $this->tpl->assign('THEMEDIR', 'templates/themes/' . $this->theme . '/');
         $this->tpl->assign('THEME', $this->theme);
+
         return $this->theme;
     }
 
@@ -138,27 +133,19 @@ abstract class Base_Module
 
     public function loadView($tpl, $modtheme = '')
     {
-		$this->add_scripts();
-        if ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === TRUE )
-        {
-			$this->getMessages();
+        $this->add_scripts();
+        if (file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $tpl) === true) {
+            $this->getMessages();
             $this->tpl->display('file:[' . $this->theme . ']' . $tpl);
-        }
-        elseif ( file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $modtheme . '/' . $tpl) === TRUE )
-		{
-			$this->getMessages();
-            $this->tpl->display('file:[' . $this->theme . ']' .$modtheme . '/'. $tpl);
-		}
-		else
-        {
-            if ( array_key_exists($modtheme, $this->tpl->getTemplateDir()) )
-            {
-				$this->getMessages();
+        } elseif (file_exists(THEME_DIR . '/themes/' . $this->theme . '/' . $modtheme . '/' . $tpl) === true) {
+            $this->getMessages();
+            $this->tpl->display('file:[' . $this->theme . ']' . $modtheme . '/' . $tpl);
+        } else {
+            if (array_key_exists($modtheme, $this->tpl->getTemplateDir())) {
+                $this->getMessages();
                 $this->tpl->display('file:[' . $modtheme . ']' . $tpl);
-            }
-            else
-            {
-                $this->setMessage('Could not find page you requested<br />'.$tpl, 'FAIL');
+            } else {
+                $this->setMessage('Could not find page you requested<br />' . $tpl, 'FAIL');
                 header('Location: index.php');
                 exit;
             }
@@ -167,90 +154,88 @@ abstract class Base_Module
 
     /**
      * Sets a status message for use later on.
-     * 
+     *
      * Levels:
-     * 	INFO
-     * 	WARN
-     * 	FAIL
-     * 	GOOD
-     * 
+     *    INFO
+     *    WARN
+     *    FAIL
+     *    GOOD
+     *
      * @param string $message
      * @param integer $level
-     * @return boolean 
+     * @return boolean
      */
     public function setMessage($message, $level = 'info')
     {
         $level = strtoupper($level);
 
         // for better practices.
-        if ( array_key_exists($level, $this->messageLevels) === false )
-        {
+        if (array_key_exists($level, $this->messageLevels) === false) {
             throw new Exception('Message level "' . $level . '" does not exists.');
+
             return false;
         }
-        array_push($this->messages, array( $level => $message ));
+        array_push($this->messages, array($level => $message));
+
         return true;
     }
 
-   /**
+    /**
      * Gets the messages saved in $_SESSION.
      * Assigns SMARTY variable called 'MSG'
-     * 
-	 * Replaces old header_msg.php hook
-     */	
-	public function getMessages()
-	{
-		 if ( !array_key_exists('status_messages', $_SESSION) )
-			return false;
+     *
+     * Replaces old header_msg.php hook
+     */
+    public function getMessages()
+    {
+        if (!array_key_exists('status_messages', $_SESSION)) {
+            return false;
+        }
 
-		// loop through the SESSION variable and push it to the template
-		$status_messages = array( );
-		foreach ( $_SESSION['status_messages'] as $key )
-		{
-			foreach ( $key as $level => $message )
-			{
-				if ( strlen($message) > 0 )
-				{
-					$status = array( $level => $message );
-					array_push($status_messages, $status);
-				}
-			}
-		}
-		if ( empty($status_messages) )
-			$status_messages = null;
+        // loop through the SESSION variable and push it to the template
+        $status_messages = array();
+        foreach ($_SESSION['status_messages'] as $key) {
+            foreach ($key as $level => $message) {
+                if (strlen($message) > 0) {
+                    $status = array($level => $message);
+                    array_push($status_messages, $status);
+                }
+            }
+        }
+        if (empty($status_messages)) {
+            $status_messages = null;
+        }
 
-		$this->tpl->assign('MSG', $status_messages);
-		// remove the session
-		unset($_SESSION['status_message']);
-	}
+        $this->tpl->assign('MSG', $status_messages);
+        // remove the session
+        unset($_SESSION['status_message']);
+    }
 
     public function __destruct()
     {
-        $_SESSION['status_messages'] = array( );
+        $_SESSION['status_messages'] = array();
 
-        foreach ( $this->messages as $key => $message )
-        {
+        foreach ($this->messages as $key => $message) {
             $_SESSION['status_messages'][$key] = $message;
         }
 
         return true;
     }
 
-	public function appendHeader($source, $priority = 0)
-	{
-		$this->scripts[$source] = $source;
-	}
-	
-	public function add_scripts()
-	{
-		//Sort by priority
+    public function appendHeader($source, $priority = 0)
+    {
+        $this->scripts[$source] = $source;
+    }
+
+    public function add_scripts()
+    {
+        //Sort by priority
         ksort($this->scripts);
-		$scripts = '';
-		foreach($this->scripts as $script)
-		{
-			$scripts .= $script;
-		}
-		$this->tpl->assign('added_scripts', $scripts);
-	}
-	
+        $scripts = '';
+        foreach ($this->scripts as $script) {
+            $scripts .= $script;
+        }
+        $this->tpl->assign('added_scripts', $scripts);
+    }
+
 }

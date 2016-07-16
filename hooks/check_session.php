@@ -11,13 +11,11 @@ function hook_check_session($container, $args = 0)
     global $debugTimer;
     // we follow a "guilty" until proven otherwise approach.
     $authenticated = false;
-    
-    if ( array_key_exists('userid', $_SESSION) && array_key_exists('hash', $_SESSION) )
-    {
+
+    if (array_key_exists('userid', $_SESSION) && array_key_exists('hash', $_SESSION)) {
         // The client has prompted that they have authorization details.
         // Validate they they are indeed valid: this will be in the for 
-        if ( compareSignature($_SESSION['hash']) )
-        {
+        if (compareSignature($_SESSION['hash'])) {
             //Select player details from Cache
             $query = 'SELECT id, username, 
 			email, rank, registered
@@ -63,7 +61,7 @@ function hook_check_session($container, $args = 0)
             */
             $player_base = $container['db']->fetchRow($query);
             $player_meta = $container['db']->fetchRow('SELECT * FROM `<ezrpg>players_meta` WHERE pid = ' . $_SESSION['userid']);
-            $player= (object) array_merge((array) $player_base, (array) $player_meta);
+            $player = (object)array_merge((array)$player_base, (array)$player_meta);
             $container['tpl']->assign('player', $player);
             $container['player'] = $player;
 
@@ -73,7 +71,7 @@ function hook_check_session($container, $args = 0)
             // check the last time the user was active.
             // if they weren't active for a certain time period, prompt for password again.
             // Changed to 10Minutes
-            if ( $_SESSION['last_active'] < (time() - 600) ) {
+            if ($_SESSION['last_active'] < (time() - 600)) {
                 if (isset($GET['mod'])) {
                     if (!in_array($_GET['mod'], array('Logout'))) {
                         session_destroy();
@@ -87,9 +85,7 @@ function hook_check_session($container, $args = 0)
                     $_SESSION['last_active'] = time();
                 }
             }
-        }
-        else
-        {
+        } else {
             session_destroy();
         }
     }

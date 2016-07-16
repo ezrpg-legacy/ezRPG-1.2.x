@@ -38,14 +38,14 @@ class ModuleFactory
 
     public static function factory($container, $module = 'Index', &$menu)
     {
-       if ( file_exists(MOD_DIR . '/' . $module . '/index.php') )
-        {
-            include_once (MOD_DIR . '/' . $module . '/index.php');
+        if (file_exists(MOD_DIR . '/' . $module . '/index.php')) {
+            include_once(MOD_DIR . '/' . $module . '/index.php');
             $classname = 'ezRPG\\Modules\\Module_' . $module;
+
             return new $classname($container, $menu);
-        }else{
-			return false;
-		}
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -70,18 +70,17 @@ class ModuleFactory
 
     public static function adminFactory($container, $module = 'Index', &$menu)
     {
-        if ( file_exists(MOD_DIR . '/' . $module . '/Admin/index.php') )
-        {
-            include_once (MOD_DIR . '/' . $module . '/Admin/index.php');
+        if (file_exists(MOD_DIR . '/' . $module . '/Admin/index.php')) {
+            include_once(MOD_DIR . '/' . $module . '/Admin/index.php');
             $classname = 'ezRPG\\Modules\\' . $module . '\\Admin\\Admin_' . $module;
+
             return new $classname($container, $menu);
-        }
-        else
-        {
-            include_once (MOD_DIR . '/Index/Admin/index.php');
+        } else {
+            include_once(MOD_DIR . '/Index/Admin/index.php');
             $tpl->getTemplateDir('admin');
+
             return new Admin_Index($container, $menu);
         }
     }
-	
+
 }

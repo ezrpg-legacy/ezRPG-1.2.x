@@ -1,7 +1,8 @@
 <?php
 
-if ( !defined('IN_EZRPG') )
+if (!defined('IN_EZRPG')) {
     exit;
+}
 
 /*
   Title: Security functions
@@ -24,20 +25,26 @@ if ( !defined('IN_EZRPG') )
   String - The derived key.
  */
 
-function createPBKDF2($password, $salt = 'ezRPG', $global_salt = SECRET_KEY, $count = 1005, $length = 32, $algorithm = 'sha256')
-{
+function createPBKDF2(
+    $password,
+    $salt = 'ezRPG',
+    $global_salt = SECRET_KEY,
+    $count = 1005,
+    $length = 32,
+    $algorithm = 'sha256'
+) {
     $password = $salt . $password;
 
     $kb = $length;
     $derived = '';
 
-    for ( $block = 1; $block <= $kb; $block++ )
-    {
+    for ($block = 1; $block <= $kb; $block++) {
         $hash = hash_hmac($algorithm, $global_salt . pack('N', $block), $password, true);
         $initial_block = $hash;
 
-        for ( $i = 1; $i < $count; $i++ )
+        for ($i = 1; $i < $count; $i++) {
             $initial_block ^= ($h = hash_hmac($algorithm, $hash, $password, true));
+        }
 
         $derived .= $initial_block;
     }
@@ -59,23 +66,18 @@ function createPBKDF2($password, $salt = 'ezRPG', $global_salt = SECRET_KEY, $co
 
 function comparePBKDF2($origin, $comparison)
 {
-    if ( count($origin) == 2 )
-    {
-        if ( createPBKDF2($origin[0], $origin[1]) == $comparison )
-        {
-            return TRUE;
+    if (count($origin) == 2) {
+        if (createPBKDF2($origin[0], $origin[1]) == $comparison) {
+            return true;
+        } else {
+            return false;
         }
-        else
-        {
-            return FALSE;
+    } else {
+        if (createPBKDF2($origin[0]) === $comparison) {
+            return true;
+        } else {
+            return false;
         }
-    }
-    else
-    {
-        if ( createPBKDF2($origin[0]) === $comparison )
-            return TRUE;
-        else
-            return FALSE;
     }
 }
 
@@ -92,13 +94,13 @@ function comparePBKDF2($origin, $comparison)
 
 function createSalt($length)
 {
-    $byte = array( );
-    for ( $i = 0; $i <= $length; $i++ )
-    {
+    $byte = array();
+    for ($i = 0; $i <= $length; $i++) {
         $mockup = sha1(microtime());
         $rand = mt_rand(0, (strlen($mockup) - 1));
         $byte[] = substr($mockup, $rand, ($rand + 1));
     }
+
     return implode($byte);
 }
 
@@ -118,6 +120,7 @@ function createSalt($length)
 function createBcrypt($password, $salt = 'ezRPG', $count = 7)
 {
     $salt = sprintf('$2a$%02d$%s$', $count, $salt);
+
     return crypt($password, $salt);
 }
 
@@ -142,7 +145,7 @@ function generateSignature()
 {
 
     $client = array_key_exists('userid', $_SESSION) ?
-            $_SESSION['userid'] : 'guest';
+        $_SESSION['userid'] : 'guest';
 
     $bits = array(
         'userid' => $client,
@@ -153,8 +156,7 @@ function generateSignature()
 
     $signature = false;
 
-    foreach ( $bits as $key => $bit )
-    {
+    foreach ($bits as $key => $bit) {
         $signature .= $key . $bit;
     }
 
@@ -173,12 +175,9 @@ function createLegacyPassword($secret, $password)
 
 function compareLegacyPassword($secret, $input, $password)
 {
-    if ( sha1($secret . $input . SECRET_KEY) == $password )
-    {
+    if (sha1($secret . $input . SECRET_KEY) == $password) {
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
@@ -188,8 +187,7 @@ function createPassword($secret, $password)
     global $container;
     $pass_meth = $container['settings']->setting['general']['pass_encryption']['value']['value'];
 
-    switch ( $pass_meth )
-    {
+    switch ($pass_meth) {
         case 1:
             return createLegacyPassword($secret, $password);
             break;
@@ -206,16 +204,16 @@ function checkPassword($secret, $input, $password, $override = '0')
 {
     global $container;
     $pass_meth = $container['settings']->setting['general']['pass_encryption']['value']['value'];
-    switch ( ($override == '0' ? $pass_meth : $override ) )
-    {
+    switch (($override == '0' ? $pass_meth : $override)) {
         case 1:
-            return compareLegacyPassword($secret, $input, ($override == 0 ? $password : createLegacyPassword($secret, $input)));
+            return compareLegacyPassword($secret, $input,
+                ($override == 0 ? $password : createLegacyPassword($secret, $input)));
             break;
         case 2:
-            return comparePBKDF2(array( $input, $secret ), ($override == 0 ? $password : createPBKDF2($input, $secret)));
+            return comparePBKDF2(array($input, $secret), ($override == 0 ? $password : createPBKDF2($input, $secret)));
             break;
         case 3:
-            return compareBcrypt(array( $input, $secret ), ($override == 0 ? $password : createBcrypt($input)));
+            return compareBcrypt(array($input, $secret), ($override == 0 ? $password : createBcrypt($input)));
             break;
     }
 }

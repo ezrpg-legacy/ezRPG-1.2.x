@@ -29,15 +29,16 @@ class Router
       An array of all routes.
      */
     protected $routes;
-	
-	/*
-	  Variable: $reservedActions
-	  An array of reserved module actions
-	*/ 
-	public $reservedActions = array(
-				'Install',
-				'Uninstall'
-				);
+
+    /*
+      Variable: $reservedActions
+      An array of reserved module actions
+    */
+    public $reservedActions = array(
+        'Install',
+        'Uninstall'
+    );
+
     /*
       Function: __construct
       The constructor takes in database, template and player variables to pass onto any hook functions called.
@@ -50,8 +51,8 @@ class Router
 
     public function __construct(&$db, &$player = 0)
     {
-        $this->db = & $db;
-        $this->player = & $player;
+        $this->db = &$db;
+        $this->player = &$player;
         $this->routes = $this->getRoutes();
     }
 
@@ -60,33 +61,27 @@ class Router
         $query = 'SELECT * FROM `<ezrpg>router` WHERE active = 1';
         $cache_file = md5($query);
 
-        if ( file_exists(CACHE_DIR . $cache_file) )
-        {
-            if ( filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24 )
-            {
+        if (file_exists(CACHE_DIR . $cache_file)) {
+            if (filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24) {
                 $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if ( DEBUG_MODE == 1 )
-                {
+                if (DEBUG_MODE == 1) {
                     echo 'Loaded Route Cache! <br />';
                 }
-            }
-            else
-            {
+            } else {
                 unlink(CACHE_DIR . $cache_file);
                 $this->getRoutes();
+
                 return;
             }
-        }
-        else
-        {
+        } else {
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if ( DEBUG_MODE == 1 )
-            {
+            if (DEBUG_MODE == 1) {
                 echo 'Created Route Cache! <br />';
             }
         }
+
         return $array;
     }
 
@@ -106,7 +101,7 @@ class Router
 
     function add_route($url)
     {
-        
+
     }
 
     /*
@@ -131,12 +126,12 @@ class Router
       
      */
 
-    function delete_route($rid = NULL)
+    function delete_route($rid = null)
     {
         //return $this->db->execute('DELETE FROM `<ezrpg>menu` WHERE id=' . $id);
     }
 
-	/*
+    /*
       Function: resolve
       Determines if a Route is valid
 
@@ -147,20 +142,20 @@ class Router
       
       
      */
-	 
-	function resolve($url)
-	{
-		foreach($this->routes as $route) {
-			$routeMatch = $route->resolve($url);
 
-			if ($routeMatch !== false) {
-				return $routeMatch;
-			}
-		}
+    function resolve($url)
+    {
+        foreach ($this->routes as $route) {
+            $routeMatch = $route->resolve($url);
 
-		return false;
-	}
-    
+            if ($routeMatch !== false) {
+                return $routeMatch;
+            }
+        }
+
+        return false;
+    }
+
 }
 
 ?>

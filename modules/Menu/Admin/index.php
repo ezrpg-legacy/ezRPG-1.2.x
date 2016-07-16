@@ -1,10 +1,12 @@
 <?php
 
 namespace ezRPG\Modules\Menu\Admin;
+
 use \ezRPG\lib\Base_Module;
 
 defined('IN_EZRPG') or exit;
-require_once (LIB_DIR . '/pclzip.lib.php');
+require_once(LIB_DIR . '/pclzip.lib.php');
+
 /*
   Class: Admin_Plugins
   Admin page for managing plugins and modules
@@ -20,10 +22,8 @@ class Admin_Menu extends Base_Module
     public function start()
     {
 
-        if ( isset($_GET['act']) )
-        {
-            switch ( $_GET['act'] )
-            {
+        if (isset($_GET['act'])) {
+            switch ($_GET['act']) {
                 case 'install' :
                     $this->install_manager(); //Completed:Install Manager
                     break;
@@ -40,11 +40,8 @@ class Admin_Menu extends Base_Module
                     $this->edit_menus();
                     break; //Completed:Edit Menus.
             }
-        }
-        elseif ( isset($_POST['act']) )
-        {
-            switch ( $_POST['act'] )
-            {
+        } elseif (isset($_POST['act'])) {
+            switch ($_POST['act']) {
                 case 'add' :
                     $this->add_menus();
                     break;
@@ -52,9 +49,7 @@ class Admin_Menu extends Base_Module
                     $this->edit_menus();
                     break;
             }
-        }
-        else
-        {
+        } else {
             $this->list_menus();
         }
     }
@@ -72,32 +67,25 @@ class Admin_Menu extends Base_Module
 
     private function remove_menus()
     {
-        if ( isset($_GET['mid']) && !isset($_GET['confirm']) )
-        {
-            if ( !$this->menu->has_children($_GET['mid']) )
-            {
+        if (isset($_GET['mid']) && !isset($_GET['confirm'])) {
+            if (!$this->menu->has_children($_GET['mid'])) {
                 $query = $this->db->execute('select id, title from <ezrpg>menu where id = ' . $_GET['mid']);
                 $menu = $this->db->fetchAll($query);
-                foreach ( $menu as $item => $key )
-                {
+                foreach ($menu as $item => $key) {
                     $this->tpl->assign('menuname', $key->title);
                     $this->tpl->assign('menuid', $key->id);
                 }
-                $this->tpl->assign('error', FALSE);
+                $this->tpl->assign('error', false);
                 $this->tpl->assign('page', 'delete');
                 $this->loadView('menus-manage.tpl');
-            }
-            else
-            {
-                $this->tpl->assign('error', TRUE);
+            } else {
+                $this->tpl->assign('error', true);
                 $this->tpl->assign('page', 'delete');
                 $this->loadView('menus-manage.tpl');
             }
         }
-        if ( isset($_GET['confirm']) && isset($_GET['mid']) )
-        {
-            if ( $_GET['confirm'] == 1 )
-            {
+        if (isset($_GET['confirm']) && isset($_GET['mid'])) {
+            if ($_GET['confirm'] == 1) {
                 $this->menu->delete_menu($_GET['mid']);
                 $this->list_menus();
                 exit;
@@ -108,8 +96,7 @@ class Admin_Menu extends Base_Module
     private function add_menus()
     {
         $error = 0;
-        if ( !isset($_POST['submit']) )
-        {
+        if (!isset($_POST['submit'])) {
             $query = $this->db->execute('select * from <ezrpg>menu');
             $menu = $this->db->fetchAll($query);
             $this->tpl->assign('menus', $menu);
@@ -122,32 +109,33 @@ class Admin_Menu extends Base_Module
             $this->tpl->assign('page', 'add');
             $this->tpl->assign('error', $error);
             $this->loadView('menus-manage.tpl');
-        }
-        else
-        {
-            $insert = Array( );
+        } else {
+            $insert = Array();
             $insert['uri'] = preg_replace("[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]", "", $_POST['muri']);
-            if ( !isClean($_POST['mname']) )
+            if (!isClean($_POST['mname'])) {
                 $error = 1;
-            if ( !isClean($_POST['mtitle']) )
+            }
+            if (!isClean($_POST['mtitle'])) {
                 $error = 2;
-            if ( !isClean($_POST['malt']) )
+            }
+            if (!isClean($_POST['malt'])) {
                 $error = 3;
-            if ( !isClean($_POST['mpos']) )
+            }
+            if (!isClean($_POST['mpos'])) {
                 $error = 4;
-            if ( !isClean($_POST['mpid']) )
+            }
+            if (!isClean($_POST['mpid'])) {
                 $error = 5;
-            if ( $error == 0 )
-            {
-                $mid = $this->menu->add_menu($_POST['mpid'], $_POST['mname'], $_POST['mtitle'], $_POST['malt'], $_POST['muri'], $_POST['mpos']);
+            }
+            if ($error == 0) {
+                $mid = $this->menu->add_menu($_POST['mpid'], $_POST['mname'], $_POST['mtitle'], $_POST['malt'],
+                    $_POST['muri'], $_POST['mpos']);
                 $this->tpl->assign('GET_MSG', 'You must activate the menu before it becomes accessible!');
                 $msg = 'You must first activate this plugin before it can be used!';
                 $this->setMessage($msg, 'WARN');
                 header('Location: index.php?mod=Menu&act=edit&mid=' . $mid);
                 exit;
-            }
-            else
-            {
+            } else {
                 $query = $this->db->execute('select * from <ezrpg>menu');
                 $menu = $this->db->fetchAll($query);
                 $this->tpl->assign('menus', $menu);
@@ -166,10 +154,8 @@ class Admin_Menu extends Base_Module
 
     private function edit_menus()
     {
-        if ( $this->menu->isMenu($_REQUEST['mid']) )
-        {
-            if ( !isset($_POST['submit']) )
-            {
+        if ($this->menu->isMenu($_REQUEST['mid'])) {
+            if (!isset($_POST['submit'])) {
                 $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_GET['mid']);
                 $menu = $this->db->fetchAll($query);
                 $this->tpl->assign('menus', $menu);
@@ -180,47 +166,47 @@ class Admin_Menu extends Base_Module
                 $this->tpl->assign('error', 0);
                 $this->tpl->assign('page', 'edit');
                 $this->loadView('menus-manage.tpl');
-            }
-            else
-            {
+            } else {
                 $error = '0';
-                if ( !isClean($_POST['mname']) )
+                if (!isClean($_POST['mname'])) {
                     $error = '1';
-                if ( !isClean($_POST['mtitle']) && isset($_POST['mname']) )
+                }
+                if (!isClean($_POST['mtitle']) && isset($_POST['mname'])) {
                     $error = '2';
-                if ( !isClean($_POST['malt']) )
-                    if ( $_POST['malt'] == NULL )
+                }
+                if (!isClean($_POST['malt'])) {
+                    if ($_POST['malt'] == null) {
                         $_POST['malt'] = '';
-                    else
+                    } else {
                         $error = '3';
-                if ( !isClean($_POST['mpos']) )
+                    }
+                }
+                if (!isClean($_POST['mpos'])) {
                     $error = '4';
-                if ( !isClean($_POST['mpid']) )
+                }
+                if (!isClean($_POST['mpid'])) {
                     $error = '5';
-                if ( $error == '0' )
-                {
-                    $this->menu->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'], $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive']);
+                }
+                if ($error == '0') {
+                    $this->menu->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'],
+                        $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive']);
                     killMenuCache();
                     header('Location: index.php?mod=Menu');
                     exit;
-                }
-                else
-                {
+                } else {
                     $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_GET['mid']);
-					$menu = $this->db->fetchAll($query);
-					$this->tpl->assign('menus', $menu);
-					$query1 = $this->db->execute('select * from <ezrpg>menu');
-					$menu = $this->db->fetchAll($query1);
-					$this->tpl->assign('menubox', $menu);
-					$this->tpl->assign('errormsg', "");
-					$this->tpl->assign('error', 0);
-					$this->tpl->assign('page', 'edit');
-					$this->loadView('menus-manage.tpl');
+                    $menu = $this->db->fetchAll($query);
+                    $this->tpl->assign('menus', $menu);
+                    $query1 = $this->db->execute('select * from <ezrpg>menu');
+                    $menu = $this->db->fetchAll($query1);
+                    $this->tpl->assign('menubox', $menu);
+                    $this->tpl->assign('errormsg', "");
+                    $this->tpl->assign('error', 0);
+                    $this->tpl->assign('page', 'edit');
+                    $this->loadView('menus-manage.tpl');
                 }
             }
-        }
-        else
-        {
+        } else {
             $this->tpl->assign('errormsg', "The selected id was incorrect!");
             $this->tpl->assign('error', 1);
             $this->tpl->assign('page', 'edit');

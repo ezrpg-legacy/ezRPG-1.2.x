@@ -17,8 +17,7 @@ class FileException extends Exception
 
     public function __toString()
     {
-        switch ( $this->code )
-        {
+        switch ($this->code) {
             case 0: //Could not read
                 $this->message = 'Could not read the file: ' . $this->message;
                 break;

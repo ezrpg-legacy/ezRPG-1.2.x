@@ -1,9 +1,11 @@
 <?php
 
 namespace ezRPG\Modules\Themes\Admin;
+
 use \ezRPG\lib\Base_Module;
 
 defined('IN_EZRPG') or exit;
+
 /*
   Class: Admin_Plugins
   Admin page for managing plugins and modules
@@ -19,24 +21,17 @@ class Admin_Themes extends Base_Module
     public function start()
     {
 
-        if ( isset($_GET['act']) && isset($_GET['gid']) )
-        {
-            switch ( $_GET['act'] )
-            {
+        if (isset($_GET['act']) && isset($_GET['gid'])) {
+            switch ($_GET['act']) {
                 case 'getTheme':
                     $this->getThemePage($_GET['gid']);
             }
-        }
-        elseif ( isset($_POST['act']) )
-        {
-            switch ( $_POST['act'] )
-            {
+        } elseif (isset($_POST['act'])) {
+            switch ($_POST['act']) {
                 case 'save' :
                     $this->save_themes();
             }
-        }
-        else
-        {
+        } else {
             $this->list_themes();
         }
     }
@@ -59,7 +54,7 @@ class Admin_Themes extends Base_Module
 
     private function save_themes()
     {
-        $update = array( );
+        $update = array();
         $update['enabled'] = 0;
         $this->db->update("<ezrpg>themes", $update, 'enabled=1');
         $update['enabled'] = 1;

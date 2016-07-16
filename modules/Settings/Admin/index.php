@@ -1,9 +1,11 @@
 <?php
 
 namespace ezRPG\Modules\Settings\Admin;
+
 use \ezRPG\lib\Base_Module;
 
 defined('IN_EZRPG') or exit;
+
 /*
   Class: Admin_Plugins
   Admin page for managing plugins and modules
@@ -19,24 +21,17 @@ class Admin_Settings extends Base_Module
     public function start()
     {
 
-        if ( isset($_GET['act']) && isset($_GET['gid']) )
-        {
-            switch ( $_GET['act'] )
-            {
+        if (isset($_GET['act']) && isset($_GET['gid'])) {
+            switch ($_GET['act']) {
                 case 'getGroup':
                     $this->getGroupPage($_GET['gid']);
             }
-        }
-        elseif ( isset($_POST['act']) )
-        {
-            switch ( $_POST['act'] )
-            {
+        } elseif (isset($_POST['act'])) {
+            switch ($_POST['act']) {
                 case 'save' :
                     $this->save_settings();
             }
-        }
-        else
-        {
+        } else {
             $this->list_settings();
         }
     }
@@ -64,24 +59,19 @@ class Admin_Settings extends Base_Module
 
     private function save_settings()
     {
-        $settings = array( );
-        foreach ( $_POST as $item => $val )
-        {
-            if ( $item != 'act' and $item != 'save' )
-            {
-                if ( strpos($item, 'sid') === 0 )
-                {
+        $settings = array();
+        foreach ($_POST as $item => $val) {
+            if ($item != 'act' and $item != 'save') {
+                if (strpos($item, 'sid') === 0) {
                     $settings[preg_replace('/sid/', '', $item)] = $val;
                 }
-                if ( strpos($item, 'sgid') === 0 )
-                {
+                if (strpos($item, 'sgid') === 0) {
                     $settings[preg_replace('/sgid/', '', $item)] = $val;
                 }
             }
         }
-        foreach ( $settings as $item => $val )
-        {
-            $update = array( );
+        foreach ($settings as $item => $val) {
+            $update = array();
             $update['value'] = $val;
             $this->db->update("<ezrpg>settings", $update, 'id=' . $item);
         }

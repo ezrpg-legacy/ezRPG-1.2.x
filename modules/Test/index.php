@@ -7,6 +7,7 @@
  */
 
 namespace ezRPG\Modules;
+
 use \ezRPG\lib\Base_Module;
 
 //This file cannot be viewed, it must be included
@@ -14,7 +15,7 @@ defined('IN_EZRPG') or exit;
 
 class Module_Test extends Base_Module
 {
-    public function  __construct($container, $menu)
+    public function __construct($container, $menu)
     {
         parent::__construct($container, $menu);
     }
