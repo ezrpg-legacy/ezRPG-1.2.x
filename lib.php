@@ -22,7 +22,7 @@ $func = array(
 
 foreach ( $func as $item )
 {
-    $filename = LIB_DIR . '/func.' . $item . '.php';
+    $filename = LIB_DIR . '/functions/func.' . $item . '.php';
     if ( is_readable($filename) )
     {
         require_once ($filename);
