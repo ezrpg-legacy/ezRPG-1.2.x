@@ -156,7 +156,7 @@ define('SECRET_KEY', '{$secret_key}');<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
 define('DB_PREFIX', '{$dbprefix}');<br />
-define('VERSION', '1.2.1.3');<br />
+define('VERSION', '1.2.1.4');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";
@@ -177,7 +177,7 @@ define('DEBUG_MODE', 0);<br />
         echo "<h2>Database Configuration</h2><br />\n";
         echo '<form method="post">';
         echo '<label>Driver</label>';
-        echo '<select name="dbdriver"><option value="mysql">MySQL</option><option value="mysqli">MySQLi</option><option value="pdo">PDO</option></select>';
+        echo '<select name="dbdriver"><option value="pdo">PDO</option><option value="mysqli">MySQLi</option></select>';
         echo '<label>Host</label>';
         echo '<input type="text" name="dbhost" value="' . $dbhost . '" />';
         echo '<label>Port</label>';
