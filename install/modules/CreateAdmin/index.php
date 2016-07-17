@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\Install\Modules;
+use ezRPG\Install\InstallerFactory;
+
 class Install_CreateAdmin extends InstallerFactory
 {
 
@@ -44,11 +47,12 @@ class Install_CreateAdmin extends InstallerFactory
 
             if ( $errors == 0 )
             {
-                require_once "../config.php";
-                require_once "../lib/func.rand.php";
+                require_once ROOT_DIR . '/config.php';
+                require_once "../lib/functions/func.rand.php";
                 try
                 {
-                    $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+                    $this->container['app']->getConfig(ROOT_DIR . '/config.php');
+                    $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
                 {

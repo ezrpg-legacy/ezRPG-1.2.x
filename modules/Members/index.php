@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\Modules;
+use \ezRPG\lib\Base_Module;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -20,12 +23,14 @@ class Module_Members extends Base_Module
         //Require login
         requireLogin();
 
-        if ( isset($_GET['page']) )
+        if (isset($_GET['page'])) {
             $page = (intval($_GET['page']) > 0) ? intval($_GET['page']) : 0;
-        else
+        } else {
             $page = 0;
+        }
 
-        $query = $this->db->execute('SELECT `username`, `level` FROM `<ezrpg>players` INNER JOIN `<ezrpg>players_meta` ON `pid` = `<ezrpg>players`.`id` ORDER BY `<ezrpg>players`.`id` ASC LIMIT ?,50', array( $page * 50 ));
+        $query = $this->db->execute('SELECT `<ezrpg>players`.`id`, `username`, `level` FROM `<ezrpg>players` INNER JOIN `<ezrpg>players_meta` ON `pid` = `<ezrpg>players`.`id` ORDER BY `<ezrpg>players`.`id` ASC LIMIT ?,50',
+            array($page * 50));
         $members = $this->db->fetchAll($query);
 
         $prevpage = (($page - 1) >= 0) ? ($page - 1) : 0;

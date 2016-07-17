@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\Modules;
+use \ezRPG\lib\Base_Module;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -20,18 +23,16 @@ class Module_EventLog extends Base_Module
         //Require the user to be logged in
         requireLogin();
 
-        if ( isset($_GET['act']) && $_GET['act'] == 'clear' )
-        {
+        if (isset($_GET['act']) && $_GET['act'] == 'clear') {
             $this->clear();
-        }
-        else
-        {
+        } else {
             //Retrieve all log messages
-            $query = $this->db->execute('SELECT `time`, `message`, `status` FROM `<ezrpg>player_log` WHERE `player`=? ORDER BY `time` DESC LIMIT 10', array( $this->player->id ));
+            $query = $this->db->execute('SELECT `time`, `message`, `status` FROM `<ezrpg>player_log` WHERE `player`=? ORDER BY `time` DESC LIMIT 10',
+                array($this->player->id));
             $logs = $this->db->fetchAll($query);
 
             //Update log message statuses to old/read (status value: 1)
-            $this->db->execute('UPDATE `<ezrpg>player_log` SET `status`=1 WHERE `player`=?', array( $this->player->id ));
+            $this->db->execute('UPDATE `<ezrpg>player_log` SET `status`=1 WHERE `player`=?', array($this->player->id));
 
             $this->tpl->assign('logs', $logs);
             $this->loadView('log.tpl', 'Log');
@@ -45,7 +46,7 @@ class Module_EventLog extends Base_Module
 
     private function clear()
     {
-        $query = $this->db->execute('DELETE FROM `<ezrpg>player_log` WHERE `player`=?', array( $this->player->id ));
+        $query = $this->db->execute('DELETE FROM `<ezrpg>player_log` WHERE `player`=?', array($this->player->id));
 
         $msg = 'You have cleared your event log!';
         $this->setMessage($msg);

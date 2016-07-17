@@ -1,5 +1,5 @@
 {include file="file:[$THEME]header.tpl" TITLE="Members"}
-
+ASDF
 <table width="90%">
   <tr>
     <th style="text-align: left;">Username</th>
@@ -10,6 +10,7 @@
   <tr>
     <td>{$member->username}</td>
     <td>{$member->level}</td>
+    {include file="file:[$THEME]members.tpl" with member}
   </tr>
 {/foreach}
 </table>

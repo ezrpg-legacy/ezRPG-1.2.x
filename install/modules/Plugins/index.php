@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\Install\Modules;
+use ezRPG\Install\InstallerFactory;
+
 class Install_Plugins extends InstallerFactory
 {
 
@@ -18,10 +21,11 @@ class Install_Plugins extends InstallerFactory
             $this->footer();
             die;
         }
-        require_once "../config.php";
+        require_once ROOT_DIR . '/config.php';
         try
         {
-            $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+            $this->container['app']->getConfig(ROOT_DIR . '/config.php');
+            $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
         }
         catch ( DbException $e )
         {

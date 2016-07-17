@@ -1,4 +1,9 @@
 <?php
+
+namespace ezRPG\Modules;
+
+use \ezRPG\lib\Base_Module;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -8,6 +13,7 @@ defined('IN_EZRPG') or exit;
   See:
   <Base_Module>
 */
+
 class Module_Skeleton extends Base_Module
 {
     /*
@@ -26,4 +32,5 @@ class Module_Skeleton extends Base_Module
         requireLogin();
     }
 }
+
 ?>

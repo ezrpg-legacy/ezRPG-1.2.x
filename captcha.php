@@ -28,6 +28,7 @@ function makeRBGColor($color, $image)
     $green = hexdec(substr($color, 2, 2));
     $blue = hexdec(substr($color, 4, 2));
     $out = ImageColorAllocate($image, $red, $green, $blue);
+
     return $out;
 }
 
@@ -62,8 +63,7 @@ $captchaImage = imagerotate($captchaImage, $angle, $backgroundColor);
 
 $line = ImageColorAllocate($captchaImage, $rred, $rgreen, $rblue);
 
-for ( $i = 0; $i < 10; $i++ )
-{
+for ($i = 0; $i < 10; $i++) {
     $xStart = mt_rand(0, $containerWidth);
     $yStart = mt_rand(0, $containerHeight);
     $xEnd = mt_rand(0, $containerWidth);

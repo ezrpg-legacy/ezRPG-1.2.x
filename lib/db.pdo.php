@@ -87,8 +87,9 @@ class Db_pdo
 
     public function __destruct()
     {
-        if ( $this->isConnected )
+        if ($this->isConnected) {
             $this->db == null;
+        }
     }
 
     /*
@@ -116,44 +117,41 @@ class Db_pdo
 
     public function execute($query, $params = 0)
     {
-        if ( $this->isConnected === false )
+        if ($this->isConnected === false) {
             $this->connect();
+        }
 
-        try
-        {
-            if ( strpos($query, DB_PREFIX) !== TRUE )
-            {
+        try {
+            if (strpos($query, DB_PREFIX) !== true) {
                 $query = str_replace('<ezrpg>', DB_PREFIX, $query);
             }
             //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
             //Parameter binding
-            if ( $params != 0 )
-            {
+            if ($params != 0) {
                 //Split the query
                 $parts = explode('?', $query);
 
                 //Make sure query parts and parameters match, otherwise adjust the arrays
                 $count1 = count($parts);
                 $count2 = count($params);
-                if ( $count1 <= $count2 ) //Too many parameters, drop the extras
+                if ($count1 <= $count2) //Too many parameters, drop the extras
+                {
                     $params = array_slice($params, 0, $count1);
+                }
 
-                if ( $count1 > ($count2 + 1) ) //Too little parameters, add extra '?' symbols  
+                if ($count1 > ($count2 + 1)) //Too little parameters, add extra '?' symbols  
                 { //OR throw an SQL exception?
                     $diff = $count2 - $count1;
                     array_fill($params, $diff, '?');
                 }
 
                 //Sanitize parameters
-                for ( $i = 0; $i < $count2; $i++ )
-                {
+                for ($i = 0; $i < $count2; $i++) {
                     $val = $params[$i];
 
-                    if ( is_string($val) )
-                    {
+                    if (is_string($val)) {
                         //magic quotes
-                        if ( get_magic_quotes_gpc() )
-                        {
+                        if (get_magic_quotes_gpc()) {
                             $val = stripslashes($val);
                         }
 
@@ -164,19 +162,17 @@ class Db_pdo
                         //{
                         $val = '\'' . $val . '\'';
                         //} //Otherwise the string is acting as a digit, so leave it alone
-                    }
-                    else if ( is_int($val) || is_float($val) )
-                    {
-                        //Value is an integer, no sanitation is necessary.
-                        //Only need to convert to string so the parameter can be concatenated onto the query string.
-                        //(Not really necessary, but otherwise this block would be empty ;])
-                        $val = strval($val);
-                    }
-                    else
-                    {
-                        //Parameter is not a valid type.
-                        $val = '?';
-                        //OR throw an SQL exception?
+                    } else {
+                        if (is_int($val) || is_float($val)) {
+                            //Value is an integer, no sanitation is necessary.
+                            //Only need to convert to string so the parameter can be concatenated onto the query string.
+                            //(Not really necessary, but otherwise this block would be empty ;])
+                            $val = strval($val);
+                        } else {
+                            //Parameter is not a valid type.
+                            $val = '?';
+                            //OR throw an SQL exception?
+                        }
                     }
 
                     $params[$i] = $val;
@@ -184,8 +180,7 @@ class Db_pdo
 
                 $query = '';
                 //Reconstruct query
-                for ( $i = 0; $i < $count2; $i++ )
-                {
+                for ($i = 0; $i < $count2; $i++) {
                     $query .= $parts[$i] . $params[$i];
                 }
                 $query .= $parts[($count1 - 1)];
@@ -193,35 +188,31 @@ class Db_pdo
 
             $this->query = $query;
 
-            if ( DEBUG_MODE === 1 )
-                echo $query, '<br />';;
+            if (DEBUG_MODE === 1) {
+                echo $query, '<br />';
+            };
 
             //Execute query
             $result = $this->db->query($query);
-            if ( $result === false )
-            { //If there was an error with the query
+            if ($result === false) { //If there was an error with the query
                 $this->error = $this->db->errorInfo();
 
                 //If in debug mode, send exception, otherwise ignore
-                if ( SHOW_ERRORS === 1 )
-                {
+                if (SHOW_ERRORS === 1) {
                     //Feature: admin logging of errors?
                     $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . var_dump($this->error) . '</strong>';
-                }elseif( IN_INSTALLER )
-				{
-					$error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
-					$error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
-					$error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
-				}else{
-					$error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
-				}
-				throw new DbException($error_msg, SQL_ERROR);
-				
+                } elseif (IN_INSTALLER) {
+                    $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
+                    $error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
+                    $error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
+                } else {
+                    $error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
+                }
+                throw new DbException($error_msg, SQL_ERROR);
+
                 return false;
             }
-        }
-        catch ( SQLException $e )
-        {
+        } catch (SQLException $e) {
             $e->__toString();
         }
 
@@ -307,21 +298,22 @@ class Db_pdo
 
     public function fetchAll(&$result, $return_array = false)
     {
-        $ret = array( );
+        $ret = array();
 
-        if ( $result === false )
+        if ($result === false) {
             return $ret;
+        }
 
-        if ( $return_array === true )
-        {
-            while ( $row = $this->fetchArray($result) )
+        if ($return_array === true) {
+            while ($row = $this->fetchArray($result)) {
                 $ret[] = $row;
-        }
-        else
-        {
-            while ( $row = $this->fetch($result) )
+            }
+        } else {
+            while ($row = $this->fetch($result)) {
                 $ret[] = $row;
+            }
         }
+
         return $ret;
     }
 
@@ -354,6 +346,7 @@ class Db_pdo
         $result = $this->execute($query, $params);
         $ret = $this->fetch($result);
         $result->closecursor();
+
         return $ret;
     }
 
@@ -398,18 +391,16 @@ class Db_pdo
 
     public function insert($table, $data)
     {
-        if ( $this->isConnected === false )
-        {
+        if ($this->isConnected === false) {
             $this->connect();
         }
         $query = 'INSERT INTO ' . $table . ' (';
         $cols = count($data);
         $part1 = ''; //List of column names
         $part2 = ''; //List of question marks for parameter binding
-        $params = Array( );
+        $params = Array();
         $i = 0; //Counter
-        foreach ( $data as $col => $val )
-        {
+        foreach ($data as $col => $val) {
             //Append column name
             $part1 .= $col;
 
@@ -418,8 +409,7 @@ class Db_pdo
 
             $params[] = $val;
 
-            if ( $i != ($cols - 1) )
-            {
+            if ($i != ($cols - 1)) {
                 $part1 .= ', ';
                 $part2 .= ', ';
             }
@@ -466,23 +456,18 @@ class Db_pdo
 
     protected function connect()
     {
-        if ( $this->isConnected === false )
-        {
+        if ($this->isConnected === false) {
             // Persistance is key
             $uri = sprintf('mysql:host=%s;dbname=%s;port=%s', $this->host, $this->dbname, $this->port);
             $this->db = new PDO($uri, $this->username, $this->password);
-            if ( $this->db === false )
-            {
+            if ($this->db === false) {
                 throw new DbException($this->db, SERVER_ERROR);
-            }
-            else
-            {
+            } else {
                 $this->isConnected = true;
+
                 return true;
             }
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -510,19 +495,21 @@ class Db_pdo
 
     function update($table, $fields, $where)
     {
-        if ( $this->isConnected === false )
+        if ($this->isConnected === false) {
             $this->connect();
+        }
         $i = 0;
         $var = "";
         $numFields = count($fields);
-        foreach ( $fields as $key => $val )
-        {
-            if ( ++$i === $numFields )
+        foreach ($fields as $key => $val) {
+            if (++$i === $numFields) {
                 $var .= $key . "='" . $val . "'";
-            else
+            } else {
                 $var .= $key . "='" . $val . "', ";
+            }
         }
         $sql = "Update " . $table . " SET " . $var . " WHERE " . $where;
+
         return $this->execute($sql);
     }
 

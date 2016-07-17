@@ -1,12 +1,24 @@
 !.gitignore
+!.keep
+!/cache/templates
+!/cache
 /templates/.compiled/
 /templates/.cache/
 /templates/.config/
 /templates/cache/
 /admin/Plugins/temp/*
 /admin/Update/temp/*
+/modules/Bank/
+/modules/Attack/
+/modules/Items/
+/modules/Housing/
+/modules/Store/
+/modules/Profile/
+/modules/Mining/
 
 config.php
 /cache/*
 /cache/templates/*.php
 install/lock
+.idea/
+vender/
