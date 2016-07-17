@@ -111,7 +111,7 @@ $debugTimer['header-hooks Loaded:'] = microtime(1);
 $module = ModuleFactory::factory($container, $module_name, $menu);
 if (isset($_GET['act'])) {
     if (method_exists($module, $_GET['act'])) {
-        $reflection = new ReflectionMethod($module, $_GET['act']);
+        $reflection = new \ReflectionMethod($module, $_GET['act']);
         if ($reflection->isPublic()) {
             $module->$_GET['act']();
         } else {
