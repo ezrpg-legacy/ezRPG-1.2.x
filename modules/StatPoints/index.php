@@ -13,6 +13,11 @@ defined('IN_EZRPG') or exit;
 
 class Module_StatPoints extends Base_Module
 {
+
+    public function __construct($container, $menu)
+    {
+        parent::__construct($container, $menu);
+    }
     /*
       Function: start
       Begins the stat points distribution page.
@@ -29,7 +34,7 @@ class Module_StatPoints extends Base_Module
         } else {
             if ($this->player->stat_points > 0) //Make sure they have stat points
             {
-                $this->loadView('statpoints.tpl');
+                $this->loadView('statpoints.tpl', 'Statpoints');
             } else //No more stat points, redirect to player home page
             {
                 $msg = 'You don\'t have any stat points left!';
