@@ -4,7 +4,7 @@ namespace ezRPG\admin;
 
 define('IN_EZRPG', true);
 define('IN_ADMIN', true);
-
+session_start();
 require_once '../init.php';
 
 $container = new \Pimple\Container;
@@ -15,7 +15,6 @@ $ezrpg->getConfig(CUR_DIR . '/config.php');
 $ezrpg->setDatabase();
 
 $debugTimer['DB Loaded:'] = microtime(1);
-
 // Settings
 $ezrpg->getSettings();
 $debugTimer['Settings Loaded:'] = microtime(1);
