@@ -21,7 +21,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 defined('IN_EZRPG') or exit;
 global $debugTimer;
 // Start Session
-session_start();
+//session_start();
 
 // Constants
 define('CUR_DIR', realpath(dirname(__FILE__)));

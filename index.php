@@ -32,6 +32,7 @@ if (!file_exists('config.php') OR filesize('config.php') == 0) {
     header('Location: install/index.php');
     exit(1);
 }
+session_start();
 // Load init.php
 require_once 'init.php';
 

@@ -49,12 +49,15 @@ try {
         if ($params['act'] == "hour") {
             $cron = new \ezRPG\lib\HourlyCron($container);
             $cron->start();
+            echo date("H:i:s") . "Executed Hourly \n";
         } elseif ($params['act'] == "halfhour") {
             $cron = new \ezRPG\lib\HalfHourCron($container);
             $cron->start();
+            echo date("H:i:s") . "Executed HalfHour \n";
         } elseif ($params['act'] == "daily") {
             $cron = new \ezRPG\lib\DailyCron($container);
             $cron->start();
+            echo date("H:i:s") . "Executed Daily";
         } else {
             die('Unknown argument');
         }
@@ -62,7 +65,5 @@ try {
         die("There weren't any arguments!");
     }
 } catch (\Exception $ex) {
-    die($ex->getMessage());
+    die("Error: ".$ex->getMessage());
 }
-
-?>
