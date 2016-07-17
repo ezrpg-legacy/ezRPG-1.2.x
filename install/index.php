@@ -11,7 +11,7 @@ require_once '../lib/Base_Module.php';
 require_once '../lib/exception.db.php';
 require_once '../lib/const.errors.php';
 require_once '../lib/DbFactory.php';
-require_once '../lib/func.modules.php';
+require_once '../lib/functions/func.modules.php';
 require_once CUR_DIR . '/lib/class.installerfactory.php';
 
 $_SESSION['in_installer'] = true;

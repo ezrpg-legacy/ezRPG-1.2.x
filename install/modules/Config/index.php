@@ -30,7 +30,7 @@ class Install_Config extends InstallerFactory
             //test database connection.
             try
             {
-                $db = DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
+                $db = \ezRPG\lib\DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
             }
             catch ( DbException $e )
             {

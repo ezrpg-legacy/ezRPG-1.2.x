@@ -21,7 +21,7 @@ class Install_Plugins extends InstallerFactory
         require_once "../config.php";
         try
         {
-            $db = DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
+            $db = \ezRPG\lib\DbFactory::factory($config_driver, $config_server, $config_username, $config_password, $config_dbname, $config_port);
         }
         catch ( DbException $e )
         {
