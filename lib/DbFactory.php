@@ -47,7 +47,11 @@ class DbFactory
 
     public static function factory($config)
     {
-        $dbconfig = $config->readConfig();
+        if(!is_array($config)) {
+            $dbconfig = $config->readConfig();
+        }else{
+            $dbconfig = $config;
+        }
         if (include_once(LIB_DIR . '/db.' . $dbconfig['dbdriver'] . '.php')) {
             $classname = 'Db_' . $dbconfig['dbdriver'];
 

@@ -1,5 +1,5 @@
 <?php
-
+namespace ezRPG\Install;
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -10,6 +10,13 @@ defined('IN_EZRPG') or exit;
 
 class InstallerFactory
 {
+    public $container;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
     /*
       Function: module
       A class for creating module objects.
@@ -34,7 +41,7 @@ class InstallerFactory
       > $new_module->start();
      */
 
-    public static function module(&$installer, $module = 'Index')
+    public static function module($container, &$installer, $module = 'Index')
     {
         if ( file_exists('./lock') )
         {
@@ -47,14 +54,14 @@ class InstallerFactory
         if ( file_exists(MOD_DIR . '/' . $module . '/index.php') )
         {
             include_once (MOD_DIR . '/' . $module . '/index.php');
-            $classname = 'Install_' . $module;
-            return new $classname();
+            $classname = '\\ezRPG\\Install\\Modules\\Install_' . $module;
+            return new $classname($container);
         }
         else
         {
             // Default module to display (the home page)
             include_once (MOD_DIR . '/Index/index.php');
-            return new Install_Index();
+            return new \ezRPG\Install\Modules\Install_Index($container);
         }
     }
 

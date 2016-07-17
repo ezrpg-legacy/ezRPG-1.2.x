@@ -1,4 +1,6 @@
 <?php
+namespace ezRPG\Install\Modules;
+use ezRPG\Install\InstallerFactory;
 
 class Install_Config extends InstallerFactory
 {
@@ -8,29 +10,30 @@ class Install_Config extends InstallerFactory
      */
     function start()
     {
+        $dbconfig = [];
         if ( !isset($_POST['submit']) )
         {
-            $dbhost = "localhost";
-            $dbuser = "root";
-            $dbname = "ezrpg";
-            $dbport = "3306";
-            $dbprefix = "ezrpg_";
+            $dbconfig['dbserver'] = "localhost";
+            $dbconfig['dbuser'] = "root";
+            $dbconfig['dbname'] = "ezrpg";
+            $dbconfig['dbport'] = "3306";
+            $dbconfig['dbpass'] = "ezrpg_";
         }
         else
         {
-            $dbhost = $_POST['dbhost'];
-            $dbuser = $_POST['dbuser'];
-            $dbname = $_POST['dbname'];
-            $dbpass = $_POST['dbpass'];
-            $dbprefix = $_POST['dbprefix'];
-            $dbdriver = $_POST['dbdriver'];
-            $dbport = $_POST['dbport'];
+            $dbconfig['dbserver'] = $_POST['dbhost'];
+            $dbconfig['dbuser'] = $_POST['dbuser'];
+            $dbconfig['dbname'] = $_POST['dbname'];
+            $dbconfig['dbpass'] = $_POST['dbpass'];
+            $dbconfig['dbprefix'] = $_POST['dbprefix'];
+            $dbconfig['dbdriver'] = $_POST['dbdriver'];
+            $dbconfig['dbport'] = $_POST['dbport'];
             $error = 0;
 
             //test database connection.
             try
             {
-                $db = \ezRPG\lib\DbFactory::factory($dbdriver, $dbhost, $dbuser, $dbpass, $dbname, $dbport);
+                $db = \ezRPG\lib\DbFactory::factory($dbconfig);
             }
             catch ( DbException $e )
             {
@@ -38,7 +41,7 @@ class Install_Config extends InstallerFactory
             }
             if ( $error != 1 )
             {
-                require_once("../lib/func.rand.php");
+                require_once(ROOT_DIR . "/lib/functions/func.rand.php");
                 $secret_key = createKey(24);
                 $config = <<<CONF
 <?php
@@ -61,12 +64,12 @@ defined('IN_EZRPG') or exit;
   \$config_driver - Contains the database driver to use to connect to the database.
   \$config_port - Contains the database port your database server port.
 */
-\$config_server = '{$dbhost}';
-\$config_dbname = '{$dbname}';
-\$config_username = '{$dbuser}';
-\$config_password = '{$dbpass}';
-\$config_driver = '{$dbdriver}';
-\$config_port = '{$dbport}';
+\$config_server = '{$dbconfig['dbserver']}';
+\$config_dbname = '{$dbconfig['dbname']}';
+\$config_username = '{$dbconfig['dbuser']}';
+\$config_password = '{$dbconfig['dbpass']}';
+\$config_driver = '{$dbconfig['dbdriver']}';
+\$config_port = '{$dbconfig['dbport']}';
 
 /*
   Constant:
@@ -90,8 +93,8 @@ define('SECRET_KEY', '{$secret_key}');
   SHOW_ERRORS - Turn on to show PHP errors.
   DEBUG_MODE - Turn on to show database errors and debug information.
 */
-define('DB_PREFIX', '{$dbprefix}');
-define('VERSION', '1.2.1.3');
+define('DB_PREFIX', '{$dbconfig['dbprefix']}');
+define('VERSION', '1.2.1.4');
 define('SHOW_ERRORS', 0);
 define('DEBUG_MODE', 0);
 ?>
@@ -126,12 +129,12 @@ defined('IN_EZRPG') or exit; <br />
   \$config_driver - Contains the database driver to use to connect to the database.<br />
   \$config_port - Contains the database port your database server port.<br />
 */<br />
-\$config_server = '{$dbhost}';<br />
-\$config_dbname = '{$dbname}';<br />
-\$config_username = '{$dbuser}';<br />
-\$config_password = '{$dbpass}';<br />
-\$config_driver = '{$dbdriver}';<br />
-\$config_port = '{$dbport}';<br />
+\$config_server = '{$dbconfig['dbserver']}';<br />
+\$config_dbname = '{$dbconfig['dbname']}';<br />
+\$config_username = '{$dbconfig['dbuser']}';<br />
+\$config_password = '{$dbconfig['dbpass']}';<br />
+\$config_driver = '{$dbconfig['dbdriver']}';<br />
+\$config_port = '{$dbconfig['dbport']}';<br />
 <br />
 /*<br />
   Constant:<br />
@@ -155,7 +158,7 @@ define('SECRET_KEY', '{$secret_key}');<br />
   SHOW_ERRORS - Turn on to show PHP errors.<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
-define('DB_PREFIX', '{$dbprefix}');<br />
+define('DB_PREFIX', '{$dbconfig['dbprefix']}');<br />
 define('VERSION', '1.2.1.4');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
@@ -179,17 +182,17 @@ define('DEBUG_MODE', 0);<br />
         echo '<label>Driver</label>';
         echo '<select name="dbdriver"><option value="pdo">PDO</option><option value="mysqli">MySQLi</option></select>';
         echo '<label>Host</label>';
-        echo '<input type="text" name="dbhost" value="' . $dbhost . '" />';
+        echo '<input type="text" name="dbhost" value="' . $dbconfig['dbserver'] . '" />';
         echo '<label>Port</label>';
-        echo '<input type="text" name="dbport" value="' . $dbport . '" />';
+        echo '<input type="text" name="dbport" value="' . $dbconfig['dbport'] . '" />';
         echo '<label>Database Name</label>';
-        echo '<input type="text" name="dbname" value="' . $dbname . '" />';
+        echo '<input type="text" name="dbname" value="' . $dbconfig['dbname'] . '" />';
         echo '<label>User</label>';
-        echo '<input type="text" name="dbuser" value="' . $dbuser . '" />';
+        echo '<input type="text" name="dbuser" value="' . $dbconfig['dbuser'] . '" />';
         echo '<label>Password</label>';
         echo '<input type="password" name="dbpass" value="" />';
         echo '<label>Table Prefix (Optional)</label>';
-        echo '<input type="text" name="dbprefix" value="', $dbprefix, '" />';
+        echo '<input type="text" name="dbprefix" value="', $dbconfig['dbprefix'], '" />';
         echo '<p>You can enter a prefix for your table names if you like.<br />This can be useful if you will be sharing the database with other applications, or if you are running more than one ezRPG instance in a single database.</p>';
         echo '<p><strong>Note</strong> Please make sure that the database exists.</p>';
         echo '<input type="submit" name="submit" value="Submit"  class="button" />';

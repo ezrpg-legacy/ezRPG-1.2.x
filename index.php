@@ -19,10 +19,6 @@ $rootPath = dirname(__DIR__);
 // Traverse back one directory
 //chdir($rootPath);
 
-if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
-    die('You must initialize composer!');
-}
-
 // Start the Debug Timer. @since 1.2RC
 $debugTimer['ezRPG start'] = microtime(1);
 

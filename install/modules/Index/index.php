@@ -1,4 +1,6 @@
 <?php
+namespace ezRPG\Install\Modules;
+use ezRPG\Install\InstallerFactory;
 
 class Install_Index extends InstallerFactory
 {

@@ -19,6 +19,7 @@ class Application
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->container['app'] = $this;
     }
 
     public function getDatabase()
@@ -92,6 +93,6 @@ class Application
 
     public function getConfig($filelocation)
     {
-        return $this->container['config'] = new \ezRPG\lib\Config(CUR_DIR . '/config.php');
+        return $this->container['config'] = new \ezRPG\lib\Config($filelocation);
     }
 }
