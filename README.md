@@ -1,7 +1,5 @@
 ##ezRPG 1.2.1.4
 
-###INSTALL IS CURRENTLY BROKEN AND NOT UPDATED YET!
-
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
 =====
@@ -11,10 +9,14 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 =====
 
 ##Notes about 1.2.1.4
-####Pushed July 10 2016
+####Pushed July 17 2016
 ```
 
-- I'm starting to go off the reservation with this. Added Namespaces, started working on the application logic, etc.
+- Dev2-Unstable is being merged to master as being stable.
+- Installer works
+- Plugin Activation/Installation system has been disabled until that's fixed. Just upload your modules to the modules folder and run your "?act=Install" if you need it.
+- Work will begin to create backward compatible Module system using PHP Reflection. It may take a performance hit, but it will allow for conversion of systems.
+- Work still needs to continue on the MVC design and the expansion of /lib/Application.php
 
 ```
 =====
