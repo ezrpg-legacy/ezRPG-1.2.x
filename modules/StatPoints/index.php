@@ -13,6 +13,11 @@ defined('IN_EZRPG') or exit;
 
 class Module_StatPoints extends Base_Module
 {
+
+    public function __construct($container, $menu)
+    {
+        parent::__construct($container, $menu);
+    }
     /*
       Function: start
       Begins the stat points distribution page.

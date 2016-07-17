@@ -13,6 +13,12 @@ defined('IN_EZRPG') or exit;
 
 class Module_Register extends Base_Module
 {
+
+    public function __construct($container, $menu)
+    {
+        parent::__construct($container, $menu);
+    }
+
     /*
       Function: start()
       Displays the registration form by default.

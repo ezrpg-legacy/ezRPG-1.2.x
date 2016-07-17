@@ -18,7 +18,7 @@ class Module_Logout extends Base_Module
       Clears session data and redirects back to homepage.
      */
 
-    public function __construct(&$db, &$tpl, &$player = 0)
+    public function __construct($container)
     {
         unset($_SESSION['hash']);
         unset($_SESSION['userid']);
