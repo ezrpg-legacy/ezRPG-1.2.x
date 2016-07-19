@@ -78,9 +78,9 @@ try {
 
     $debugTimer['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-    $menu = new \ezRPG\lib\Menu($container);
+    $ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
     $debugTimer['Menus Initiated:'] = microtime(1);
-    $menu->get_menus();
+    $ezrpg->container['menu']->get_menus();
     $debugTimer['Menus retrieved:'] = microtime(1);
     $players = new \ezRPG\lib\Players($container);
 } catch (\Exception $ex) {
@@ -104,7 +104,7 @@ $module_name = $container['hooks']->run_hooks('header', $module_name);
 $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
-$module = ModuleFactory::factory($container, $module_name, $menu);
+$module = ModuleFactory::factory($container, $module_name);
 if (isset($_GET['act'])) {
     if (method_exists($module, $_GET['act'])) {
         $reflection = new \ReflectionMethod($module, $_GET['act']);

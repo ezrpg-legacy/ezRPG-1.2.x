@@ -30,6 +30,9 @@ class Admin_Plugins extends Base_Module
                 case 'adminOnly':
                     $this->list_modules(true);
                     break;
+                case 'install':
+                    $this->install_modules($_GET['name']);
+                    break;
                 case 'upload':
                     $this->upload_modules(); //Completed:Upload Modules
                     break;
@@ -61,14 +64,9 @@ class Admin_Plugins extends Base_Module
      */
     private function list_modules($adminOnly = false)
     {
-        if(!$adminOnly)
-            $modules = $this->scanGameModules();
-        else
-            $modules = $this->scanAdminModules();
-        $moddb = $this->getGameModulesDB();
-        $plugins = array_merge_recursive($modules, $moddb);
+        $cached = $this->setModuleCache($adminOnly);
         $this->tpl->assign('adminOnly', $adminOnly);
-        $this->tpl->assign("plugins", $plugins);
+        $this->tpl->assign("plugins", $cached);
         $this->loadView('plugins.tpl');
     }
 
@@ -117,6 +115,10 @@ class Admin_Plugins extends Base_Module
         return $modulesInfo;
     }
 
+    /**
+     * Scans the Module Directory for all modules
+     * Ported for JesterC's ModuleInfo and acquired from EdwardBlack13's Repo for ezRPG1.0.x
+     */
     private function scanAdminModules()
     {
         // Grab all files and directories in the modules folder
@@ -165,38 +167,86 @@ class Admin_Plugins extends Base_Module
 
     private function getGameModulesDB()
     {
-        $query = $this->db->execute('select `title`, `installed` from <ezrpg>plugins');
+        $query = $this->db->execute('select `id`, `title`, `installed`, `active` from <ezrpg>plugins');
         $plugins = Array();
         while ($m = $this->db->fetch($query)) {
-            $plugins[$m->title] = array('installed' => (bool) $m->installed);
+            $plugins[$m->title] = array('installed' => (bool) $m->installed, 'active' => (bool) $m->active, 'id'=> $m->id);
         }
         return $plugins;
     }
 
+    private function getModuleCache($admin = false)
+    {
+        if(file_exists(CACHE_DIR . '/module_cache')){
+            $cache = file_get_contents(CACHE_DIR . '/module_cache');
+            $plugins = unserialize($cache);
+            if(!$admin)
+                return $plugins['public'];
+            else
+                return $plugins['admin'];
+        }else{
+            return $this->setModuleCache();
+        }
+    }
+
+    public function setModuleCache($adminonly=false)
+    {
+        $modules = $this->scanGameModules();
+        $admin = $this->scanAdminModules();
+        $moddb = $this->getGameModulesDB();
+        $public = array('public'=>array_merge_recursive($modules, $moddb));
+        $admin = array('admin' => array_merge_recursive($admin, $moddb));
+        $plugins = array_merge($public, $admin);
+        $cache = serialize($plugins);
+        file_put_contents(CACHE_DIR . '/module_cache', $cache);
+        return $this->getModuleCache($adminonly);
+    }
+
     private function enable_modules($id)
     {
-        $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 1 WHERE <ezrpg>plugins.id = ' . $id . ' OR <ezrpg>plugins.pid = ' . $id);
+        $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 1 WHERE <ezrpg>plugins.id = ' . $id);
         $this->db->fetch($query);
         $query2 = $this->db->execute('UPDATE <ezrpg>menu SET <ezrpg>menu.active = 1 WHERE <ezrpg>menu.module_id = ' . $id);
         $this->db->fetch($query2);
         killMenuCache();
         $this->setMessage("Module enabled!");
-        killModuleCache();
         header('Location: index.php?mod=Plugins');
         exit;
     }
 
     private function disable_modules($id)
     {
-        $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.id = ' . $id . ' OR <ezrpg>plugins.pid = ' . $id);
+        $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.id = ' . $id);
         $this->db->fetch($query);
         $query2 = $this->db->execute('UPDATE <ezrpg>menu SET <ezrpg>menu.active = 0 WHERE <ezrpg>menu.module_id = ' . $id);
         $this->db->fetch($query2);
         killMenuCache();
         $this->setMessage("Module disabled!");
-        killModuleCache();
         header('Location: index.php?mod=Plugins');
         exit;
+    }
+    
+    private function install_modules($name){
+        if(file_exists(MOD_DIR . '/' . $name . '/index.php'))
+            $module = \ezRPG\lib\ModuleFactory::factory($this->container, $name);
+        elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php'))
+            $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
+
+        if (method_exists($module, 'install')) {
+            $reflection = new \ReflectionMethod($module, 'install');
+            if ($reflection->isPublic()) {
+                $this->setMessage("You've installed " . $name);
+                $module->install();
+            } else {
+                $this->setMessage("This module's installer function is Private", "warn");
+                $this->list_modules();
+            }
+        } else {
+            $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 1 WHERE <ezrpg>plugins.title = "'.$name.'"');
+            $this->db->fetch($query);
+            $this->setMessage("You've installed " . $name);
+            $this->list_modules();
+        }
     }
 
     private function upload_modules()
@@ -388,32 +438,28 @@ class Admin_Plugins extends Base_Module
         }
     }
 
-    private function remove_modules($id = 0)
+    private function remove_modules($name)
     {
-        if ($id == 0) {
-            $this->list_modules();
-            exit;
-        }
-        $query1 = $this->db->execute('SELECT * FROM <ezrpg>plugins_meta WHERE plug_id=' . $id);
-        $query_mod = $this->db->execute('SELECT * FROM <ezrpg>plugins WHERE pid=' . $id . ' OR id=' . $id);
-        $result = $this->db->fetchAll($query_mod);
-        if ($this->db->numRows($query1) != 0) {
-            $result2 = $this->db->fetchAll($query1);
-            foreach ($result2 as $item => $key) {
-                if (!empty($key->uninstall)) {
-                    $this->db->execute($key->uninstall);
-                }
+        if(file_exists(MOD_DIR . '/' . $name . '/index.php'))
+            $module = \ezRPG\lib\ModuleFactory::factory($this->container, $name);
+        elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php'))
+            $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
+
+        if (method_exists($module, 'uninstall')) {
+            $reflection = new \ReflectionMethod($module, 'uninstall');
+            if ($reflection->isPublic()) {
+                $this->setMessage("You've installed " . $name);
+                $module->uninstall();
+                $this->list_modules();
+            } else {
+                $this->setMessage("This module's uninstaller function is Private", "warn");
+                $this->list_modules();
             }
-            $complete = $this->finish_removal($id, $result);
         } else {
-            $complete = $this->finish_removal($id, $result);
-        }
-        if ($complete == true) {
-            $this->setMessage('Uninstall Complete', 'GOOD');
-            header('Location: index.php?mod=Plugins');
-        } else {
-            $this->setMessage('Uninstall Failed', 'FAIL');
-            header('Location: index.php?mod=Plugins');
+            $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 0 WHERE <ezrpg>plugins.title = "'.$name.'"');
+            $this->db->fetch($query);
+            $this->setMessage("You've uninstalled " . $name);
+            $this->list_modules();
         }
     }
 

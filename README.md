@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.4
+##ezRPG 1.2.1.5
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,15 +8,14 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.4
-####Pushed July 17 2016
+##Notes about 1.2.1.5
+####Pushed July 18 2016
 ```
 
-- Dev2-Unstable is being merged to master as being stable.
-- Installer works
-- Plugin Activation/Installation system has been disabled until that's fixed. Just upload your modules to the modules folder and run your "?act=Install" if you need it.
-- Work will begin to create backward compatible Module system using PHP Reflection. It may take a performance hit, but it will allow for conversion of systems.
-- Work still needs to continue on the MVC design and the expansion of /lib/Application.php
+- Working on fixing the Plugin Manager. Porting over the concept introduced by JesterC in ezRPG 1.0.x with the Module_Info.txt
+- Everytime you visit the Plugin Manager, it will force a reload of the Module Cache which does a scandir and a db call, as well as recreates the /cache/module_cache file.
+- This module_cache will then be active and usable throughout the game and never get reloaded until visiting the Plugin Manager.
+- The idea is that the cache is always good until that 1 event, as that's the only page we should be doing activations and installations of modules, if we never do that after uploading a new module, then it's neither installed nor active yet.
 
 ```
 =====

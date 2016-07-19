@@ -19,35 +19,20 @@ if (!defined('IN_EZRPG')) {
   Array - The Cache.
  */
 
-function loadModuleCache()
+function loadModuleCache($admin = false)
 {
     global $container;
     $db = $container['db'];
-    $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
-    $cache_file = md5($query);
-    $cache = CACHE_DIR . $cache_file;
-    if (file_exists($cache)) {
-        if (filemtime($cache) > time() - 60 * 60 * 24) {
-            $array = unserialize(file_get_contents($cache));
-            if (DEBUG_MODE == 1) {
-                $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Admin: Loaded Module Cache!');
-            }
-        } else {
-            unlink($cache);
-            $query1 = $db->execute($query);
-            $array = $db->fetchAll($query1);
-            file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if (DEBUG_MODE == 1) {
-                $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
-            }
-        }
-    } else {
-        $query1 = $db->execute($query);
-        $array = $db->fetchAll($query1);
-        file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-        if (DEBUG_MODE == 1) {
-            $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Created Module Cache');
-        }
+    if(file_exists(CACHE_DIR . '/module_cache')){
+        $cache = file_get_contents(CACHE_DIR . '/module_cache');
+        $plugins = unserialize($cache);
+        if(!$admin)
+            return $plugins['public'];
+        else
+            return $plugins['admin'];
+    }else{
+        $pluginManager = new \ezRPG\Modules\Plugins\Admin;
+        $array = $pluginManager->setModuleCache();
     }
     $debugTimer['Loaded Module Cache'] = microtime(1);
 
@@ -66,11 +51,10 @@ function loadModuleCache()
 
 function killModuleCache()
 {
-    $query = 'SELECT * FROM `<ezrpg>plugins` WHERE active = 1';
-    $cache_file = md5($query);
-    if (file_exists(CACHE_DIR . $cache_file)) {
-        $cache = CACHE_DIR . $cache_file;
+    if (file_exists(CACHE_DIR . 'module_cache')) {
+        $cache = CACHE_DIR . 'module_cache';
         unlink($cache);
+        loadModuleCache();
         $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Module Cache Cleaned');
     }
 
