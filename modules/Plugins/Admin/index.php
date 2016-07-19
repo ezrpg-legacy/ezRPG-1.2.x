@@ -237,15 +237,16 @@ class Admin_Plugins extends Base_Module
             if ($reflection->isPublic()) {
                 $this->setMessage("You've installed " . $name);
                 $module->install();
+                header('Location: index.php?mod=Plugins');
             } else {
                 $this->setMessage("This module's installer function is Private", "warn");
-                $this->list_modules();
+                header('Location: index.php?mod=Plugins');
             }
         } else {
             $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 1 WHERE <ezrpg>plugins.title = "'.$name.'"');
             $this->db->fetch($query);
             $this->setMessage("You've installed " . $name);
-            $this->list_modules();
+            header('Location: index.php?mod=Plugins');
         }
     }
 
