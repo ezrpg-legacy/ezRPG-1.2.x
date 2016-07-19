@@ -5,7 +5,7 @@
  * Date: 7/11/2016
  * Time: 8:20 AM
  */
-namespace ezRPG\Modules\Upgrades\Admin;
+namespace ezRPG\Modules;
 use \ezRPG\lib\Base_Module;
 
 //This file cannot be viewed, it must be included
