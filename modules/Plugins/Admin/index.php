@@ -27,6 +27,9 @@ class Admin_Plugins extends Base_Module
                 case 'view':
                     $this->view_modules($_GET['id']); //TODO:View Modules
                     break;
+                case 'adminOnly':
+                    $this->list_modules(true);
+                    break;
                 case 'upload':
                     $this->upload_modules(); //Completed:Upload Modules
                     break;
@@ -48,15 +51,126 @@ class Admin_Plugins extends Base_Module
         }
     }
 
-    private function list_modules()
+
+    /**
+     * List all modules, scan dirs for new additions, show status of installation/activation.
+     * Combines Jester's ModuleInfo with my database idology.
+     *
+     * Todo: Needs to cache the results of active modules
+     * 
+     */
+    private function list_modules($adminOnly = false)
     {
-        $query = $this->db->execute('select * from <ezrpg>plugins JOIN <ezrpg>plugins_meta ON <ezrpg>plugins.id = <ezrpg>plugins_meta.plug_id'); // WHERE <ezrpg>plugins_meta.pm_id=0 //Not sure what this was for -_-
-        $plugins = Array();
-        while ($m = $this->db->fetch($query)) {
-            $plugins[] = $m;
-        }
+        if(!$adminOnly)
+            $modules = $this->scanGameModules();
+        else
+            $modules = $this->scanAdminModules();
+        $moddb = $this->getGameModulesDB();
+        $plugins = array_merge_recursive($modules, $moddb);
+        $this->tpl->assign('adminOnly', $adminOnly);
         $this->tpl->assign("plugins", $plugins);
         $this->loadView('plugins.tpl');
+    }
+
+    /**
+     * Scans the Module Directory for all modules
+     * Ported for JesterC's ModuleInfo and acquired from EdwardBlack13's Repo for ezRPG1.0.x 
+     */
+    private function scanGameModules($mod = '')
+    {
+        // Grab all files and directories in the modules folder
+        $scan = scandir(MOD_DIR);
+
+        // Check if there are any modules present
+        $modules = array();
+        $modulesInfo = array();
+        foreach ($scan AS $module) {
+            if (is_dir(MOD_DIR . $module) && $module !== "." && $module !== ".." && !strpos($module, '.php'))
+            {
+                $modules[] = $module;
+                // Make sure it's in proper Module structure format with the index.php
+                if(file_exists(MOD_DIR . $module . '/index.php')) {
+                    // Check if any of the modules has a Module_Info.txt file.
+                    if (fopen(MOD_DIR . $module . "/Module_Info.txt", "r") != false) {
+                        // Okay, let's parse the file
+                        $contents = file_get_contents(MOD_DIR . $module . "/Module_Info.txt");
+                        $contents = explode(":", $contents);
+
+                        $modulesInfo[$module] = array(
+                            "name" => $contents[2],
+                            "ver" => $contents[4],
+                            "desc" => $contents[6],
+                            "author" => $contents[8]
+                        );
+                    } else {
+
+                        $modulesInfo[$module] = array(
+                            "name" => $module,
+                            "ver" => "?",
+                            "desc" => "No Module_Info.txt File",
+                            "author" => "Unknown"
+                        );
+                    }
+                }
+            }
+        }
+        return $modulesInfo;
+    }
+
+    private function scanAdminModules()
+    {
+        // Grab all files and directories in the modules folder
+        $scan = scandir(MOD_DIR);
+
+        // Check if there are any modules present
+        $modules = array();
+        $modulesInfo = array();
+        foreach ($scan AS $mod) {
+            if (is_dir(MOD_DIR . $mod) && $mod !== "." && $mod !== ".." && !strpos($mod, '.php'))
+            {
+                $adm = scandir(MOD_DIR . '/'. $mod . '/Admin');
+                foreach($adm as $module) {
+                    if ($module !== "." && $module !== ".." && !strpos($module, '.php')) {
+                        $modules[] = $mod;
+                        // Make sure it's in proper Module structure format with the index.php
+                        if (file_exists(MOD_DIR . '/'. $mod . '/Admin/index.php')) {
+                            // Check if any of the modules has a Module_Info.txt file.
+                            if (fopen(MOD_DIR . '/'. $mod . "/Admin/Module_Info.txt", "r") != false) {
+                                // Okay, let's parse the file
+                                $contents = file_get_contents(MOD_DIR . '/'. $mod . "/Admin/Module_Info.txt");
+                                $contents = explode(":", $contents);
+
+                                $modulesInfo[$mod] = array(
+                                    "name" => $contents[2],
+                                    "ver" => $contents[4],
+                                    "desc" => $contents[6],
+                                    "author" => $contents[8]
+                                );
+                            } else {
+
+                                $modulesInfo[$mod] = array(
+                                    "name" => $mod,
+                                    "ver" => "?",
+                                    "desc" => "No Module_Info.txt File",
+                                    "author" => "Unknown"
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $modulesInfo;
+    }
+
+    private function getGameModulesDB()
+    {
+        $query = $this->db->execute('select `title`, `installed` from <ezrpg>plugins');
+        $plugins = Array();
+        while ($m = $this->db->fetch($query)) {
+            $plugins[$m->title] = array('installed' => (bool) $m->installed);
+        }
+        return $plugins;
     }
 
     private function enable_modules($id)
@@ -375,5 +489,4 @@ class Admin_Plugins extends Base_Module
         }
         closedir($dir);
     }
-
 }

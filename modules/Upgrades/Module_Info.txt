@@ -1,0 +1,4 @@
+:Module Title: Player Upgrades
+:Module Version: 1.0.0
+:Module Description: Upgrades module for fortress and player upgrades. Based off of Darkthrone.com game style
+:Module Author: Tim Garrity

@@ -10,25 +10,29 @@ Actions
 </th>
 </tr>
 <!-- START OF ADMINCP_PLUGINS_ROW-->
-{foreach from=$plugins item=plugin}
+{foreach from=$plugins item=plugin }
+ {if isset($plugin['name'])}
 <tr>
 <td valign="top">
-{$plugin->title} | Version: {$plugin->version}<br>
-<i>{$plugin->description}</i><br>
-Created By: <a href="{if $plugin->url eq null}#{else}{$plugin->url}{/if}">{$plugin->author}</a>
+{$plugin['name']} | Version: {$plugin['ver']}<br>
+<i>{$plugin['desc']}</i><br>
+Created By: <a href="{if $plugin['url'] eq null}#{else}{$plugin['url']}{/if}">{$plugin['author']}</a>
 </td>
 <td valign="top">
-{if $plugin->title != ezRPGCore }
-{if $plugin->active != 1}
+ {if $plugin['installed']}
+{if $plugin['active'] != 1}
 <a href="index.php?mod=Plugins&act=enable&id={$plugin->id}">Activate</a>
 {else}
 <a href="index.php?mod=Plugins&act=disable&id={$plugin->id}">Deactivate</a>
 {/if}
  |
  <a href="index.php?mod=Plugins&act=remove&id={$plugin->id}">Uninstall</a>
+  {else}
+  <a href="index.php?mod=Plugins&act=install&name={$plugin['name']}">Install</a>
 {/if}
 </td>
 </tr>
+ {/if}
 {/foreach}
 <!-- END OF ADMINCP_PLUGINS_ROW-->
 </tbody></table>
