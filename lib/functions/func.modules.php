@@ -149,56 +149,12 @@ function isModuleActive($name, $modules = 0)
     }
     foreach ($modules as $key => $item) {
         if (in_array($name, (array)$item)) {
-            return true;
+            if($key == $name)
+                return $item['active'];
         }
     }
 
     return false;
-}
-
-function setModuleActive($name, $modules = 0)
-{
-    global $db;
-
-    if ($modules == 0) {
-        $modules = (array)loadModuleCache();
-    }
-
-    $db->execute('UPDATE `<ezrpg>plugins` SET `active`=1 WHERE `title`=?', array($name));
-    killModuleCache();
-    setMenuActive($name);
-
-    return true;
-}
-
-function setModuleDeactive($name, $modules = 0)
-{
-    global $db;
-
-    if ($modules == 0) {
-        $modules = (array)loadModuleCache();
-    }
-
-    $db->execute('UPDATE `<ezrpg>plugins` SET  `active`=0 WHERE `title`=?', array($name));
-    killModuleCache();
-    setMenuActive($name);
-
-    return true;
-}
-
-function secondaryInstallComplete($name, $modules = 0)
-{
-    global $db;
-
-    if ($modules == 0) {
-        $modules = (array)loadModuleCache();
-    }
-
-    $db->execute('UPDATE `<ezrpg>plugins` SET `second_installed`=1 WHERE `title`=?', array($name));
-    killModuleCache();
-    setMenuActive($name);
-
-    return true;
 }
 
 function setMenuActive($name)
