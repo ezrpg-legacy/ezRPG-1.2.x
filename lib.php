@@ -47,7 +47,4 @@ require_once(LIB_DIR . '/exception.db.php');
 //Constants
 require_once(LIB_DIR . '/const.errors.php');
 
-//External Libraries
-//Smarty
-//require_once (EXT_DIR . '/smarty/Smarty.class.php');
 ?>
