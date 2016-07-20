@@ -265,13 +265,24 @@ class Admin_Plugins extends Base_Module
         elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php'))
             $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
 
+        $modQuery = $this->db->execute('SELECT `id` from <ezrpg>plugins WHERE <ezrpg>plugins.title = "'. $name .'"');
+        $modID = $this->db->fetch($modQuery);
+
         if (method_exists($module, 'install')) {
             $reflection = new \ReflectionMethod($module, 'install');
             if ($reflection->isPublic()) {
                 $this->setMessage("You've installed " . $name);
-                $module->install();
-                $query = $this->db->execute('INSERT INTO <ezrpg>plugins (`title`, `installed`) VALUES ("'.$name.'",1)');
-                $this->db->fetch($query);
+                if($modID === false) {
+                    $item['title'] = $name;
+                    $item['installed'] = 1;
+                    $plugID = $this->db->insert("<ezrpg>plugins", $item);
+                }else{
+                    $plugID = $modID->id;
+                    $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 1, <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.title = "'.$name.'"');
+                    $this->db->fetch($query);
+                }
+                $module->install($plugID);
+                killMenuCache();
                 header('Location: index.php?mod=Plugins');
             } else {
                 $this->setMessage("This module's installer function is Private", "warn");
@@ -369,7 +380,10 @@ class Admin_Plugins extends Base_Module
                 $module->uninstall();
                 $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 0, <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.title = "'.$name.'"');
                 $this->db->fetch($query);
-
+                $modIDquery = $this->db->execute('SELECT `id` FROM <ezrpg>plugins WHERE <ezrpg>plugins.title = "'. $name . '"');
+                $modID = $this->db->fetch($modIDquery);
+                $delMenu = $this->db->execute('DELETE FROM <ezrpg>menu WHERE <ezrpg>menu.module_id = ' . $modID->id);
+                killMenuCache();
                 $this->list_modules();
             } else {
                 $this->setMessage("This module's uninstaller function is Private", "warn");
@@ -378,6 +392,10 @@ class Admin_Plugins extends Base_Module
         } else {
             $query = $this->db->execute('UPDATE <ezrpg>plugins SET <ezrpg>plugins.installed = 0, <ezrpg>plugins.active = 0 WHERE <ezrpg>plugins.title = "'.$name.'"');
             $this->db->fetch($query);
+            $modIDquery = $this->db->execute('SELECT `id` FROM <ezrpg>plugins WHERE <ezrpg>plugins.title = "'. $name . '"');
+            $modID = $this->db->fetch($modIDquery);
+            $delMenu = $this->db->execute('DELETE FROM <ezrpg>menu WHERE <ezrpg>menu.module_id = ' . $modID->id);
+            killMenuCache();
             $this->setMessage("You've uninstalled " . $name);
             $this->list_modules();
         }

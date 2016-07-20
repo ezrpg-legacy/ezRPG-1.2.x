@@ -108,7 +108,9 @@ class Menu
     {
         if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
-        } else {
+        } elseif($pid == '') {
+            $item['parent_id'] = 0;
+        }else{
             $item['parent_id'] = $this->get_menu_id_by_name($pid);
         }
         $item['AltTitle'] = $alttitle;
@@ -116,6 +118,7 @@ class Menu
         $item['title'] = $title;
         $item['uri'] = $uri;
         $item['module_id'] = $mod_id;
+        $item['active'] = '0';
         if ($pos == '') {
             if ($item['parent_id'] == null) {
                 $pos = '0';
