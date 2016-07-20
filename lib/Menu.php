@@ -100,11 +100,11 @@ class Menu
       $pos (Optional) Sets position menu appears in order of other menus.
 
       Example Usage:
-      $bid = add_menu('','Bank','Empire Bank', '', 'index.php?mod=Bank', 3);
+      $bid = add_menu('','Bank','Empire Bank', '', 'index.php?mod=Bank', 0, 3);
       $add_menu ($bid, 'Deposit', 'Deposit Money', '', 'index.php?mod=Bank&act=Deposit');
      */
 
-    function add_menu($pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $mod_id = '')
+    function add_menu($pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = 0, $mod_id = 0)
     {
         if (is_numeric($pid)) {
             $item['parent_id'] = $pid;

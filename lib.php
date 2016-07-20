@@ -41,9 +41,6 @@ spl_autoload_register("ezrpg_Autoloader");
 
 require_once(CUR_DIR . '/lib/Application.php');
 
-//Exceptions
-require_once(LIB_DIR . '/exception.db.php');
-
 //Constants
 require_once(LIB_DIR . '/const.errors.php');
 
