@@ -1,5 +1,8 @@
 <?php
 
+namespace ezRPG\lib;
+use \Exception;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -61,14 +64,14 @@ class DbException extends Exception
         $ret = <<<OUT
 <html>
 <head>
-<title>ezRPG Error!</title>
+<title>ezRPG Engine Error!</title>
 <style>
 #error { width: 50%; margin: auto; font: 0.8em  Verdana, Arial, Sans-serif; color: #666; padding: 10px; border: 1px solid #3182C0; }
 </style>
 </head>
 <body>
 <div id="error">
-<h1>ezRPG</h1>
+<h1>ezRPG Engine</h1>
 <p><strong>Error: $this_class!</strong><br />
 OUT;
 
