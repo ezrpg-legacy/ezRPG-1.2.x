@@ -36,7 +36,12 @@ define('CACHE_DIR', CUR_DIR . '/cache/');
 //require_once CUR_DIR . '/config.php';
 $debugTimer['Config Loaded:'] = microtime(1);
 // Show errors?
-(SHOW_ERRORS == 0) ? error_reporting(0) : error_reporting(E_ALL);
+if(SHOW_ERRORS == 0)
+    error_reporting(0);
+else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
 
 require_once(CUR_DIR . '/lib.php');
 $debugTimer['Library Loaded:'] = microtime(1);
