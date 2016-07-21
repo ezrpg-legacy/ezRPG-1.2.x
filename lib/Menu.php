@@ -100,15 +100,17 @@ class Menu
       $pos (Optional) Sets position menu appears in order of other menus.
 
       Example Usage:
-      $bid = add_menu('','Bank','Empire Bank', '', 'index.php?mod=Bank', 3);
+      $bid = add_menu('','Bank','Empire Bank', '', 'index.php?mod=Bank', 0, 3);
       $add_menu ($bid, 'Deposit', 'Deposit Money', '', 'index.php?mod=Bank&act=Deposit');
      */
 
-    function add_menu($pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $mod_id = '')
+    function add_menu($pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = 0, $mod_id = 0)
     {
         if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
-        } else {
+        } elseif($pid == '') {
+            $item['parent_id'] = 0;
+        }else{
             $item['parent_id'] = $this->get_menu_id_by_name($pid);
         }
         $item['AltTitle'] = $alttitle;
@@ -116,6 +118,7 @@ class Menu
         $item['title'] = $title;
         $item['uri'] = $uri;
         $item['module_id'] = $mod_id;
+        $item['active'] = '0';
         if ($pos == '') {
             if ($item['parent_id'] == null) {
                 $pos = '0';
@@ -133,7 +136,7 @@ class Menu
       Applies new values to menu
      */
 
-    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '')
+    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '', $modid = 0)
     {
         if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
@@ -153,6 +156,7 @@ class Menu
         }
         $item['pos'] = $pos;
         $item['active'] = $active;
+        $item['module_id'] = $modid;
 
         return $this->db->update("<ezrpg>menu", $item, "id = " . $mid);
     }
@@ -199,15 +203,9 @@ class Menu
       $menu (Optional) Initializes the $menu array variable
      */
 
-    function get_menus(
-        $parent = null,
-        $args = 0,
-        $begin = true,
-        $endings = true,
-        $title = "",
-        $customtag = "",
-        $showchildren = true
-    ) {
+    function get_menus($parent = null, $args = 0, $begin = true, $endings = true, $title = "", $customtag = "", $showchildren = true
+    ) 
+    {
         if ($args != 0) {
             (isset($args['begin']) ? $begin = $args['begin'] : '');
             (isset($args['endings']) ? $endings = $args['endings'] : '');
@@ -375,6 +373,10 @@ class Menu
         }
     }
 
+    function get_module_name_by_id($mid){
+        $query = $this->db->execute('SELECT `title`, `id` FROM <ezrpg>plugins WHERE <ezrpg>plugins.id = ' . $mid);
+        return $this->db->fetch($query)->title;
+    }
     /*
       Function: countmenus
       Returns the number of menus the group has
@@ -425,14 +427,22 @@ class Menu
 
     function isMenu($name)
     {
-        $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
-        $array = $this->db->fetchAll($query, true);
-        foreach ($array as $item => $ival) {
-            if ($ival['name'] == $name) {
-                return true;
-            } elseif ($ival['id'] == $name) {
-                return true;
+        try {
+            $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
+            $array = $this->db->fetchAll($query);
+        }catch(\ezRPG\lib\DbException $ex){
+            throw new $ex;
+        }
+        try {
+            foreach ($array as $item => $ival) {
+                if ($ival->name == $name) {
+                    return true;
+                } elseif ($ival->id == $name) {
+                    return true;
+                }
             }
+        }catch(\Exception $ex){
+            throw new EzException($ex->getMessage());
         }
 
         return false;

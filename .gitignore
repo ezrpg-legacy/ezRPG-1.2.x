@@ -15,6 +15,7 @@
 /modules/Store/
 /modules/Profile/
 /modules/Mining/
+/modules/Upgrades/
 
 config.php
 /cache/*

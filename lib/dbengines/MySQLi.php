@@ -1,5 +1,9 @@
 <?php
 
+namespace ezRPG\lib\dbengines;
+use ezRPG\lib\DbException,
+    \SQLException;
+
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -12,7 +16,7 @@ defined('IN_EZRPG') or exit;
   - <DbException>
  */
 
-class Db_mysqli
+class MySQLi
 {
     /*
       Integer: $query_count

@@ -78,9 +78,9 @@ try {
 
     $debugTimer['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-    $menu = new \ezRPG\lib\Menu($container);
+    $ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
     $debugTimer['Menus Initiated:'] = microtime(1);
-    $menu->get_menus();
+    $ezrpg->container['menu']->get_menus();
     $debugTimer['Menus retrieved:'] = microtime(1);
     $players = new \ezRPG\lib\Players($container);
 } catch (\Exception $ex) {
@@ -93,7 +93,7 @@ $debugTimer['init.php Loaded:'] = microtime(1);
 //Set Default module and check if Module is selected in URI
 $default_mod = $container['settings']->setting['general']['default_module']['value'];
 
-$module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod'])/* && isModuleActive($_GET['mod'])*/) ? $_GET['mod'] : $default_mod);
+$module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
 $container['tpl']->assign('module_name', $module_name);
 //Init Hooks - Runs before Header
 $container['hooks']->run_hooks('init');
@@ -104,7 +104,7 @@ $module_name = $container['hooks']->run_hooks('header', $module_name);
 $debugTimer['header-hooks Loaded:'] = microtime(1);
 
 //Begin module
-$module = ModuleFactory::factory($container, $module_name, $menu);
+$module = ModuleFactory::factory($container, $module_name);
 if (isset($_GET['act'])) {
     if (method_exists($module, $_GET['act'])) {
         $reflection = new \ReflectionMethod($module, $_GET['act']);

@@ -63,9 +63,9 @@ $ezrpg->setPlayer($hooks->run_hooks('player', 0));
 
 $debugTimer['Player-Hooks loaded:'] = microtime(1);
 // Create the Menu object
-$menu = new \ezRPG\lib\Menu($container);
+$ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
 $debugTimer['Menus Initiated:'] = microtime(1);
-$menu->get_menus();
+$ezrpg->container['menu']->get_menus();
 $debugTimer['Menus retrieved:'] = microtime(1);
 $players = new \ezRPG\lib\Players($container);
 
@@ -88,7 +88,7 @@ $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod'])) ? $_GET['mod'
 //Admin header hook
 $module_name = $hooks->run_hooks('admin_header', $module_name);
 //Begin module
-$module = \ezRPG\lib\ModuleFactory::adminFactory($container, $module_name, $menu);
+$module = \ezRPG\lib\ModuleFactory::adminFactory($container, $module_name);
 $module->start();
 
 //Admin footer hook
