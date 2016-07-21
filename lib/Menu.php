@@ -136,7 +136,7 @@ class Menu
       Applies new values to menu
      */
 
-    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '')
+    function edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '', $modid = 0)
     {
         if (is_numeric($pid)) {
             $item['parent_id'] = $pid;
@@ -156,6 +156,7 @@ class Menu
         }
         $item['pos'] = $pos;
         $item['active'] = $active;
+        $item['module_id'] = $modid;
 
         return $this->db->update("<ezrpg>menu", $item, "id = " . $mid);
     }
@@ -202,15 +203,9 @@ class Menu
       $menu (Optional) Initializes the $menu array variable
      */
 
-    function get_menus(
-        $parent = null,
-        $args = 0,
-        $begin = true,
-        $endings = true,
-        $title = "",
-        $customtag = "",
-        $showchildren = true
-    ) {
+    function get_menus($parent = null, $args = 0, $begin = true, $endings = true, $title = "", $customtag = "", $showchildren = true
+    ) 
+    {
         if ($args != 0) {
             (isset($args['begin']) ? $begin = $args['begin'] : '');
             (isset($args['endings']) ? $endings = $args['endings'] : '');
@@ -378,6 +373,10 @@ class Menu
         }
     }
 
+    function get_module_name_by_id($mid){
+        $query = $this->db->execute('SELECT `title`, `id` FROM <ezrpg>plugins WHERE <ezrpg>plugins.id = ' . $mid);
+        return $this->db->fetch($query)->title;
+    }
     /*
       Function: countmenus
       Returns the number of menus the group has
@@ -428,14 +427,22 @@ class Menu
 
     function isMenu($name)
     {
-        $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
-        $array = $this->db->fetchAll($query, true);
-        foreach ($array as $item => $ival) {
-            if ($ival['name'] == $name) {
-                return true;
-            } elseif ($ival['id'] == $name) {
-                return true;
+        try {
+            $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
+            $array = $this->db->fetchAll($query);
+        }catch(\ezRPG\lib\DbException $ex){
+            throw new $ex;
+        }
+        try {
+            foreach ($array as $item => $ival) {
+                if ($ival->name == $name) {
+                    return true;
+                } elseif ($ival->id == $name) {
+                    return true;
+                }
             }
+        }catch(\Exception $ex){
+            throw new EzException($ex->getMessage());
         }
 
         return false;

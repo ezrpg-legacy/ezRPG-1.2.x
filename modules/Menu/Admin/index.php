@@ -59,8 +59,11 @@ class Admin_Menu extends Base_Module
         $menu = $this->db->fetchAll($query);
         $query1 = $this->db->execute('select * from <ezrpg>menu where parent_id = 0');
         $groups = $this->db->fetchAll($query1);
+        $query2 = $this->db->execute('select `title`, `id` from <ezrpg>plugins');
+        $plugins = $this->db->fetchAll($query2);
         $this->tpl->assign("groups", $groups);
         $this->tpl->assign("menus", $menu);
+        $this->tpl->assign('plugins', $plugins);
         $this->loadView('menus.tpl');
     }
 
@@ -153,14 +156,17 @@ class Admin_Menu extends Base_Module
 
     private function edit_menus()
     {
-        if ($this->menu->isMenu($_REQUEST['mid'])) {
+        if ($this->container['menu']->isMenu($_REQUEST['mid'])) {
             if (!isset($_POST['submit'])) {
                 $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_GET['mid']);
-                $menu = $this->db->fetchAll($query);
-                $this->tpl->assign('menus', $menu);
+                $menu =  $this->db->fetch($query);
+                $this->tpl->assign('mitem', $menu);
                 $query1 = $this->db->execute('select * from <ezrpg>menu');
                 $menu = $this->db->fetchAll($query1);
+                $query2 = $this->db->execute('select `title`, `id` from <ezrpg>plugins');
+                $plugins = $this->db->fetchAll($query2);
                 $this->tpl->assign('menubox', $menu);
+                $this->tpl->assign('plugins', $plugins);
                 $this->tpl->assign('errormsg', "");
                 $this->tpl->assign('error', 0);
                 $this->tpl->assign('page', 'edit');
@@ -174,6 +180,7 @@ class Admin_Menu extends Base_Module
                     $error = '2';
                 }
                 if (!isClean($_POST['malt'])) {
+
                     if ($_POST['malt'] == null) {
                         $_POST['malt'] = '';
                     } else {
@@ -186,19 +193,30 @@ class Admin_Menu extends Base_Module
                 if (!isClean($_POST['mpid'])) {
                     $error = '5';
                 }
+
+                if (!isClean($_POST['modid'])){
+                    $error = '6';
+                }
+
                 if ($error == '0') {
-                    $this->menu->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'],
-                        $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive']);
+                    //edit_menu($mid = '', $pid = 0, $name, $title = '', $alttitle = null, $uri = '', $pos = '', $active = '')
+                    $this->container['menu']->edit_menu($_POST['mid'], $_POST['mpid'], $_POST['mname'], $_POST['mtitle'],
+                        $_POST['malt'], $_POST['muri'], $_POST['mpos'], $_POST['mactive'], $_POST['modid']);
                     killMenuCache();
+                    $this->setMessage('Successfully updated menu');
                     header('Location: index.php?mod=Menu');
                     exit;
                 } else {
-                    $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_GET['mid']);
-                    $menu = $this->db->fetchAll($query);
-                    $this->tpl->assign('menus', $menu);
+                    die($error);
+                    $query = $this->db->execute('select * from <ezrpg>menu where id = ' . $_POST['mid']);
+                    $menu =  $this->db->fetch($query);
+                    $this->tpl->assign('mitem', $menu);
                     $query1 = $this->db->execute('select * from <ezrpg>menu');
                     $menu = $this->db->fetchAll($query1);
+                    $query2 = $this->db->execute('select `title`, `id` from <ezrpg>plugins');
+                    $plugins = $this->db->fetchAll($query2);
                     $this->tpl->assign('menubox', $menu);
+                    $this->tpl->assign('plugins', $plugins);
                     $this->tpl->assign('errormsg', "");
                     $this->tpl->assign('error', 0);
                     $this->tpl->assign('page', 'edit');
