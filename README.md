@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.5
+##ezRPG 1.2.1.6
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,14 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.5
+##Notes about 1.2.1.6
 ####Pushed July 18 2016
 ```
 
-- Working on fixing the Plugin Manager. Porting over the concept introduced by JesterC in ezRPG 1.0.x with the Module_Info.txt
-- Everytime you visit the Plugin Manager, it will force a reload of the Module Cache which does a scandir and a db call, as well as recreates the /cache/module_cache file.
-- This module_cache will then be active and usable throughout the game and never get reloaded until visiting the Plugin Manager.
-- The idea is that the cache is always good until that 1 event, as that's the only page we should be doing activations and installations of modules, if we never do that after uploading a new module, then it's neither installed nor active yet.
+- With the Plugin Manager done, I've been working on the Menu Manager.
+- Needed to fix a number of syntaxes in the template and main plugin.
+- Fixed a few side things as well like the validation function, test hooks, exceptions, and the PlayersOnline hook.
 
 ```
 =====
