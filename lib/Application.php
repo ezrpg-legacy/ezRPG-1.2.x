@@ -71,10 +71,12 @@ class Application
 
     public function getThemes()
     {
-        $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
-        $debugTimer['Themes Initiated:'] = microtime(1);
+        return $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
 
-        return $this->container['themes'];
+    }
+
+    public function initializePlayer(){
+        return $this->container['player'] = 0;
     }
 
     public function setDatabase()
@@ -94,5 +96,42 @@ class Application
     public function getConfig($filelocation)
     {
         return $this->container['config'] = new \ezRPG\lib\Config($filelocation);
+    }
+
+    public function initializeView(){
+        return new \ezRPG\lib\View($this->container);
+    }
+
+    public function run(){
+        //Set Default module and check if Module is selected in URI
+        $default_mod = $this->container['settings']->setting['general']['default_module']['value'];
+
+        $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
+        $this->container['tpl']->assign('module_name', $module_name);
+//Init Hooks - Runs before Header
+        $this->container['hooks']->run_hooks('init');
+
+//Header hooks
+        $module_name = $this->container['hooks']->run_hooks('header', $module_name);
+
+//Begin module
+        $module = ModuleFactory::factory($this->container, $module_name);
+        if (isset($_GET['act'])) {
+            if (method_exists($module, $_GET['act'])) {
+                $reflection = new \ReflectionMethod($module, $_GET['act']);
+                if ($reflection->isPublic()) {
+                    $module->$_GET['act']();
+                } else {
+                    $module->start();
+                }
+            } else {
+                $module->start();
+            }
+        } else {
+            $module->start();
+        }
+
+//Footer hooks
+        $this->container['hooks']->run_hooks('footer', $module_name);
     }
 }
