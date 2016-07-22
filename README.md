@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.6
+##ezRPG 1.2.1.7
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,13 +8,11 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.6
-####Pushed July 18 2016
+##Notes about 1.2.1.7
+####Pushed July 21 2016
 ```
 
-- With the Plugin Manager done, I've been working on the Menu Manager.
-- Needed to fix a number of syntaxes in the template and main plugin.
-- Fixed a few side things as well like the validation function, test hooks, exceptions, and the PlayersOnline hook.
+- Refactoring the Application controller, moved index.php's to /web to fix #35, still stable!
 
 ```
 =====

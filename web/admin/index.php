@@ -11,6 +11,13 @@ $rootPath = dirname(dirname(__DIR__));
 // Traverse back one directory
 chdir($rootPath);
 
+// Check for config and if it has data. @since 1.2RC
+if (!file_exists('config.php') OR filesize('config.php') == 0) {
+    //Redirect to installer @since 1.x
+    header('Location: ../install/index.php');
+    exit(1);
+}
+
 require_once $rootPath. '/init.php';
 
 $container = new \Pimple\Container;

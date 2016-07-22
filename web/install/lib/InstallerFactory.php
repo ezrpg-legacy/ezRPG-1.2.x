@@ -60,7 +60,7 @@ class InstallerFactory
         else
         {
             // Default module to display (the home page)
-            include_once (MOD_DIR . '/Index/index.php');
+            include_once(MOD_DIR . '/Index/index.php');
             return new \ezRPG\Install\Modules\Install_Index($container);
         }
     }

@@ -94,18 +94,18 @@ define('SECRET_KEY', '{$secret_key}');
   DEBUG_MODE - Turn on to show database errors and debug information.
 */
 define('DB_PREFIX', '{$dbconfig['dbprefix']}');
-define('VERSION', '1.2.1.6');
+define('VERSION', '1.2.1.7');
 define('SHOW_ERRORS', 0);
 define('DEBUG_MODE', 0);
 ?>
 CONF;
-                $fh = fopen('../config.php', 'w');
+                $fh = fopen(ROOT_DIR . '/config.php', 'w');
                 fwrite($fh, $config);
                 fclose($fh);
                 $this->header();
-                if ( filesize('../config.php') == 0 )
+                if ( filesize(ROOT_DIR . '/config.php') == 0 )
                 {
-                    rename('../config.php', '../config.php.bak');
+                    rename(ROOT_DIR . '/config.php', ROOT_DIR . '/config.php.bak');
                     echo "<h2>Error Writing To Config.php</h2>";
                     echo "<p>There was an error writing to Config.php.</p>";
                     echo "<p>Before continuing, please rename 'http://ezrpg/config.php.bak' to 'http://ezrpg/config.php.bak' and update with the following:</p><br />\n";
@@ -159,7 +159,7 @@ define('SECRET_KEY', '{$secret_key}');<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
 define('DB_PREFIX', '{$dbconfig['dbprefix']}');<br />
-define('VERSION', '1.2.1.6');<br />
+define('VERSION', '1.2.1.7');<br />
 define('SHOW_ERRORS', 0);<br />
 define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";
