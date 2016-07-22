@@ -7,19 +7,19 @@ class Install_Index extends InstallerFactory
 
     function start()
     {
-        if ( !is_writable('../config.php') )
+        if ( !is_writable(ROOT_DIR . '/config.php') )
         {
             //Attempt to create file
-            $fh = fopen('../config.php', 'w+');
+            $fh = fopen(ROOT_DIR . '/config.php', 'w+');
             if ( !$fh )
             {
                 $files[] = "config.php";
             }
             fclose($fh);
         }
-        if ( !is_writable('../cache/templates') )
+        if ( !is_writable(ROOT_DIR . '/cache/templates') )
         {
-            $files[] = "cache/templates";
+            $files[] = ROOT_DIR . "/cache/templates";
         }
         if ( !empty($files) )
         {

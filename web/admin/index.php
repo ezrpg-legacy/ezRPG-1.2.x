@@ -14,7 +14,7 @@ chdir($rootPath);
 // Check for config and if it has data. @since 1.2RC
 if (!file_exists('config.php') OR filesize('config.php') == 0) {
     //Redirect to installer @since 1.x
-    header('Location: install/index.php');
+    header('Location: ../install/index.php');
     exit(1);
 }
 

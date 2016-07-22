@@ -4,19 +4,24 @@ namespace ezRPG\Install;
 use ezRPG\lib\Application,
     ezRPG\lib\ModuleFactory;
 
-define('IN_EZRPG', true);
-define('LIB_DIR', realpath("../lib"));
-define('CUR_DIR', realpath(dirname(__FILE__)));
-define('MOD_DIR', CUR_DIR . '/modules');
-define('CACHE_DIR', '../cache/');
-define('EXT_DIR', '../lib/ext');
-define('ROOT_DIR' , dirname(CUR_DIR));
+$rootPath = dirname(dirname(__DIR__));
 
-require_once '../lib/Base_Module.php';
-require_once '../lib/DbException.php';
-require_once '../lib/const.errors.php';
-require_once '../lib/DbFactory.php';
-require_once '../lib/functions/func.modules.php';
+// Traverse back one directory
+chdir($rootPath);
+
+define('IN_EZRPG', true);
+define('CUR_DIR', realpath(__DIR__));
+define('ROOT_DIR', realpath($rootPath));
+define('LIB_DIR', ROOT_DIR . "/lib");
+define('MOD_DIR', CUR_DIR . '/modules');
+define('CACHE_DIR', ROOT_DIR . '/cache/');
+define('EXT_DIR', LIB_DIR . '/ext');
+
+require_once LIB_DIR . '/Base_Module.php';
+require_once LIB_DIR . '/DbException.php';
+require_once LIB_DIR . '/const.errors.php';
+require_once LIB_DIR . '/DbFactory.php';
+require_once LIB_DIR . '/functions/func.modules.php';
 require_once CUR_DIR . '/lib/InstallerFactory.php';
 
 $_SESSION['in_installer'] = true;
@@ -30,8 +35,8 @@ if (file_exists(ROOT_DIR . '/vendor/autoload.php')) {
 function ezrpg_Autoloader($pClassName)
 {
     $class = str_replace("ezRPG\\lib\\", "", $pClassName);
-    if (file_exists(ROOT_DIR . "/lib/" . $class . ".php")) {
-        include(ROOT_DIR . "/lib/" . $class . ".php");
+    if (file_exists(LIB_DIR . "/" . $class . ".php")) {
+        include(LIB_DIR . "/" . $class . ".php");
     }
 }
 spl_autoload_register("ezRPG\\Install\\ezrpg_Autoloader");

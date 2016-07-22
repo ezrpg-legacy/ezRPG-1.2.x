@@ -8,7 +8,7 @@ class Install_Plugins extends InstallerFactory
 
     function start()
     {
-        if ( !file_exists('../config.php') OR filesize('../config.php') == 0 )
+        if ( !file_exists(ROOT_DIR . '/config.php') OR filesize(ROOT_DIR . '/config.php') == 0 )
         {
             $this->header();
             echo "<h2>There's been an error!</h2><br />";
