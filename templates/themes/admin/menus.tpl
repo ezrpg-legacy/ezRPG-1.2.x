@@ -16,9 +16,6 @@
 <table width="100%" border="1px">
   <tbody>
 		<tr>
-			<th>
-				ID
-			</th>
 			<th width="25%">
 				Menu
 			</th>
@@ -35,15 +32,15 @@
 				Active
 			</th>
 			<th>
+				Plugins
+			</th>
+			<th>
 				Actions
 			</th>
 		</tr>
 {foreach from=$menus item=mitem}
-{if $mitem->parent_id == $gitem->id}
+{if $mitem->parent_id eq $gitem->id}
 		<tr>
-			<td valign="top">
-				{$mitem->id}<br />
-			</td>
 			<td valign="top">
 				{$mitem->title}<br>
 			</td>
@@ -58,6 +55,13 @@
 			</td>
 			<td valign="top">
 				{$mitem->active}
+			</td>
+			<td valign="top">
+				{foreach from=$plugins item=$plug}
+					{if $plug->id eq $mitem->module_id}
+						{$plug->title}
+					{/if}
+				{/foreach}
 			</td>
 			<td valign="top">
 {if $mitem->id != 0 }

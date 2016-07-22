@@ -73,13 +73,13 @@ abstract class Base_Module
       $player - A player result set from the database, or 0 if not logged in.
      */
 
-    public function __construct($container, &$menu)
+    public function __construct($container)
     {
         $this->db = $container['db'];
         $this->tpl = $container['tpl'];
         $this->theme = $this->getTheme();
         $this->player = $container['player'];
-        $this->menu = $menu;
+        $this->menu = $container['menu'];
         $this->settings = $container['settings'];
         $this->name = get_class($this);
         $this->scripts = array();

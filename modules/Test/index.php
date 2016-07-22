@@ -22,6 +22,27 @@ class Module_Test extends Base_Module
 
     public function start()
     {
-        echo $this->container['hooks']->run_hooks('test', "Module: I am saying hello");
+        if(isset($_GET['act']))
+        {
+            $this->test($_GET['act']);
+        }
+        else{
+            die('You need to put in an action to test');
+        }
+    }
+
+    public function test($what)
+    {
+        switch($what){
+            case "hookoutput":
+                echo $this->container['hooks']->run_hooks('test', "Module: I am saying hello");
+                break;
+            case "exceptionhook":
+                $this->container['hooks']->run_hooks('exceptionTest', $_GET['type']);
+                break;
+            default:
+                die('nothing to test here');
+                break;
+        }
     }
 }

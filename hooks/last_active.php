@@ -4,6 +4,7 @@ defined('IN_EZRPG') or exit;
 
 //Add hook to update the last active value for the player, default priority (5)
 $hooks->add_hook('header', 'last_active');
+$hooks->add_hook('admin_header', 'last_active');
 
 function hook_last_active($container, $args = 0)
 {

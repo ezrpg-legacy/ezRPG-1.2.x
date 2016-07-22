@@ -15,6 +15,7 @@
   ],
   "require": {
     "pimple/pimple": "~3.0",
-    "smarty/smarty": "~3.1"
+    "smarty/smarty": "~3.1",
+    "pclzip/pclzip": "~2.8.2"
   }
 }

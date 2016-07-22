@@ -7,7 +7,6 @@
 <br />
 {/if}
 <form action="index.php?mod=Menu" method="post" id="menu">
-{foreach from=$menus item=mitem}
 <label for="mname">Menu Name:</label>
 <input type="text" name="mname" value="{$mitem->name}" required="true" />
 <label for="mpid">Menu Parent_ID:</label>
@@ -36,12 +35,24 @@
 <option value="0" {if $mitem->active eq 0} selected {/if} >Disabled</option>
 <option value="1" {if $mitem->active eq 1} selected {/if} >Enabled</option>
 </select>
+<label for="modid">Required Module:</label>
+<select name="modid" required="true" form="menu">
+    <option value="0">None</option>
+    {foreach from=$plugins item=plug}
+        {if $mitem->module_id eq $plug->id}
+            <option value="{$plug->id}" selected>
+                {else}
+            <option value="{$plug->id}">
+        {/if}
+        {$plug->title}
+        </option>
+    {/foreach}
+</select>
 <br />
 <input type="hidden" name="mid" value="{$mitem->id}" />
 <input type="hidden" name="mod" value="Menu" />
 <input type="hidden" name="act" value="edit" />
 <input type="submit" class="button" name="submit" value="Save!" />
-{/foreach}
 </form>
 <!-- END OF ADMINCP_PLUGINS_ROW-->
 {elseif $page eq "delete"}
@@ -56,6 +67,7 @@
 {elseif $page eq "add"}
 {if $error != 0}
 <b>You have an error with a code of {$error}</b>
+<b>{$errormsg}</b>
 <br />
 {/if}
 <form action="index.php?mod=Menu" method="post" id="menu">
@@ -65,8 +77,20 @@
 <select name="mpid" required="true" form="menu">
 <option value="0">Create A Group</option>
 {foreach from=$menus item=mitem}
- <option value="{$mitem->id}">{$mitem->title}</option>
+    <option value="{$mitem->id}">
+        {$mitem->title} |
+        {if $mitem->parent_id eq 0 }
+            Menu Group
+        {else}
+            {foreach from=$groups item=$grp}
+                {if $grp->id eq $mitem->parent_id}
+                    {$grp->name}
+                {/if}
+            {/foreach}
+        {/if}
+    </option>
 {/foreach}
+
   </select>
 <label for="mtitle">Menu Title:</label>
 <input type="text" name="mtitle" value="{$mtitle}" required="true" />
@@ -76,6 +100,15 @@
 <input type="text" name="mpos" value="{$mpos}" />
 <label for="muri">Menu URI:</label>
 <input type="text" name="muri" value="{$muri}" />
+<label for="modid">Required Module:</label>
+<select name="modid" required="true" form="menu">
+    <option value="0">None</option>
+    {foreach from=$plugins item=plug}
+        <option value="{$plug->id}">
+            {$plug->title}
+        </option>
+    {/foreach}
+</select>
 <br />
 <input type="hidden" name="mod" value="Menu" />
 <input type="hidden" name="act" value="add" />

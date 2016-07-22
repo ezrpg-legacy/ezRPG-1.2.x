@@ -13,7 +13,7 @@ define('EXT_DIR', '../lib/ext');
 define('ROOT_DIR' , dirname(CUR_DIR));
 
 require_once '../lib/Base_Module.php';
-require_once '../lib/exception.db.php';
+require_once '../lib/DbException.php';
 require_once '../lib/const.errors.php';
 require_once '../lib/DbFactory.php';
 require_once '../lib/functions/func.modules.php';

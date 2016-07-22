@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.4
+##ezRPG 1.2.1.6
 
 ###Warning this version of ezRPG 1.2.0 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,15 +8,13 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.4
-####Pushed July 17 2016
+##Notes about 1.2.1.6
+####Pushed July 18 2016
 ```
 
-- Dev2-Unstable is being merged to master as being stable.
-- Installer works
-- Plugin Activation/Installation system has been disabled until that's fixed. Just upload your modules to the modules folder and run your "?act=Install" if you need it.
-- Work will begin to create backward compatible Module system using PHP Reflection. It may take a performance hit, but it will allow for conversion of systems.
-- Work still needs to continue on the MVC design and the expansion of /lib/Application.php
+- With the Plugin Manager done, I've been working on the Menu Manager.
+- Needed to fix a number of syntaxes in the template and main plugin.
+- Fixed a few side things as well like the validation function, test hooks, exceptions, and the PlayersOnline hook.
 
 ```
 =====

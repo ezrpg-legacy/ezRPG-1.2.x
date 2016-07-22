@@ -36,13 +36,13 @@ class ModuleFactory
       > $new_module->start();
      */
 
-    public static function factory($container, $module = 'Index', &$menu)
+    public static function factory($container, $module = 'Index')
     {
         if (file_exists(MOD_DIR . '/' . $module . '/index.php')) {
             include_once(MOD_DIR . '/' . $module . '/index.php');
             $classname = 'ezRPG\\Modules\\Module_' . $module;
 
-            return new $classname($container, $menu);
+            return new $classname($container);
         } else {
             return false;
         }
@@ -68,18 +68,18 @@ class ModuleFactory
       > $admin_module->start();
      */
 
-    public static function adminFactory($container, $module = 'Index', &$menu)
+    public static function adminFactory($container, $module = 'Index')
     {
         if (file_exists(MOD_DIR . '/' . $module . '/Admin/index.php')) {
             include_once(MOD_DIR . '/' . $module . '/Admin/index.php');
             $classname = 'ezRPG\\Modules\\' . $module . '\\Admin\\Admin_' . $module;
 
-            return new $classname($container, $menu);
+            return new $classname($container);
         } else {
             include_once(MOD_DIR . '/Index/Admin/index.php');
-            $tpl->getTemplateDir('admin');
+            $container['tpl']->getTemplateDir('admin');
 
-            return new Admin_Index($container, $menu);
+            return new Admin_Index($container);
         }
     }
 
