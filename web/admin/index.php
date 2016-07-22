@@ -5,6 +5,12 @@ namespace ezRPG\admin;
 define('IN_EZRPG', true);
 define('IN_ADMIN', true);
 session_start();
+
+$rootPath = dirname(__DIR__);
+
+// Traverse back one directory
+chdir($rootPath);
+
 require_once '../init.php';
 
 $container = new \Pimple\Container;

@@ -8,8 +8,8 @@
  */
 
 namespace ezRPG;
-use ezRPG\lib\Application,
-    ezRPG\lib\ModuleFactory;
+use \ezRPG\lib\Application,
+    \ezRPG\lib\ModuleFactory;
 
 // Define IN_EZRPG as TRUE
 define('IN_EZRPG', true);
@@ -17,7 +17,7 @@ define('IN_EZRPG', true);
 $rootPath = dirname(__DIR__);
 
 // Traverse back one directory
-//chdir($rootPath);
+chdir($rootPath);
 
 // Start the Debug Timer. @since 1.2RC
 $debugTimer['ezRPG start'] = microtime(1);
