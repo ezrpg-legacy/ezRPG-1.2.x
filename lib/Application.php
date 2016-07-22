@@ -102,20 +102,26 @@ class Application
         return new \ezRPG\lib\View($this->container);
     }
 
-    public function run(){
+    public function dispatch(){
         //Set Default module and check if Module is selected in URI
         $default_mod = $this->container['settings']->setting['general']['default_module']['value'];
 
         $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
         $this->container['tpl']->assign('module_name', $module_name);
-//Init Hooks - Runs before Header
+        
+        //Init Hooks - Runs before Header
         $this->container['hooks']->run_hooks('init');
+        return $module_name;
+    }
+    
+    public function run($module_name, $admin = false)
+    {
+        //Begin module
+        if($admin)
+            $module = ModuleFactory::adminFactory($this->container, $module_name);
+        else
+            $module = ModuleFactory::factory($this->container, $module_name);
 
-//Header hooks
-        $module_name = $this->container['hooks']->run_hooks('header', $module_name);
-
-//Begin module
-        $module = ModuleFactory::factory($this->container, $module_name);
         if (isset($_GET['act'])) {
             if (method_exists($module, $_GET['act'])) {
                 $reflection = new \ReflectionMethod($module, $_GET['act']);
@@ -130,8 +136,5 @@ class Application
         } else {
             $module->start();
         }
-
-//Footer hooks
-        $this->container['hooks']->run_hooks('footer', $module_name);
     }
 }

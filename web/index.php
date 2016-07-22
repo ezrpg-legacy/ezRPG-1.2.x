@@ -30,18 +30,18 @@ if (!file_exists('config.php') OR filesize('config.php') == 0) {
 }
 session_start();
 // Load init.php
-require_once 'init.php';
+require_once $rootPath .'/init.php';
 
 try {
 
     $container = new \Pimple\Container;
     $ezrpg = new Application($container);
-    $ezrpg->getConfig(CUR_DIR . '/config.php');
-// Database
-    $ezrpg->setDatabase();
 
-    // Database password no longer needed, unset variable
-    unset($config_password);
+    // Get Config for the game
+    $ezrpg->getConfig(CUR_DIR . '/config.php');
+    
+    // Initialize the Database
+    $ezrpg->setDatabase();
 
     // Settings
     $ezrpg->getSettings();
@@ -72,4 +72,8 @@ try {
     $ex->getMessage();
 }
 
-$ezrpg->run();
+$module_name = $ezrpg->dispatch();
+$module_name = $ezrpg->container['hooks']->run_hooks('header', $module_name);
+$ezrpg->run($module_name);
+//Footer hooks
+$ezrpg->container['hooks']->run_hooks('footer', $module_name);
