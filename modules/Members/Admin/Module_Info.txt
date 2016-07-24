@@ -1,0 +1,4 @@
+:Module Title: Player Management
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Player Management module
+:Module Author: Tim Garrity

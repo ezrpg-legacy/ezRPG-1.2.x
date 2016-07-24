@@ -1,0 +1,4 @@
+:Module Title: City
+:Module Version: 1.0.1
+:Module Description: ezRPGCore
+:Module Author: Zeggy

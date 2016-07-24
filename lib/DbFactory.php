@@ -52,14 +52,8 @@ class DbFactory
         }else{
             $dbconfig = $config;
         }
-        if (include_once(LIB_DIR . '/db.' . $dbconfig['dbdriver'] . '.php')) {
-            $classname = 'Db_' . $dbconfig['dbdriver'];
-
-            return new $classname($dbconfig['dbserver'], $dbconfig['dbuser'], $dbconfig['dbpass'], $dbconfig['dbname'],
-                $dbconfig['dbport']);
-        } else {
-            throw new DbException($dbconfig['dbdriver'], DRIVER_ERROR);
-        }
+        $dbconfig['dsn'] = $dbconfig['dbdriver'] . ":dbname=" . $dbconfig['dbname'] . ";host=" . $dbconfig['dbserver'] . ";port=" . $dbconfig['dbport'];
+        return new \ezRPG\lib\DbEngine($dbconfig);
     }
 
 }

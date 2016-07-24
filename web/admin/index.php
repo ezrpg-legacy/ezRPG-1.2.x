@@ -18,6 +18,21 @@ if (!file_exists('config.php') OR filesize('config.php') == 0) {
     exit(1);
 }
 
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
+
+function ezrpg_Autoloader($pClassName)
+{
+    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
+    $class = str_replace("\\", "/",$class);
+    if (file_exists(LIB_DIR . "/" . $class . ".php")) {
+        include(LIB_DIR . "/" . $class . ".php");
+    }
+
+}
+spl_autoload_register("ezRPG\\admin\\ezrpg_Autoloader");
+
 require_once $rootPath. '/init.php';
 
 $container = new \Pimple\Container;

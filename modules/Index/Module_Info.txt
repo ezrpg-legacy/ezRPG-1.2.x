@@ -1,0 +1,4 @@
+:Module Title: Main Index Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Main Index Module
+:Module Author: Zeggy

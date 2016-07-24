@@ -1,0 +1,4 @@
+:Module Title: Main Admin Index Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Main Admin Index
+:Module Author: Zeggy

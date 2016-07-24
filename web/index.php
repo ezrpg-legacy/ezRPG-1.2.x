@@ -28,18 +28,32 @@ if (!file_exists('config.php') OR filesize('config.php') == 0) {
     header('Location: install/index.php');
     exit(1);
 }
+
+function ezrpg_Autoloader($pClassName)
+{
+    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
+    $class = str_replace("\\", "/",$class);
+    if (file_exists(LIB_DIR . "/" . $class . ".php")) {
+        include(LIB_DIR . "/" . $class . ".php");
+    }
+
+}
+spl_autoload_register("ezRPG\\ezrpg_Autoloader");
+
 session_start();
 // Load init.php
 require_once $rootPath .'/init.php';
 
-try {
 
     $container = new \Pimple\Container;
     $ezrpg = new Application($container);
 
     // Get Config for the game
-    $ezrpg->getConfig(CUR_DIR . '/config.php');
-    
+    $ezrpg->getConfig($rootPath . '/config.php');
+
+        error_reporting(E_ALL);
+        ini_set('display_errors', 0);
+
     // Initialize the Database
     $ezrpg->setDatabase();
 
@@ -48,7 +62,7 @@ try {
 
     // Initialize the View Controller;
     $ezrpg->initializeView();
-    
+
     // Themes
     $ezrpg->getThemes();
 
@@ -68,9 +82,6 @@ try {
 
     // What's this used for?
     $players = new \ezRPG\lib\Players($container);
-} catch (\Exception $ex) {
-    $ex->getMessage();
-}
 
 $module_name = $ezrpg->dispatch();
 $module_name = $ezrpg->container['hooks']->run_hooks('header', $module_name);

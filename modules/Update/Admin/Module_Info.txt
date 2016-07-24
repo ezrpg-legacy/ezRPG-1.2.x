@@ -1,0 +1,4 @@
+:Module Title: Game Updater
+:Module Version: 1.0.0
+:Module Description: ezRPGGame Core, Check for Updates and install them
+:Module Author: Tim Garrity

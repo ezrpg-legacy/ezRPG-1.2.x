@@ -89,7 +89,7 @@ class Application
     public function getSettings()
     {
         $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
-
+        
         return $this->container['settings'];
     }
 
@@ -124,6 +124,7 @@ class Application
 
         if (isset($_GET['act'])) {
             if (method_exists($module, $_GET['act'])) {
+                die($module_name);
                 $reflection = new \ReflectionMethod($module, $_GET['act']);
                 if ($reflection->isPublic()) {
                     $module->$_GET['act']();

@@ -111,7 +111,8 @@ class Hooks
 
         //Sort by priority
         ksort($this->hooks[$hook_name]);
-
+//        if($hook_name == 'header')
+//           die(var_dump($this->hooks[$hook_name]));
         //if($hook_name=='header')
         //die(var_dump($this->player));
 

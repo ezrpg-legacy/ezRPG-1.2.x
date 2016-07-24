@@ -1,0 +1,4 @@
+:Module Title: Game Settings
+:Module Version: 1.0.0
+:Module Description: ezRPGGame, Game Settings module
+:Module Author: Tim Garrity

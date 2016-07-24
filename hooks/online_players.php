@@ -7,10 +7,13 @@ $hooks->add_hook('admin_header', 'online_players', 1);
 
 function hook_online_players($container, $args = 0)
 {
-    $query = $container['db']->fetchRow('SELECT COUNT(`pid`) AS `count` FROM `<ezrpg>players_meta` WHERE `last_active`>?',
-        array(time() - (60 * 5)));
-    $container['tpl']->assign('ONLINE', $query->count);
-
+    try {
+        $query = $container['db']->fetchRow('SELECT COUNT(`pid`) AS `count` FROM `<ezrpg>players_meta` WHERE `last_active`>?',
+            array(time() - (60 * 5)));
+        $container['tpl']->assign('ONLINE', $query->count);
+    }catch(\Exception $ex){
+        throw new \ezRPG\lib\EzException($ex->getMessage());
+    }
     return $args;
 }
 

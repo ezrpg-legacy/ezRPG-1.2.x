@@ -1,0 +1,4 @@
+:Module Title: Login Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Login Module
+:Module Author: Zeggy

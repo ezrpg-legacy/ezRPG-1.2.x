@@ -10,7 +10,6 @@ function hook_new_logs($container, $args = 0)
     if (LOGGED_IN == true) {
         $container['tpl']->assign('new_logs', checkLog($container['player']->id, $container['db']));
     }
-
     return $args;
 }
 

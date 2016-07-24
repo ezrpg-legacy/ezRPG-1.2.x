@@ -38,12 +38,12 @@ class EzException extends Exception
 OUT;
 
         //Only show line number and file if debug mode is on
-        if (DEBUG_MODE) {
+        //if (DEBUG_MODE) {
             $ret .= <<<OUT
 <strong>File</strong>: $this->file<br />
 <strong>Line</strong>: $this->line<br />
 OUT;
-        }
+        //}
 
         //The error message itself
         $ret .= <<<OUT

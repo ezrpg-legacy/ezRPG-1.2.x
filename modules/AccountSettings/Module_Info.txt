@@ -1,0 +1,4 @@
+:Module Title: Account Settings
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Account Settings module
+:Module Author: Zeggy

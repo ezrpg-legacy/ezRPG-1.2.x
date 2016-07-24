@@ -1,0 +1,4 @@
+:Module Title: Menu Management System
+:Module Version: 1.0.2
+:Module Description: ezRPGGame, Menu system
+:Module Author: Tim Garrity

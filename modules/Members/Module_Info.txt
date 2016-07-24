@@ -1,0 +1,4 @@
+:Module Title: Members Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Members list module
+:Module Author: Zeggy

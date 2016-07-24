@@ -1,0 +1,4 @@
+:Module Title: Stat Points
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, StatPoints module
+:Module Author: Zeggy

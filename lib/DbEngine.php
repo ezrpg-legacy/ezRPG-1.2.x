@@ -1,22 +1,24 @@
 <?php
 
-namespace ezRPG\lib\dbengines;
+namespace ezRPG\lib;
 use ezRPG\lib\DbException,
-    \SQLException;
+    \PDO,
+    \PDOException;
+use ezRPG\lib\EzException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: mysqli
-  Database abstraction class for MySQLi.
+  Class: PDO
+  Database abstraction class for PDO.
 
   See Also:
   - <DbFactory>
   - <DbException>
  */
 
-class MySQLi
+class DbEngine
 {
     /*
       Integer: $query_count
@@ -45,7 +47,7 @@ class MySQLi
 
     /*
       Variable: $db
-      Contains a MySQLi link identifier.
+      Contains a PDO link identifier.
      */
     protected $db;
 
@@ -55,11 +57,13 @@ class MySQLi
       $dbname - Name of the database.
       $username - Username to connect with.
       $password - Password to connect with.
+      $port - Database Port to connect to.
      */
     protected $host;
     protected $dbname;
     protected $username;
     protected $password;
+    protected $port;
 
     /*
       Constructor: __construct
@@ -72,13 +76,24 @@ class MySQLi
       $dbname - Name of database
      */
 
-    public function __construct($host = 'localhost', $username = 'root', $password = '', $dbname = '')
+    public function __construct($conf)
     {
-        $this->host = $host;
-        $this->dbname = $dbname;
-        $this->username = $username;
-        $this->password = $password;
-        $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');;
+        $options = array(
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        );
+        try {
+            $this->db = new \PDO( $conf['dsn'], $conf['dbuser'], $conf['dbpass'], $options );
+            $this->host = $conf['dbserver'];
+            $this->password = $conf['dbpass'];
+            $this->username = $conf['dbuser'];
+            $this->port = $conf['dbconf'];
+            $this->dbname = $conf['dbname'];
+            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');
+        }catch(\PDOException $ex){
+            throw new EzException($ex->getMessage() . $ex->getLine());
+        }
     }
 
     /*
@@ -89,7 +104,7 @@ class MySQLi
     public function __destruct()
     {
         if ($this->isConnected) {
-            $this->db->close();
+            $this->db == null;
         }
     }
 
@@ -123,7 +138,9 @@ class MySQLi
         }
 
         try {
-            $query = str_replace('<ezrpg>', DB_PREFIX, $query);
+            if (strpos($query, DB_PREFIX) !== true) {
+                $query = str_replace('<ezrpg>', DB_PREFIX, $query);
+            }
             //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
             //Parameter binding
             if ($params != 0) {
@@ -159,7 +176,7 @@ class MySQLi
                         //Otherwise, strings of numbers will still be passed as a string, and surrounded with single quotes
                         //if (!ctype_digit($val))
                         //{
-                        $val = '\'' . $this->db->real_escape_string($val) . '\'';
+                        $val = '\'' . $val . '\'';
                         //} //Otherwise the string is acting as a digit, so leave it alone
                     } else {
                         if (is_int($val) || is_float($val)) {
@@ -194,14 +211,14 @@ class MySQLi
             //Execute query
             $result = $this->db->query($query);
             if ($result === false) { //If there was an error with the query
-                $this->error = $this->db->error;
+                $this->error = $this->db->errorInfo();
 
                 //If in debug mode, send exception, otherwise ignore
                 if (SHOW_ERRORS === 1) {
                     //Feature: admin logging of errors?
-                    $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . $this->error . '</strong>';
+                    $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . var_dump($this->error) . '</strong>';
                 } elseif (IN_INSTALLER) {
-                    $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . $this->error . '</strong> <br />';
+                    $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
                     $error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
                     $error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
                 } else {
@@ -243,7 +260,7 @@ class MySQLi
 
     public function fetch(&$result)
     {
-        return $result->fetch_object();
+        return $result->fetchObject();
     }
 
     /*
@@ -322,7 +339,7 @@ class MySQLi
 
       Equivalent to using mysql_fetch_object(mysql_query($query)).
 
-      After the row is fetched, all memory associated with the result is freed with mysql_free_result().
+      After the row is fetched, all memory associated with the result is freed with PDO::closeCursor().
 
       Parameters:
       $query - A string with the SQL query to execute.
@@ -344,14 +361,14 @@ class MySQLi
     {
         $result = $this->execute($query, $params);
         $ret = $this->fetch($result);
-        $result->free();
+        $result->closecursor();
 
         return $ret;
     }
 
     /*
       Function: numRows
-      Uses mysql_num_rows on a result set to return the number of rows.
+      Uses PDO::rowCount on a result set to return the number of rows.
 
       Parameters:
       $result - A result set from an SQL query.
@@ -362,7 +379,7 @@ class MySQLi
 
     public function numRows(&$result)
     {
-        return $result->num_rows;
+        return $result->rowCount();
     }
 
     /*
@@ -393,9 +410,7 @@ class MySQLi
         if ($this->isConnected === false) {
             $this->connect();
         }
-
         $query = 'INSERT INTO ' . $table . ' (';
-
         $cols = count($data);
         $part1 = ''; //List of column names
         $part2 = ''; //List of question marks for parameter binding
@@ -403,7 +418,7 @@ class MySQLi
         $i = 0; //Counter
         foreach ($data as $col => $val) {
             //Append column name
-            $part1 .= $this->db->real_escape_string($col);
+            $part1 .= $col;
 
             //Append a question mark and leave sanitation to the <execute> method through variable binding.
             $part2 .= '?';
@@ -421,10 +436,9 @@ class MySQLi
 
         $query .= $part1 . ') VALUES (';
         $query .= $part2 . ')';
-
         $result = $this->execute($query, $params);
 
-        return $this->db->insert_id;
+        return $this->db->lastInsertId();
     }
 
     /*
@@ -460,18 +474,14 @@ class MySQLi
     {
         if ($this->isConnected === false) {
             // Persistance is key
-            $this->db = mysqli_connect($this->host, $this->username, $this->password);
+            $uri = sprintf('mysql:host=%s;dbname=%s;port=%s', $this->host, $this->dbname, $this->port);
+            $this->db = new PDO($uri, $this->username, $this->password);
             if ($this->db === false) {
                 throw new DbException($this->db, SERVER_ERROR);
             } else {
                 $this->isConnected = true;
 
-                $db_selected = $this->db->select_db($this->dbname);
-                if ($db_selected === false) {
-                    throw new DbException($this->dbname, DATABASE_ERROR);
-                } else {
-                    return true;
-                }
+                return true;
             }
         } else {
             return true;
@@ -504,11 +514,6 @@ class MySQLi
         if ($this->isConnected === false) {
             $this->connect();
         }
-        if (!strpos($table, "<ezrpg>") && !strpos($table, DB_PREFIX)) {
-            $table = $this->prefix . $table;
-        } else {
-            $table = str_replace('<ezrpg>', $this->prefix, $table);
-        }
         $i = 0;
         $var = "";
         $numFields = count($fields);
@@ -519,7 +524,7 @@ class MySQLi
                 $var .= $key . "='" . $val . "', ";
             }
         }
-        $sql = "Update " . $this->db->real_escape_string($table, $this->db) . " SET " . $var . " WHERE " . $where;
+        $sql = "Update " . $table . " SET " . $var . " WHERE " . $where;
 
         return $this->execute($sql);
     }

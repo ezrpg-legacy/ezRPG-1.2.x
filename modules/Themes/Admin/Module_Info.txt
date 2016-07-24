@@ -1,0 +1,4 @@
+:Module Title: Theme Management
+:Module Version: 1.0.0
+:Module Description: ezRPGGame Core, Handles choosing the themes for the front end.
+:Module Author: Tim

@@ -1,0 +1,4 @@
+:Module Title: Event Log
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Event Log module
+:Module Author: Zeggy

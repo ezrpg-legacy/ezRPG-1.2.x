@@ -1,0 +1,4 @@
+:Module Title: Plugin Management
+:Module Version: 1.0.2
+:Module Description: ezRPGGame, Plugin Management module
+:Module Author: Tim Garrity

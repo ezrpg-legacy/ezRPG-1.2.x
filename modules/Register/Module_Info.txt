@@ -1,0 +1,4 @@
+:Module Title: Registration Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Player Registration module
+:Module Author: Zeggy
