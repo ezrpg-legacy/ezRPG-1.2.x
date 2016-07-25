@@ -33,7 +33,8 @@ define('HOOKS_DIR', CUR_DIR . '/hooks');
 define('THEME_DIR', CUR_DIR . '/templates/');
 define('CACHE_DIR', CUR_DIR . '/cache/');
 
-//require_once CUR_DIR . '/config.php';
+if(file_exists(CUR_DIR . '/config.php'))
+    require_once(CUR_DIR . '/config.php');
 $debugTimer['Config Loaded:'] = microtime(1);
 
 require_once(CUR_DIR . '/lib.php');

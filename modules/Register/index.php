@@ -75,6 +75,7 @@ class Module_Register extends Base_Module
         $error = 0;
         $errors = Array();
 
+        include_once (ROOT_DIR . 'config.php');
         //Check username
         $result = $this->db->fetchRow('SELECT COUNT(`id`) AS `count` FROM `<ezrpg>players` WHERE `username`=?',
             array($_POST['username']));
@@ -149,7 +150,6 @@ class Module_Register extends Base_Module
                 $error = 1;
             }
         }
-
         //verify_code must NOT be used again.
         session_unset();
         session_destroy();
@@ -168,14 +168,13 @@ class Module_Register extends Base_Module
             $insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
             $insert['registered'] = time();
 
-            global $hooks;
             //Run register hook
-            $insert = $hooks->run_hooks('register', $insert);
+            $insert = $this->container['hooks']->run_hooks('register', $insert);
             $new_player = $this->db->insert('<ezrpg>players', $insert);
             $this->db->execute("INSERT INTO <ezrpg>players_meta (pid) VALUES ('" . $new_player . "')");
             //Use $new_player to find their new ID number.
 
-            $hooks->run_hooks('register_after', $new_player);
+            $this->container['hooks']->run_hooks('register_after', $new_player);
 
             $msg = 'Congratulations, you have registered! Please login now to play!';
             $this->setMessage($msg, 'GOOD');

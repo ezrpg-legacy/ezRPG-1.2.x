@@ -32,7 +32,9 @@ function hook_check_session($container, $args = 0)
             // check the last time the user was active.
             // if they weren't active for a certain time period, prompt for password again.
             // Changed to 10Minutes
-            if ($_SESSION['last_active'] < (time() - 600)) {
+            $mins = $container['settings']->setting['player']['timeout']['value'];
+            $secs = $mins * 60;
+            if ($_SESSION['last_active'] < (time() - $secs)) {
                 if (isset($_GET['mod'])) {
                     if (!in_array($_GET['mod'], array('Logout'))) {
                         session_destroy();

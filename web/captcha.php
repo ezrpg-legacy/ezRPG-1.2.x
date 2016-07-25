@@ -2,7 +2,8 @@
 
 define('IN_EZRPG', true);
 
-require_once('init.php');
+session_start();
+require_once('../init.php');
 
 //$code_length = rand(5,6);
 $code_length = 4;
@@ -17,10 +18,10 @@ $l3 = strtoupper(createKey(1, 1));
 $l4 = strtoupper(createKey(1, 1));
 $verify_string = $l1 . ' ' . $l2 . ' ' . $l3 . ' ' . $l4;
 $real_string = $l1 . $l2 . $l3 . $l4;
-$verify_code = sha1(strtoupper($real_string) . SECRET_KEY);
-
+$verify_code = sha1(strtoupper($real_string) . SECRET_KEY );
 $_SESSION['verify_code'] = $verify_code;
-
+$_SESSION['verify_code2'] = $real_string;
+$_SESSION['verify_code3'] = strtoupper($real_string) . SECRET_KEY;
 function makeRBGColor($color, $image)
 {
     $color = str_replace("#", "", $color);

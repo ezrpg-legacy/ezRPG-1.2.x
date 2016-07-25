@@ -40,9 +40,11 @@ class Module_Test extends Base_Module
             case "exceptionhook":
                 $this->container['hooks']->run_hooks('exceptionTest', $_GET['type']);
                 break;
-            default:
-                die('nothing to test here');
+            case "register":
+                $this->container['hooks']->run_hooks('register_after', "1");
                 break;
+            default:
+                echo 'nothing to test here';
         }
     }
 }
