@@ -98,7 +98,7 @@ class Module_Login extends Base_Module
             $this->setMessage($errmsg, 'FAIL');
         }
 
-        //header('Location: index.php');
+        header('Location: index.php');
         exit;
     }
 
