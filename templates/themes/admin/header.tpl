@@ -75,7 +75,7 @@
 
 <div id="header">
 	<span id="title">{$GAMESETTINGS['game_name']['value']}</span>
-	<span id="time">{$smarty.now|date_format:'%A %T'}
+	<span id="title-right"><span id="time">{$smarty.now|date_format:'%A %T'}</span>
 	<br />
 	<strong>Players Online</strong>: {$ONLINE}</span>
 </div>

@@ -3,8 +3,8 @@
 namespace ezRPG\lib;
 use ezRPG\lib\DbException,
     \PDO,
-    \PDOException;
-use ezRPG\lib\EzException;
+    \PDOException,
+    ezRPG\lib\EzException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -228,8 +228,8 @@ class DbEngine
 
                 return false;
             }
-        } catch (SQLException $e) {
-            $e->__toString();
+        } catch (PDOException $e) {
+            throw new EzException($e->__toString());
         }
 
         //Update query count
