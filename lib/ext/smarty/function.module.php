@@ -21,9 +21,9 @@ function smarty_function_module($params, &$smarty)
 {
     $print = '<!-- Not Found -->';
     if (DEBUG_MODE) {
-        //$print .= '<pre>'. print_r($params) . '</pre>';
+        $print .= '<pre>'. var_dump($params) . '</pre>';
     }
-    //$print .= '-->';
+    $print .= '-->';
     if (!empty($params)) {
         if (!empty($params['n'])) {
             global $container;
@@ -37,6 +37,19 @@ function smarty_function_module($params, &$smarty)
     }
 
     return $print;
+}
+
+function smarty_function_ismoduleactive($params, &$smarty)
+{
+    if (!empty($params)) {
+        if (!empty($params['n'])) {
+            global $container;
+            if(isModuleActive($params['n'])){
+                return true;
+            }
+            return false;
+        }
+    }
 }
 
 

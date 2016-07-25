@@ -31,10 +31,10 @@ function loadModuleCache($admin = false)
         else
             return $plugins['admin'];
     }else{
-        $pluginManager = new \ezRPG\Modules\Plugins\Admin;
+        $mod = new \ezRPG\lib\ModuleFactory();
+        $pluginManager= $mod::adminFactory($container, 'Plugins');
         $array = $pluginManager->setModuleCache();
     }
-    $debugTimer['Loaded Module Cache'] = microtime(1);
 
     return $array;
 }
