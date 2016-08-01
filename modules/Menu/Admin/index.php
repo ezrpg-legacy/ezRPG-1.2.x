@@ -38,6 +38,10 @@ class Admin_Menu extends Base_Module
                 case 'edit' :
                     $this->edit_menus();
                     break; //Completed:Edit Menus.
+                case 'clean' :
+                    killMenuCache();
+                    $this->list_menus();
+                    break;
             }
         } elseif (isset($_POST['act'])) {
             switch ($_POST['act']) {

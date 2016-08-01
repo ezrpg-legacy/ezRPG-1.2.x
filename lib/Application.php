@@ -124,7 +124,7 @@ class Application
 
         if (isset($_GET['act'])) {
             if (method_exists($module, $_GET['act'])) {
-                die($module_name);
+                //die($module_name);
                 $reflection = new \ReflectionMethod($module, $_GET['act']);
                 if ($reflection->isPublic()) {
                     $module->$_GET['act']();

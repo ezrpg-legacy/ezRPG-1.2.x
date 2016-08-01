@@ -76,6 +76,6 @@
 </div>
 {/foreach}
 <!-- END OF ADMINCP_PLUGINS_ROW-->
-<a href="index.php?mod=Menu&act=add"><input name="login" type="submit" class="button" value="Add New.." /></a>
+<a href="index.php?mod=Menu&act=add"><input name="login" type="submit" class="button" value="Add New.." /></a> <a href="index.php?mod=Menu&act=clean"><input name="login" type="submit" class="button" value="Clear Cache" /></a>
 
 {include file="file:[$THEME]footer.tpl"}
