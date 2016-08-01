@@ -51,9 +51,10 @@ require_once $rootPath .'/init.php';
     // Get Config for the game
     $ezrpg->getConfig($rootPath . '/config.php');
 
+    if(SHOW_ERRORS) {
         error_reporting(E_ALL);
-        ini_set('display_errors', 0);
-
+        ini_set('display_errors', 1);
+    }
     // Initialize the Database
     $ezrpg->setDatabase();
 

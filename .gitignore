@@ -16,6 +16,8 @@
 /modules/Profile/
 /modules/Mining/
 /modules/Upgrades/
+/templates/themes/fantasy/
+/web/static/fantasy/
 
 config.php
 /cache/*
@@ -23,3 +25,4 @@ config.php
 web/install/lock
 .idea/
 vender/
+/modules/Attack/

@@ -15,9 +15,9 @@ defined('IN_EZRPG') or exit;
 
 class Module_Test extends Base_Module
 {
-    public function __construct($container, $menu)
+    public function __construct($container)
     {
-        parent::__construct($container, $menu);
+        parent::__construct($container);
     }
 
     public function start()

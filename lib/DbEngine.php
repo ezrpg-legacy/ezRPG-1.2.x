@@ -87,7 +87,7 @@ class DbEngine
             $this->host = $conf['dbserver'];
             $this->password = $conf['dbpass'];
             $this->username = $conf['dbuser'];
-            $this->port = $conf['dbconf'];
+            $this->port = $conf['dbport'];
             $this->dbname = $conf['dbname'];
             $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');

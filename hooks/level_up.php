@@ -16,7 +16,7 @@ function hook_level_up($container, $args = 0)
     //Check if player has leveled up
     if ($args->exp >= $args->max_exp) {
         //Update the current player variable ($args)
-        //$args->exp = $args->exp - $args->max_exp;  //Dafaq?
+        $args->exp = $args->exp - $args->max_exp;  //Figured it out, we're setting Exp back to 0 + however much above it we were.... Leveling
         $args->level += 1;
         $args->stat_points += 2;
         $args->max_exp += 20;
