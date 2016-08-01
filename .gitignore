@@ -16,8 +16,8 @@
 /modules/Profile/
 /modules/Mining/
 /modules/Upgrades/
-/templates/themes/fantasy/
-/web/static/fantasy/
+/templates/themes/fantasy/*
+/web/static/fantasy/*
 
 config.php
 /cache/*
