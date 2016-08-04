@@ -241,7 +241,7 @@ class Menu
                             foreach ($result as $mitem => $mval) {
                                 $menuarray[$mitem] = $mval;
                             }
-                            $this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag), $mentarray);
+                            $this->tpl->assign('MENU_' . (($customtag == "") ? $ival->name : $customtag), $menuarray);
                             unset($menuarray);
                         }
                     } else {

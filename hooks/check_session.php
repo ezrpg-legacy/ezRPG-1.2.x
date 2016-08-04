@@ -29,6 +29,7 @@ function hook_check_session($container, $args = 0)
             // Set logged-in flag
             $authenticated = true;
 
+            $container['tpl']->assign('ADMIN', ($player->rank > 5) ? 'TRUE' : 'FALSE');
             // check the last time the user was active.
             // if they weren't active for a certain time period, prompt for password again.
             // Changed to 10Minutes

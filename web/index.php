@@ -51,7 +51,7 @@ require_once $rootPath .'/init.php';
     // Get Config for the game
     $ezrpg->getConfig($rootPath . '/config.php');
 
-    if(SHOW_ERRORS) {
+    if(SHOW_ERRORS === 1) {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
     }
