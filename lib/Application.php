@@ -16,6 +16,20 @@ class Application
 
     public $container;
 
+    public $settings;
+
+    public $db;
+
+    public $tpl;
+
+    public $player;
+
+    public $version = "1.2.1.9";
+
+    public $themes;
+
+    public $config;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -24,7 +38,7 @@ class Application
 
     public function getDatabase()
     {
-        return $this->container['db'];
+        return $this->db; ///$this->container['db'];
     }
 
     public function getContainer()
@@ -34,22 +48,22 @@ class Application
 
     public function getTemplateSystem()
     {
-        return $this->container['tpl'];
+        return $this->tpl; //$this->container['tpl'];
     }
 
     public function setTemplateSystem($tpl)
     {
-        $this->container['tpl'] = $tpl;
+        $this->tpl = $this->container['tpl'] = $tpl;
     }
 
     public function getPlayer()
     {
-        return $this->container['player'];
+        return $this->player; //$this->container['player'];
     }
 
     public function setPlayer($args)
     {
-
+        $this->player = $args;
     }
 
     public function getHooks()
@@ -71,31 +85,30 @@ class Application
 
     public function getThemes()
     {
-        return $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
-
+        return $this->themes = $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
     }
 
     public function initializePlayer(){
-        return $this->container['player'] = 0;
+        return $this->player = $this->container['player'] = 0;
     }
 
     public function setDatabase()
     {
         $this->container['db'] = \ezRPG\lib\DbFactory::factory($this->container['config']);
 
-        return $this->container['db'];
+        return $this->db = $this->container['db'];
     }
 
     public function getSettings()
     {
         $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
         
-        return $this->container['settings'];
+        return $this->settings = $this->container['settings'];
     }
 
     public function getConfig($filelocation)
     {
-        return $this->container['config'] = new \ezRPG\lib\Config($filelocation);
+        return $this->config = $this->container['config'] = new \ezRPG\lib\Config($filelocation);
     }
 
     public function initializeView(){
@@ -124,7 +137,6 @@ class Application
 
         if (isset($_GET['act'])) {
             if (method_exists($module, $_GET['act'])) {
-                //die($module_name);
                 $reflection = new \ReflectionMethod($module, $_GET['act']);
                 if ($reflection->isPublic()) {
                     $module->$_GET['act']();

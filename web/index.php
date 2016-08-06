@@ -76,6 +76,9 @@ require_once $rootPath .'/init.php';
     // Run login hooks on player variable
     $ezrpg->setPlayer($hooks->run_hooks('player', 0));
 
+    if(isset($container['player']->rank) && $container['player']->rank < 5){
+        ini_set('display_errors', 0);
+    }
     // Create the Menu object
     $ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
 
