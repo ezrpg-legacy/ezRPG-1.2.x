@@ -161,13 +161,13 @@ INSERT INTO `<ezrpg>settings` (`id`, `name`, `title`, `description`, `optionscod
 (13, 'version', 'Game Version', '', 'text', '1.2.1.7', 0, 1, 1, 0),
 (14, 'default_module', 'Default Module', 'Choose a default module for your frontpage', 'text', 'Index', 0, 1, 1, 0),
 (15, 'registration', 'Registration Settings', NULL, NULL, NULL, 0, 0, 0, 1),
-(16, 'newgold', 'Starting Gold', 'Set the amount of gold to start with', 'text', '50000', 0, 16, 0, 1),
-(17, 'strength', 'Starting Strength', NULL, 'text', '5', 0, 16, 0, 1),
-(18, 'vitality', 'Starting Vitality', NULL, 'text', '5', 0, 16, 0, 1),
-(19, 'dexterity', 'Starting Dexterity', NULL, 'text', '5', 0, 16, 0, 1),
-(20, 'agility', 'Starting Agility', NULL, 'text', '5', 0, 16, 0, 1),
+(16, 'newgold', 'Starting Gold', 'Set the amount of gold to start with', 'text', '1000', 0, 16, 0, 1),
+(17, 'strength', 'Starting Strength', NULL, 'text', '5', 0, 15, 0, 1),
+(18, 'vitality', 'Starting Vitality', NULL, 'text', '5', 0, 15, 0, 1),
+(19, 'dexterity', 'Starting Dexterity', NULL, 'text', '5', 0, 15, 0, 1),
+(20, 'agility', 'Starting Agility', NULL, 'text', '5', 0, 15, 0, 1),
 (21, 'player', 'Player Settings', NULL, NULL, NULL, 0, 0, 0, 1),
-(22, 'timeout', 'Session timeout', 'Number of minutes until timeout.', 'text', '15', 0, 22, 0, 1);
+(22, 'timeout', 'Session timeout', 'Number of minutes until timeout.', 'text', '15', 0, 21, 0, 1);
 QUERY;
 
         $db->execute($data1);

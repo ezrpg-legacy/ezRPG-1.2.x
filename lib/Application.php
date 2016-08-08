@@ -30,6 +30,8 @@ class Application
 
     public $config;
 
+    public $hooks;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -80,7 +82,7 @@ class Application
             }
         }
 
-        return $hooks;
+        return $this->hooks = $hooks;
     }
 
     public function getThemes()
@@ -102,7 +104,7 @@ class Application
     public function getSettings()
     {
         $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
-        
+
         return $this->settings = $this->container['settings'];
     }
 
@@ -121,12 +123,12 @@ class Application
 
         $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
         $this->container['tpl']->assign('module_name', $module_name);
-        
+
         //Init Hooks - Runs before Header
         $this->container['hooks']->run_hooks('init');
         return $module_name;
     }
-    
+
     public function run($module_name, $admin = false)
     {
         //Begin module

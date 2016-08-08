@@ -4,7 +4,7 @@
 		<meta name="description" content="ezRPG Project, the free, open source browser-based game engine!" />
 		<meta name="keywords" content="" />
 		
-		<link rel="stylesheet" href="{$THEMEDIR}assets/css/style.css" type="text/css" />
+		<link rel="stylesheet" href="static/rework/assets/css/style.css" type="text/css" />
 		
 		
 		<script src="static/scripts/ext/jquery/jquery.1.8.1.min.js"></script>

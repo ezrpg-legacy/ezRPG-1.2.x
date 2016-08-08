@@ -45,12 +45,12 @@ $container = new \Pimple\Container;
 $ezrpg = new Application($container);
 $ezrpg->getHooks();
 
-$installer = new InstallerFactory($container);
+$installer = new InstallerFactory($ezrpg->container);
 $default_mod = 'Index';
 
 $module_name = ( (isset($_GET['step']) && ctype_alnum($_GET['step'])) ? $_GET['step'] : $default_mod );
 
 //Begin module
-$module = InstallerFactory::module($container, $installer, $module_name);
+$module = InstallerFactory::module($ezrpg->container, $installer, $module_name);
 $module->start();
 ?>

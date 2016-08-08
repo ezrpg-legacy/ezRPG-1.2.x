@@ -10,7 +10,7 @@ class Install_CreateAdmin extends InstallerFactory
     {
         if ( !isset($_POST['submit']) )
         {
-			$sitefolder = strtok($_SERVER['PHP_SELF'], 'install');
+            $sitefolder = strtok($_SERVER['PHP_SELF'], 'install');
             $siteurl = 'http://' . $_SERVER['HTTP_HOST'] . $sitefolder;
             $username = '';
             $email = '';
@@ -26,22 +26,22 @@ class Install_CreateAdmin extends InstallerFactory
             $email = $_POST['email'];
             if ( empty($username) || empty($email) || empty($password) || empty($password2) )
             {
-                $errors = 1;
+                //$errors = 1;
                 $msg .= 'You forgot to fill in something!';
             }
             if ( !preg_match("/^[a-zA-Z0-9_]{4,16}$/", $username) )
             {
-                $errors = 1;
+                //$errors = 1;
                 $msg .= 'Username is invalid!';
             }
             if ( $password != $password2 )
             {
-                $errors = 1;
+                //$errors = 1;
                 $msg .= 'You didn\'t verify your password correctly.';
             }
             if ( !preg_match("/[a-zA-Z0-9\W]{6}+/", $password) )
             {
-                $errors = 1;
+                //$errors = 1;
                 $msg .= 'Password is invalid';
             }
 
@@ -58,7 +58,6 @@ class Install_CreateAdmin extends InstallerFactory
                 {
                     $e->__toString();
                 }
-
                 $secret_key = createKey(16);
                 $insert = array( );
                 $insert['username'] = $username;
@@ -72,7 +71,11 @@ class Install_CreateAdmin extends InstallerFactory
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;
                 $db->insert("<ezrpg>players_meta", $admin_meta);
-                $this->container['hooks']->run_hooks('register_after', $admin_meta['pid']);
+                try{
+                    $this->container['app']->hooks->run_hooks('register_after', $admin_meta['pid']);
+                }catch( \Exception $e){
+                    throw new EzException($e->getMessage() . $e->getLine());
+                }
                 $insertconf = array( );
                 $insertconf['name'] = 'site_url';
                 $insertconf['title'] = 'Site URL';
