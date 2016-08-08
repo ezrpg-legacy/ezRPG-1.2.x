@@ -43,6 +43,7 @@ spl_autoload_register("ezRPG\\Install\\ezrpg_Autoloader");
 
 $container = new \Pimple\Container;
 $ezrpg = new Application($container);
+$ezrpg->getHooks();
 
 $installer = new InstallerFactory($container);
 $default_mod = 'Index';

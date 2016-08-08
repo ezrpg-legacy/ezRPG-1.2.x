@@ -72,6 +72,7 @@ class Install_CreateAdmin extends InstallerFactory
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;
                 $db->insert("<ezrpg>players_meta", $admin_meta);
+                $this->container['hooks']->run_hooks('register_after', $admin_meta['pid']);
                 $insertconf = array( );
                 $insertconf['name'] = 'site_url';
                 $insertconf['title'] = 'Site URL';
