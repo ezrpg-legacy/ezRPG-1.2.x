@@ -16,6 +16,7 @@ define('LIB_DIR', ROOT_DIR . "/lib");
 define('MOD_DIR', CUR_DIR . '/modules');
 define('CACHE_DIR', ROOT_DIR . '/cache/');
 define('EXT_DIR', LIB_DIR . '/ext');
+define('HOOKS_DIR', ROOT_DIR . '/hooks');
 
 require_once LIB_DIR . '/Base_Module.php';
 require_once LIB_DIR . '/DbException.php';
