@@ -180,7 +180,7 @@ define('DEBUG_MODE', 0);<br />
         echo "<h2>Database Configuration</h2><br />\n";
         echo '<form method="post">';
         echo '<label>Driver</label>';
-        echo '<select name="dbdriver"><option value="mysqli">MySQLi</option></select>';
+        echo '<select name="dbdriver"><option value="mysql">MySQLi</option></select>';
         echo '<label>Host</label>';
         echo '<input type="text" name="dbhost" value="' . $dbconfig['dbserver'] . '" />';
         echo '<label>Port</label>';
