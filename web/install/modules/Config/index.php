@@ -146,7 +146,8 @@ defined('IN_EZRPG') or exit; <br />
   <br />
   SECRET_KEY - A long string of random characters.<br />
 */<br />
-define('SECRET_KEY', '{$secret_key}');<br />
+if(!defined('SECRET_KEY'))
+    define('SECRET_KEY', '{$secret_key}');<br />
 <br />
 <br />
 /*<br />
@@ -158,10 +159,14 @@ define('SECRET_KEY', '{$secret_key}');<br />
   SHOW_ERRORS - Turn on to show PHP errors.<br />
   DEBUG_MODE - Turn on to show database errors and debug information.<br />
 */<br />
-define('DB_PREFIX', '{$dbconfig['dbprefix']}');<br />
-define('VERSION', '1.2.1.7');<br />
-define('SHOW_ERRORS', 0);<br />
-define('DEBUG_MODE', 0);<br />
+if(!defined('DB_PREFIX'))
+    define('DB_PREFIX', '{$dbconfig['dbprefix']}');<br />
+if(!defined('VERSION'))
+    define('VERSION', '1.2.1.7');<br />
+if(!defined('SHOW_ERRORS'))
+    define('SHOW_ERRORS', 0);<br />
+if(!defined('DEBUG_MODE))
+    define('DEBUG_MODE', 0);<br />
 ?><br /></code></pre>";
                     echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
                 }
