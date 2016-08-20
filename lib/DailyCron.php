@@ -24,6 +24,8 @@ class DailyCron
     public function start()
     {
         try {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
             $this->container['hooks']->run_hooks('cron_daily');
         } catch (\Exception $ex) {
             $ex->getMessage();

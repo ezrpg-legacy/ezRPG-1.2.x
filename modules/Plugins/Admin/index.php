@@ -140,16 +140,16 @@ class Admin_Plugins extends Base_Module
         foreach ($scan AS $mod) {
             if (is_dir(MOD_DIR . $mod) && $mod !== "." && $mod !== ".." && !strpos($mod, '.php'))
             {
-                $adm = scandir(MOD_DIR . '/'. $mod . '/Admin');
+                $adm = scandir(MOD_DIR . $mod . '/Admin');
                 foreach($adm as $module) {
                     if ($module !== "." && $module !== ".." && !strpos($module, '.php')) {
                         $modules[] = $mod;
                         // Make sure it's in proper Module structure format with the index.php
-                        if (file_exists(MOD_DIR . '/'. $mod . '/Admin/index.php')) {
+                        if (file_exists(MOD_DIR . $mod . '/Admin/index.php')) {
                             // Check if any of the modules has a Module_Info.txt file.
-                            if (fopen(MOD_DIR . '/'. $mod . "/Admin/Module_Info.txt", "r") != false) {
+                            if (fopen(MOD_DIR . $mod . "/Admin/Module_Info.txt", "r") != false) {
                                 // Okay, let's parse the file
-                                $contents = file_get_contents(MOD_DIR . '/'. $mod . "/Admin/Module_Info.txt");
+                                $contents = file_get_contents(MOD_DIR . $mod . "/Admin/Module_Info.txt");
                                 $contents = explode(":", $contents);
 
                                 $modulesInfo[$mod] = array(
@@ -260,14 +260,13 @@ class Admin_Plugins extends Base_Module
      * @param $name
      */
     private function install_modules($name){
-        if(file_exists(MOD_DIR . '/' . $name . '/index.php'))
+        if(file_exists(MOD_DIR . $name . '/index.php'))
             $module = \ezRPG\lib\ModuleFactory::factory($this->container, $name);
-        elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php'))
+        elseif(file_exists(MOD_DIR . $name . '/Admin/index.php'))
             $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
 
         $modQuery = $this->db->execute('SELECT `id` from <ezrpg>plugins WHERE <ezrpg>plugins.title = "'. $name .'"');
         $modID = $this->db->fetch($modQuery);
-
         if (method_exists($module, 'install')) {
             $reflection = new \ReflectionMethod($module, 'install');
             if ($reflection->isPublic()) {
@@ -312,7 +311,8 @@ class Admin_Plugins extends Base_Module
                     'application/zip',
                     'application/x-zip-compressed',
                     'multipart/x-zip',
-                    'application/x-compressed'
+                    'application/x-compressed',
+		    'application/octet-stream'
                 );
                 foreach ($accepted_types as $mime_type) {
                     if ($mime_type == $type) {

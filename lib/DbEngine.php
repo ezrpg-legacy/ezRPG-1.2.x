@@ -5,6 +5,7 @@ use ezRPG\lib\DbException,
     \PDO,
     \PDOException,
     ezRPG\lib\EzException;
+use ezRPG\lib\DbException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -51,6 +52,8 @@ class DbEngine
      */
     protected $db;
 
+    protected $prepared;
+
     /*
       Variables: Connection Details
       $host - Host name of database server.
@@ -83,16 +86,18 @@ class DbEngine
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         );
         try {
-            $this->db = new \PDO( $conf['dsn'], $conf['dbuser'], $conf['dbpass'], $options );
+            $dsn = "mysql:host=".$conf['dbserver'].";dbname=".$conf['dbname'].";";
+            $this->db = new \PDO( $dsn, $conf['dbuser'], $conf['dbpass'], $options );
             $this->host = $conf['dbserver'];
             $this->password = $conf['dbpass'];
             $this->username = $conf['dbuser'];
             $this->port = $conf['dbport'];
             $this->dbname = $conf['dbname'];
+            $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');
         }catch(\PDOException $ex){
-            throw new EzException($ex->getMessage() . $ex->getLine());
+            throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of DbEngine.php");
         }
     }
 
@@ -136,6 +141,8 @@ class DbEngine
         if ($this->isConnected === false) {
             $this->connect();
         }
+        
+        $query = trim($query);
 
         try {
             if (strpos($query, DB_PREFIX) !== true) {
@@ -405,42 +412,39 @@ class DbEngine
       - <execute>
      */
 
-    public function insert($table, $data)
-    {
-        if ($this->isConnected === false) {
-            $this->connect();
-        }
-        $query = 'INSERT INTO ' . $table . ' (';
-        $cols = count($data);
-        $part1 = ''; //List of column names
-        $part2 = ''; //List of question marks for parameter binding
-        $params = Array();
-        $i = 0; //Counter
-        foreach ($data as $col => $val) {
-            //Append column name
-            $part1 .= $col;
-
-            //Append a question mark and leave sanitation to the <execute> method through variable binding.
-            $part2 .= '?';
-
-            $params[] = $val;
-
-            if ($i != ($cols - 1)) {
-                $part1 .= ', ';
-                $part2 .= ', ';
+    public function insert($table, $data){
+        // check if table name not empty
+        if ( !empty( $table ) ) {
+            if (strpos($table, DB_PREFIX) !== true) {
+                $table = str_replace('<ezrpg>', DB_PREFIX, $table);
             }
-
-            //Increment counter
-            ++$i;
+            // and array data not empty
+            if (count($data) > 0 && is_array($data)) {
+                // get array insert data in temp array
+                foreach ($data as $f => $v) {
+                    $tmp[] = ":s_$f";
+                }
+                // make name space param for pdo insert statement
+                $sNameSpaceParam = implode(',', $tmp);
+                // unset temp var
+                unset($tmp);
+                // get insert fields name
+                $sFields = implode(',', array_keys($data));
+                // set pdo insert statement in class property
+                $sql = "INSERT INTO `$table` ($sFields) VALUES ($sNameSpaceParam);";
+                // pdo prepare statement
+                try {
+                    $this->prepared = $this->db->prepare($sql);
+                    $this->_bindPdoNameSpace($data);
+                    // set class where property with array data
+                    $this->prepared->execute();
+                    return $this->db->lastInsertId();
+                }catch(\PDOException $ex){
+                    throw new DbException($ex->getMessage());
+                }
+            }
         }
-
-        $query .= $part1 . ') VALUES (';
-        $query .= $part2 . ')';
-        $result = $this->execute($query, $params);
-
-        return $this->db->lastInsertId();
     }
-
     /*
       Function: affected
       Returns the number of affected rows from the last query executed.
@@ -529,6 +533,77 @@ class DbEngine
         return $this->execute($sql);
     }
 
+    /**
+     * PDO Bind Param with :namespace
+     * @param array $array
+     */
+    private function _bindPdoNameSpace( $array = array() ) {
+        if(strstr(key($array), ' ')){
+            // bind array data in pdo
+            foreach ( $array as $f => $v ) {
+                // get table column from array key
+                $field = $this->getFieldFromArrayKey($f);
+                // check pass data type for appropriate field
+                switch ( gettype( $array[$f] ) ):
+                    // is string found then pdo param as string
+                    case 'string':
+                        $this->prepared->bindParam( ":s" . "_" . "$field", $array[$f], PDO::PARAM_STR );
+                        break;
+                    // if int found then pdo param set as int
+                    case 'integer':
+                        $this->prepared->bindParam( ":s" . "_" . "$field", $array[$f], PDO::PARAM_INT );
+                        break;
+                    // if boolean found then set pdo param as boolean
+                    case 'boolean':
+                        $this->prepared->bindParam( ":s" . "_" . "$field", $array[$f], PDO::PARAM_BOOL );
+                        break;
+                endswitch;
+            } // end for each here
+        }else{
+            // bind array data in pdo
+            foreach ( $array as $f => $v ) {
+                // check pass data type for appropriate field
+                switch ( gettype( $array[$f] ) ):
+                    // is string found then pdo param as string
+                    case 'string':
+                        $this->prepared->bindParam( ":s" . "_" . "$f", $array[$f], PDO::PARAM_STR );
+                        break;
+                    // if int found then pdo param set as int
+                    case 'integer':
+                        $this->prepared->bindParam( ":s" . "_" . "$f", $array[$f], PDO::PARAM_INT );
+                        break;
+                    // if boolean found then set pdo param as boolean
+                    case 'boolean':
+                        $this->prepared->bindParam( ":s" . "_" . "$f", $array[$f], PDO::PARAM_BOOL );
+                        break;
+                endswitch;
+            } // end for each here
+        }
+    }
+    /**
+     * Bind PDO Param without :namespace
+     * @param array $array
+     */
+    private function _bindPdoParam( $array = array() ) {
+        // bind array data in pdo
+        foreach ( $array as $f => $v ) {
+            // check pass data type for appropriate field
+            switch ( gettype( $array[$f] ) ):
+                // is string found then pdo param as string
+                case 'string':
+                    $this->prepared->bindParam( $f + 1, $array[$f], PDO::PARAM_STR );
+                    break;
+                // if int found then pdo param set as int
+                case 'integer':
+                    $this->prepared->bindParam( $f + 1, $array[$f], PDO::PARAM_INT );
+                    break;
+                // if boolean found then set pdo param as boolean
+                case 'boolean':
+                    $this->prepared->bindParam( $f + 1, $array[$f], PDO::PARAM_BOOL );
+                    break;
+            endswitch;
+        } // end for each here
+    }
 }
 
 ?>
