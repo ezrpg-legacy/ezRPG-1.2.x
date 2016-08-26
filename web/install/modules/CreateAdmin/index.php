@@ -54,7 +54,7 @@ class Install_CreateAdmin extends InstallerFactory
                 try
                 {
                     $this->container['app']->getConfig(ROOT_DIR . '/config.php');
-                    $db = $this->container['app']->setDatabase();
+                    $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
                 {
@@ -69,7 +69,6 @@ class Install_CreateAdmin extends InstallerFactory
                 $insert['secret_key'] = $secret_key;
                 $insert['registered'] = time();
                 $insert['rank'] = 10;
-                $this->container['app']->getSettings();
                 $new_admin = $db->insert("<ezrpg>players", $insert);
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;

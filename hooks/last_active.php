@@ -12,7 +12,9 @@ function hook_last_active($container, $args = 0)
         return $args;
     }
     //Only update last active value if 5 minutes have passed since the last update
-    if ($container['player']->last_active <= (time() - 300)) {
+    $mins = $container['settings']->setting['player']['timeout']['value'];
+    $secs = $mins * 60;
+    if ($container['player']->last_active <= (time() - $secs)) {
         $query = $container['db']->execute('UPDATE `<ezrpg>players_meta` SET `last_active`=? WHERE `pid`=?',
             array(time(), $container['player']->id));
         loadMetaCache(1);
