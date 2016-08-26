@@ -5,7 +5,6 @@ use ezRPG\lib\DbException,
     \PDO,
     \PDOException,
     ezRPG\lib\EzException;
-use ezRPG\lib\DbException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -135,19 +134,19 @@ class DbEngine
       See Also:
       - <connect>
      */
-
-    public function execute($query, $params = 0)
+    public function oldexecute($query, $params = 0)
     {
         if ($this->isConnected === false) {
             $this->connect();
         }
-        
+
         $query = trim($query);
 
         try {
             if (strpos($query, DB_PREFIX) !== true) {
                 $query = str_replace('<ezrpg>', DB_PREFIX, $query);
             }
+
             //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
             //Parameter binding
             if ($params != 0) {
@@ -162,7 +161,7 @@ class DbEngine
                     $params = array_slice($params, 0, $count1);
                 }
 
-                if ($count1 > ($count2 + 1)) //Too little parameters, add extra '?' symbols  
+                if ($count1 > ($count2 + 1)) //Too little parameters, add extra '?' symbols
                 { //OR throw an SQL exception?
                     $diff = $count2 - $count1;
                     array_fill($params, $diff, '?');
@@ -212,7 +211,7 @@ class DbEngine
             $this->query = $query;
 
             if (DEBUG_MODE === 1) {
-                echo $query, '<br />';
+                echo "SQLCommand: " . $query, '<br />';
             };
 
             //Execute query
@@ -224,18 +223,18 @@ class DbEngine
                 if (SHOW_ERRORS === 1) {
                     //Feature: admin logging of errors?
                     $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . var_dump($this->error) . '</strong>';
-                } elseif (IN_INSTALLER) {
+                } elseif (defined("IN_INSTALLER")) {
                     $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
                     $error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
                     $error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
                 } else {
-                    $error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em>';
+                    $error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em><br>'. $this->error[2];
                 }
-                throw new DbException($error_msg, SQL_ERROR);
+                throw new EzException($error_msg);
 
                 return false;
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new EzException($e->__toString());
         }
 
@@ -243,6 +242,55 @@ class DbEngine
         ++$this->query_count;
 
         return $result;
+    }
+
+    public function execute($query, $params = 0)
+    {
+        if ($this->isConnected === false) {
+            $this->connect();
+        }
+
+        $query = trim($query);
+
+        try {
+            if (strpos($query, DB_PREFIX) !== true) {
+                $query = str_replace('<ezrpg>', DB_PREFIX, $query);
+            }
+
+            if (count($params) > 0 && is_array($params)) {
+
+                foreach ($params as $f => $v) {
+                    $tmp[] = ":s_$f";
+                    $pos = strpos($query, "?");
+                    if ($pos !== false) {
+                        $query = substr_replace($query, ":s_$f", $pos, strlen("?"));
+                    }
+                }
+
+                $sql = $query;
+                // pdo prepare statement
+                try {
+                    $this->prepared = $this->db->prepare($sql);
+                    $this->_bindPdoNameSpace($params);
+                    // set class where property with array data
+
+                    //die(var_dump($this->prepared->debugDumpParams()));
+                    $this->prepared->execute();
+                    return $this->prepared;
+                } catch (\PDOException $ex) {
+                    throw new DbException($ex->getMessage());
+                }
+            }else{
+                try {
+                    return $this->db->query($query);
+                }catch(\PDOException $ex){
+                    throw new DbException($ex->getMessage());
+                }
+            }
+
+        }catch(\PDOException $ex){
+            throw new DbException($ex->getMessage());
+        }
     }
 
     /*
@@ -477,15 +525,18 @@ class DbEngine
     protected function connect()
     {
         if ($this->isConnected === false) {
-            // Persistance is key
-            $uri = sprintf('mysql:host=%s;dbname=%s;port=%s', $this->host, $this->dbname, $this->port);
-            $this->db = new PDO($uri, $this->username, $this->password);
-            if ($this->db === false) {
-                throw new DbException($this->db, SERVER_ERROR);
-            } else {
-                $this->isConnected = true;
+            try {
+                $uri = sprintf('mysql:host=%s;dbname=%s;port=%s', $this->host, $this->dbname, $this->port);
+                $this->db = new PDO($uri, $this->username, $this->password);
+                if ($this->db === false) {
+                    throw new DbException($this->db, SERVER_ERROR);
+                } else {
+                    $this->isConnected = true;
 
-                return true;
+                    return true;
+                }
+            }catch(PDOException $ex){
+                throw new EzException($ex->getMessage());
             }
         } else {
             return true;
