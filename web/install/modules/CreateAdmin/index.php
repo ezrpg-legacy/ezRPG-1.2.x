@@ -39,10 +39,10 @@ class Install_CreateAdmin extends InstallerFactory
                 $errors = 1;
                 $msg .= 'You didn\'t verify your password correctly.';
             }
-            if ( !preg_match("/[a-zA-Z0-9\W]{6}+/", $password) )
+            if ( strlen($password) < 6 )
             {
                 $errors = 1;
-                $msg .= 'Password is invalid';
+                $msg .= 'Password must be at least 6 characters long.';
             }
 
             if ( $errors == 0 )
