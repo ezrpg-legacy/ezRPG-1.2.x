@@ -47,7 +47,6 @@ class Install_CreateAdmin extends InstallerFactory
 
             if ( $errors == 0 )
             {
-                require_once ROOT_DIR . '/config.php';
                 require_once ROOT_DIR . "/lib/functions/func.rand.php";
                 try
                 {
