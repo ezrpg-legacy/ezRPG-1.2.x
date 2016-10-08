@@ -18,6 +18,7 @@ class Install_Config extends InstallerFactory
             $dbconfig['dbname'] = "ezrpg";
             $dbconfig['dbport'] = "3306";
             $dbconfig['dbpass'] = "ezrpg_";
+            $dbconfig['dbprefix'] = "ezrpg_";
         }
         else
         {
