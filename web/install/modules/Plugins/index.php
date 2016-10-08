@@ -21,7 +21,6 @@ class Install_Plugins extends InstallerFactory
             $this->footer();
             die;
         }
-        require_once ROOT_DIR . '/config.php';
         try
         {
             $this->container['app']->getConfig(ROOT_DIR . '/config.php');
