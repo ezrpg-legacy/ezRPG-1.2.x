@@ -95,7 +95,7 @@ class Application
 
     public function getConfig($filelocation)
     {
-        return $this->container['config'] = new \ezrpg\core\Config($filelocation);
+        return $this->container['config'] = new \ezrpg\core\ConfigOld($filelocation);
     }
 
     public function initializeView(){
