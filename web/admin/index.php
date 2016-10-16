@@ -36,7 +36,7 @@ spl_autoload_register("ezRPG\\admin\\ezrpg_Autoloader");
 require_once $rootPath. '/init.php';
 
 $container = new \Pimple\Container;
-$ezrpg = new \ezRPG\lib\Application($container);
+$ezrpg = new \ezrpg\core\Application($container);
 
 // Get Config for the game
 $ezrpg->getConfig(CUR_DIR . '/config.php');
@@ -63,11 +63,11 @@ $container['hooks'] = $hooks = $ezrpg->getHooks();
 $ezrpg->setPlayer($hooks->run_hooks('player', 0));
 
 // Create the Menu object
-$ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
+$ezrpg->container['menu'] = new \ezrpg\core\Menu($container);
 
 $ezrpg->container['menu']->get_menus();
 
-$players = new \ezRPG\lib\Players($container);
+$players = new \ezrpg\core\Players($container);
 
 // Check player exists
 if ($container['player'] == '0') {

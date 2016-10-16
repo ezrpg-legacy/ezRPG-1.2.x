@@ -1,10 +1,10 @@
 <?php
 
-namespace ezRPG\lib;
-use ezRPG\lib\DbException,
+namespace ezrpg\core;
+use ezrpg\core\DbException,
     \PDO,
     \PDOException,
-    ezRPG\lib\EzException;
+    ezrpg\core\EzException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;

@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -53,7 +53,7 @@ class DbFactory
             $dbconfig = $config;
         }
         $dbconfig['dsn'] = "mysql:dbname=" . $dbconfig['dbname'] . ";host=" . $dbconfig['dbserver'] . ";port=" . $dbconfig['dbport'];
-        return new \ezRPG\lib\DbEngine($dbconfig);
+        return new \ezrpg\core\DbEngine($dbconfig);
     }
 
 }

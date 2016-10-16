@@ -1,5 +1,4 @@
 <?php
-
 /*
   Name: Index.php
   URI: http://ezrpgproject.net/
@@ -7,9 +6,15 @@
   Package: ezRPG-Core
  */
 
-namespace ezRPG;
-use \ezRPG\lib\Application,
-    \ezRPG\lib\ModuleFactory;
+namespace ezrpg;
+use \ezrpg\core\Application,
+    \ezrpg\core\ModuleFactory;
+
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 // Define IN_EZRPG as TRUE
 define('IN_EZRPG', true);
@@ -29,16 +34,6 @@ if (!file_exists('config.php') OR filesize('config.php') == 0) {
     exit(1);
 }
 
-function ezrpg_Autoloader($pClassName)
-{
-    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
-    $class = str_replace("\\", "/",$class);
-    if (file_exists(LIB_DIR . "/" . $class . ".php")) {
-        include(LIB_DIR . "/" . $class . ".php");
-    }
-
-}
-spl_autoload_register("ezRPG\\ezrpg_Autoloader");
 
 session_start();
 // Load init.php
@@ -51,8 +46,8 @@ require_once $rootPath .'/init.php';
     // Get Config for the game
     $ezrpg->getConfig($rootPath . '/config.php');
 
-        error_reporting(E_ALL);
-        ini_set('display_errors', 0);
+        // error_reporting(E_ALL);
+        // ini_set('display_errors', 0);
 
     // Initialize the Database
     $ezrpg->setDatabase();
@@ -76,12 +71,12 @@ require_once $rootPath .'/init.php';
     $ezrpg->setPlayer($hooks->run_hooks('player', 0));
 
     // Create the Menu object
-    $ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
+    $ezrpg->container['menu'] = new \ezrpg\core\Menu($container);
 
     $ezrpg->container['menu']->get_menus();
 
     // What's this used for?
-    $players = new \ezRPG\lib\Players($container);
+    $players = new \ezrpg\core\Players($container);
 
 $module_name = $ezrpg->dispatch();
 $module_name = $ezrpg->container['hooks']->run_hooks('header', $module_name);

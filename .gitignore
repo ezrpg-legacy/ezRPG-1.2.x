@@ -22,4 +22,6 @@ config.php
 /cache/templates/*.php
 web/install/lock
 .idea/
-vender/
+vendor/
+lock
+composer.lock

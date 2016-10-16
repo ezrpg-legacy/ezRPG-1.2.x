@@ -1,8 +1,8 @@
 <?php
 
 namespace ezRPG\Install;
-use ezRPG\lib\Application,
-    ezRPG\lib\ModuleFactory;
+use ezrpg\core\Application,
+    ezrpg\core\ModuleFactory;
 
 $rootPath = dirname(dirname(__DIR__));
 

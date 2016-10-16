@@ -24,7 +24,7 @@ class Install_Plugins extends InstallerFactory
         try
         {
             $this->container['app']->getConfig(ROOT_DIR . '/config.php');
-            $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
+            $db = \ezrpg\core\DbFactory::factory($this->container['config']);
         }
         catch ( DbException $e )
         {

@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 use \Exception;
 
 //This file cannot be viewed, it must be included
