@@ -93,9 +93,23 @@ class Application
         return $this->container['settings'];
     }
 
-    public function getConfig($filelocation)
+    public function getConfig()
     {
-        return $this->container['config'] = new \ezrpg\core\ConfigOld($filelocation);
+        if (!array_key_exists('config', $this->container)) {
+            $config_paths = [
+                CORE_DIR . '/config/*.php',
+                MOD_DIR . 'modules/*/config.php',
+                CUR_DIR . '/config/*.php',
+            ];
+
+            $configLoader = new \ezrpg\core\ConfigLoader();
+            $config = $configLoader->loadConfigFromPaths($config_paths);
+
+            var_dump($config);
+
+            $this->container['config'] = new \ezrpg\core\Config($config);
+        }
+        return $this->container['config'];
     }
 
     public function initializeView(){
