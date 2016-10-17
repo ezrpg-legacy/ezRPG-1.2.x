@@ -6,7 +6,7 @@
  * Time: 12:10 AM
  */
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 use Pimple\Container;
 
@@ -55,7 +55,7 @@ class Application
     public function getHooks()
     {
         // Create a hooks object
-        $hooks = new \ezRPG\lib\Hooks($this->container);
+        $hooks = new \ezrpg\core\Hooks($this->container);
         $debugTimer['Hooks Initiated:'] = microtime(1);
         // Include all hook files
         $hook_files = scandir(HOOKS_DIR);
@@ -71,7 +71,7 @@ class Application
 
     public function getThemes()
     {
-        return $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
+        return $this->container['themes'] = new \ezrpg\core\Themes($this->container);
 
     }
 
@@ -81,25 +81,39 @@ class Application
 
     public function setDatabase()
     {
-        $this->container['db'] = \ezRPG\lib\DbFactory::factory($this->container['config']);
+        $this->container['db'] = \ezrpg\core\DbFactory::factory($this->container['config']);
 
         return $this->container['db'];
     }
 
     public function getSettings()
     {
-        $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
-        
+        $this->container['settings'] = new \ezrpg\core\Settings($this->container['db']);
+
         return $this->container['settings'];
     }
 
-    public function getConfig($filelocation)
+    public function getConfig()
     {
-        return $this->container['config'] = new \ezRPG\lib\Config($filelocation);
+        if (!array_key_exists('config', $this->container)) {
+            $config_paths = [
+                CORE_DIR . '/config/*.php',
+                MOD_DIR . 'modules/*/config.php',
+                CUR_DIR . '/config/*.php',
+            ];
+
+            $configLoader = new \ezrpg\core\ConfigLoader();
+            $config = $configLoader->loadConfigFromPaths($config_paths);
+
+            var_dump($config);
+
+            $this->container['config'] = new \ezrpg\core\Config($config);
+        }
+        return $this->container['config'];
     }
 
     public function initializeView(){
-        return new \ezRPG\lib\View($this->container);
+        return new \ezrpg\core\View($this->container);
     }
 
     public function dispatch(){
@@ -108,12 +122,12 @@ class Application
 
         $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
         $this->container['tpl']->assign('module_name', $module_name);
-        
+
         //Init Hooks - Runs before Header
         $this->container['hooks']->run_hooks('init');
         return $module_name;
     }
-    
+
     public function run($module_name, $admin = false)
     {
         //Begin module

@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 defined('IN_EZRPG') or exit;
 
 /*
@@ -430,7 +430,7 @@ class Menu
         try {
             $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
             $array = $this->db->fetchAll($query);
-        }catch(\ezRPG\lib\DbException $ex){
+        }catch(\ezrpg\core\DbException $ex){
             throw new $ex;
         }
         try {

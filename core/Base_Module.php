@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;

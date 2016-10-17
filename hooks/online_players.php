@@ -12,7 +12,7 @@ function hook_online_players($container, $args = 0)
             array(time() - (60 * 5)));
         $container['tpl']->assign('ONLINE', $query->count);
     }catch(\Exception $ex){
-        throw new \ezRPG\lib\EzException($ex->getMessage());
+        throw new \ezrpg\core\EzException($ex->getMessage());
     }
     return $args;
 }

@@ -6,12 +6,12 @@
  * Time: 9:37 AM
  */
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 use \Exception;
 
 
-class Config
+class ConfigOld
 {
     protected $filelocation;
 

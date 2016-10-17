@@ -6,13 +6,13 @@
  * Time: 12:55 AM
  */
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
-use ezRPG\lib\Application,
+use ezrpg\core\Application,
     Pimple\Container;
 
 
-class HalfHourCron
+class HourlyCron
 {
     protected $container;
 
@@ -24,7 +24,7 @@ class HalfHourCron
     public function start()
     {
         try {
-            $this->container['hooks']->run_hooks('cron_30min');
+            $this->container['hooks']->run_hooks('cron_1hr');
         } catch (\Exception $ex) {
             $ex->getMessage();
         }

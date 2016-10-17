@@ -2,7 +2,7 @@
 
 namespace ezRPG\Modules\Plugins\Admin;
 
-use \ezRPG\lib\Base_Module;
+use \ezrpg\core\Base_Module;
 
 defined('IN_EZRPG') or exit;
 
@@ -227,7 +227,7 @@ class Admin_Plugins extends Base_Module
 
     /**
      * @param $id
-     * @throws \ezRPG\lib\Exception
+     * @throws \ezrpg\core\Exception
      */
     private function enable_modules($id)
     {
@@ -261,9 +261,9 @@ class Admin_Plugins extends Base_Module
      */
     private function install_modules($name){
         if(file_exists(MOD_DIR . '/' . $name . '/index.php'))
-            $module = \ezRPG\lib\ModuleFactory::factory($this->container, $name);
+            $module = \ezrpg\core\ModuleFactory::factory($this->container, $name);
         elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php'))
-            $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
+            $module = \ezrpg\core\ModuleFactory::adminFactory($this->container, $name);
 
         $modQuery = $this->db->execute('SELECT `id` from <ezrpg>plugins WHERE <ezrpg>plugins.title = "'. $name .'"');
         $modID = $this->db->fetch($modQuery);
@@ -363,14 +363,14 @@ class Admin_Plugins extends Base_Module
 
     /**
      * @param $name
-     * @throws \ezRPG\lib\Exception
+     * @throws \ezrpg\core\Exception
      */
     private function remove_modules($name)
     {
         if(file_exists(MOD_DIR . '/' . $name . '/index.php')) {
-            $module = \ezRPG\lib\ModuleFactory::factory($this->container, $name);
+            $module = \ezrpg\core\ModuleFactory::factory($this->container, $name);
         }elseif(file_exists(MOD_DIR . '/' . $name . '/Admin/index.php')) {
-            $module = \ezRPG\lib\ModuleFactory::adminFactory($this->container, $name);
+            $module = \ezrpg\core\ModuleFactory::adminFactory($this->container, $name);
         }
 
         if (method_exists($module, 'uninstall')) {

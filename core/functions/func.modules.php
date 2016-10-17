@@ -31,7 +31,7 @@ function loadModuleCache($admin = false)
         else
             return $plugins['admin'];
     }else{
-        $mod = new \ezRPG\lib\ModuleFactory();
+        $mod = new \ezrpg\core\ModuleFactory();
         $pluginManager= $mod::adminFactory($container, 'Plugins');
         $array = $pluginManager->setModuleCache();
     }

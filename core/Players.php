@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 defined('IN_EZRPG') or exit;
 

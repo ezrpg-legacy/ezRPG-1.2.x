@@ -17,9 +17,11 @@
 /modules/Mining/
 /modules/Upgrades/
 
-config.php
+/config.php
 /cache/*
 /cache/templates/*.php
 web/install/lock
 .idea/
-vender/
+vendor/
+lock
+composer.lock
