@@ -17,6 +17,10 @@
 /modules/Mining/
 /modules/Upgrades/
 
+/composer.lock
+/lock
+/vendor
+
 config.php
 /cache/*
 /cache/templates/*.php
