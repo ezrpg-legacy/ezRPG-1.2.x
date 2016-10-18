@@ -1,0 +1,4 @@
+:Module Title: Logout Module
+:Module Version: 1.0.1
+:Module Description: ezRPGGame, Logout module
+:Module Author: Zeggy

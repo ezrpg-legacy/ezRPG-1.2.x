@@ -20,14 +20,13 @@ class Admin_Update extends Base_Module
 
     public function start()
     {
-
         if (isset($_GET['act'])) {
             switch ($_GET['act']) {
                 case 'upload':
-                    $this->upload_update(); //Completed:Upload update
+                    $this->upload_update(); 
                     break;
                 case 'list':
-                    $this->list_update(); //Completed:Lists update
+                    $this->list_update(); 
                     break;
             }
         } else {
@@ -37,7 +36,7 @@ class Admin_Update extends Base_Module
 
     private function list_update()
     {
-        $version = $this->settings->setting['general']['version']['value'];
+        $version = $this->container['app']->version;
         $this->tpl->assign("version", $version);
         $this->loadView('update.tpl');
     }
@@ -45,166 +44,70 @@ class Admin_Update extends Base_Module
     private function upload_update()
     {
         if (isset($_FILES['file'])) {
-            if (isset($_POST['agreed']) && $_POST['agreed']) {
-                if ($_FILES["file"]["error"] > 0) {
-                    $this->tpl->assign("MSG", "Error: " . $_FILES["file"]["error"]);
-                    $this->loadView('upload_update.tpl');
-                } else {
-                    $type = $_FILES["file"]["type"];
-                    $okay = false;
-                    $accepted_types = array(
-                        'application/zip',
-                        'application/x-zip-compressed',
-                        'multipart/x-zip',
-                        'application/x-compressed'
-                    );
-                    foreach ($accepted_types as $mime_type) {
-                        if ($mime_type == $type) {
-                            $okay = true;
-                            break;
-                        }
-                    }
-                    if ($okay) {
-                        $zip = new PclZip($_FILES["file"]["tmp_name"]);
-                        $ziptempdir = substr(uniqid('', true), -5);
-                        $dir = "Update/temp/" . $ziptempdir;
-                        $results = "";
-                        if ($zip->extract(PCLZIP_OPT_PATH, $dir) == 0) {
-                            $results .= "Error : " . $zip->errorInfo(true);
-                        }
-                        $results .= "Plugin extracted to " . $dir . "<br />";
-                        if (file_exists($dir . "/plugin.xml")) {
-                            $results .= "this is a proper module/plugin. <br />";
-                            $plug = simplexml_load_file($dir . "/" . "plugin.xml");
-                            $error = 1;
-                            if (!empty($plug->Update->Compatiable)) {
-                                if (!empty($plug->Update->Compatiable->Version)) {
-                                    $error = 1;
-                                    foreach ($plug->Update->Compatiable->Version as $version) {
-                                        if (VERSION >= $version) {
-                                            $error = 0;
-                                        }
-                                    }
-                                }
-                            }
-                            if ($error == 1) {
-                                $results .= $dir . "/" . pathinfo($_FILES['file']['name'],
-                                        PATHINFO_FILENAME) . ".xml was not found <br />";
-                                $results .= "Update is not compatiable with your version of ezRPG <br />";
-                                $results .= 'Update version: ' . $plug->Update->Version . ' & Your Version: ' . VERSION . '! <br />';
-                                $this->rrmdir($dir);
-                                $results .= "All temporary files have been deleted. <br />";
-                                $results .= "<a href='index.php?mod=Update'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
-                                $this->tpl->assign("RESULTS", $results);
-                                $this->loadView('plugin_results.tpl');
-                                exit;
-                            }
-                            if (!empty($plug->Update->Hook)) {
-                                if (!empty($plug->Update->Hook->HookFile)) {
-                                    foreach ($plug->Update->Hook->HookFile as $hooks) {
-                                        $hook['filename'] = (string)$hooks->HookFileName;
-                                        $hook['title'] = (string)$hooks->HookTitle;
-                                        $hook['type'] = 'hook';
-                                        $this->db->insert('<ezrpg>Update', $hook);
-                                    }
-                                }
-                            }
-                            if (!empty($plug->Update->Lib)) {
-                                if (!empty($plug->Update->Lib->LibFile)) {
-                                    foreach ($plug->Update->Lib->LibFile as $libs) {
-                                        $lib['filename'] = (string)$libs->HookFileName;
-                                        $lib['title'] = (string)$libs->HookTitle;
-                                        $lib['type'] = 'library';
-                                        $this->db->insert('<ezrpg>Update', $lib);
-                                    }
-                                }
-                            }
-                            if (!empty($plug->Update->Theme)) {
-                                if (!empty($plug->Update->Theme->ThemeFolder)) {
-                                    foreach ($plug->Update->Theme->ThemeFolder as $theme) {
-                                        $theme_m['filename'] = (string)$theme->ThemeFolder;
-                                        $theme_m['title'] = (string)$theme->ThemeTitle;
-                                        $theme_m['type'] = 'templates';
-                                        $this->db->insert('<ezrpg>Update', $theme_m);
-                                    }
-                                }
-                            }
-                            if (!empty($plug->Update->Menus)) {
-                                if (!empty($plug->Update->Menus->Menu)) {
-                                    foreach ($plug->Update->Menus->Menu as $menu) {
-                                        $menusys = $this->menu;
-                                        $menufile = $menu;
-                                        $menu_p['module_id'] = 0;
-                                        $menu_p['parent_id'] = ($menusys->isMenu((string)$menufile->MenuParent) ? $menusys->get_menu_id_by_name((string)$menufile->MenuParent) : '0');
-                                        $menu_p['title'] = (string)$menufile->Title;
-                                        $menu_p['uri'] = (string)$menufile->URL;
-                                        $menu_id = $this->db->insert('<ezrpg>menu', $menu_p);
-                                        if (!empty($menufile->MenuChildren)) {
-                                            if (!empty($menufile->MenuChildren->Child)) {
-                                                foreach ($menufile->MenuChildren->Child as $menu) {
-                                                    $menu_c['module_id'] = 0;
-                                                    $menu_c['parent_id'] = $menu_id;
-                                                    $menu_c['title'] = (string)$menufile->Title;
-                                                    $menu_c['uri'] = (string)$menu->URL;
-                                                    $this->db->insert('<ezrpg>menu', $menu_c);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    killMenuCache();
-                                }
-                            }
-                            if (!empty($plug->Update->SQL)) {
-                                if (!empty($plug->Update->SQL->SQLCALL)) {
-                                    foreach ($plug->Update->SQL->SQLCALL as $sql) {
-                                        $this->db->execute((string)$sql);
-                                    }
-                                }
-                            }
-                            $results .= "installed db data <br />";
-                            if (file_exists($dir . '/update')) {
-                                $this->re_copy($dir . '/update/', MOD_DIR);
-                            }
-                            if (file_exists($dir . '/lib')) {
-                                $this->re_copy($dir . '/lib/', LIB_DIR);
-                            }
-                            if (file_exists($dir . '/hooks')) {
-                                $this->re_copy($dir . '/hooks/', HOOKS_DIR);
-                            }
-                            if (file_exists($dir . '/admin')) {
-                                $this->re_copy($dir . '/admin/', ADMIN_DIR);
-                            }
-                            if (file_exists($dir . '/templates')) {
-                                $this->re_copy($dir . '/templates/', THEME_DIR);
-                            }
-                            if (file_exists($dir . '/install')) {
-                                $this->re_copy($dir . '/templates/', CUR_DIR);
-                            }
-                            $this->rrmdir($dir);
-                            $results .= "You have successfully uploaded a plugin via the manager! <br />";
-                            killModuleCache();
-                            killSettingsCache();
-                            killMenuCache();
-                            $results .= "<a href='index.php?mod=Update'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
-                        } else {
-                            $results .= $dir . "/" . pathinfo($_FILES['file']['name'],
-                                    PATHINFO_FILENAME) . ".xml was not found <br />";
-                            $results .= "This is not a valid Plugin <br />";
-                            $this->rrmdir($dir);
-                            $results .= "All temporary files have been deleted. <br />";
-                            $results .= "<a href='index.php?mod=Update'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
-                        }
-                    } else {
-                        $results = "Uploaded Unsupported filetype. Only upload .zips at this time.<br>";
-                        $results .= "<a href='index.php?mod=Update'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
-                    }
-                    $this->tpl->assign("RESULTS", $results);
-                    $this->loadView('plugin_results.tpl');
-                }
+            if ($_FILES["file"]["error"] > 0) {
+                $this->tpl->assign("MSG", "Error: " . $_FILES["file"]["error"]);
+                $this->loadView('upload_update.tpl');
             } else {
-                $this->setMessage('You must check Agreed to upload update!', 'FAIL');
-                header('Location: index.php?mod=Update');
-                exit;
+                $type = $_FILES["file"]["type"];
+                $okay = false;
+                $accepted_types = array(
+                    'application/zip',
+                    'application/x-zip-compressed',
+                    'multipart/x-zip',
+                    'application/x-compressed',
+                    'application/octet-stream'
+                );
+                foreach ($accepted_types as $mime_type) {
+                    if ($mime_type == $type) {
+                        $okay = true;
+                        break;
+                    }
+                }
+                if ($okay) {
+                    $zip = new \PclZip($_FILES["file"]["tmp_name"]);
+                    $ziptempdir = substr(uniqid('', true), -5);
+                    $dir = MOD_DIR . "/Update/Admin/temp/" . $ziptempdir;
+                    $results = "";
+                    if ($zip->extract(PCLZIP_OPT_PATH, $dir) == 0) {
+                        $results .= "Error : " . $zip->errorInfo(true);
+                    }
+
+					//run each sql the folder starting from the version after the current
+					$sqlfiles = preg_grep('/^([^.])/', scandir($dir . "/sql/"));
+					$versions = [];
+					foreach($sqlfiles as $file){
+						$version = explode('-', $file);
+						$version[1] = str_replace(".sql", "", $version[1]);
+						if(version_compare($version[1],$this->container['app']->version, ">")){
+							if(version_compare($version[0], $this->container['app']->version, "<="))
+							{
+								array_push($versions, array('s'=>$version[0], 'e'=>$version[1], 'f'=>$dir . "/sql/". $file));
+							}
+						}
+									
+					}
+					ksort($versions);
+					foreach ($versions as $file) {								
+						$sqlfile = file_get_contents($file['f']);
+						$sql = explode(";",$sqlfile);
+						foreach($sql as $k)
+						{
+							$this->container['db']->execute($k);
+						}
+					}
+                    
+                    $this->re_copy($dir, CUR_DIR);
+                    $this->rrmdir($dir);
+                    $results .= "You have successfully uploaded and installed an update! <br />";
+                    $results .= "<a href='index.php?mod=Update'><input name='back' type='submit' class='button' value='Back to manager' /></a>";
+                } else {
+                    $results = "Filetype detected: " . $_FILES['file']['type'] . '<br />';
+                    $results .= "Uploaded Unsupported filetype. Only upload .zips at this time.<br />";
+                    $results .= "If you feel that this message is in error, please ask for support from ezRPGProject.net!<br />";
+                    $results .= "<a href='index.php?mod=Update'><input name='login' type='submit' class='button' value='Back To Manager' /></a>";
+                }
+                $this->tpl->assign("RESULTS", $results);
+                $this->loadView('update_results.tpl');
             }
         } else {
             $this->loadView('upload_update.tpl');
@@ -215,7 +118,7 @@ class Admin_Update extends Base_Module
     {
         if ($id == 0) {
             $this->list_update();
-            break;
+            exit;
         }
         $query = $this->db->execute('SELECT uninstall FROM <ezrpg>Update_meta WHERE plug_id=' . $id);
         $result2 = $this->db->fetch($query);
@@ -247,40 +150,11 @@ class Admin_Update extends Base_Module
         }
     }
 
-    private function finish_removal($id, $module)
-    {
-        try {
-            foreach ($result as $file) {
-                switch ($file->type) {
-                    case 'module':
-                        $this->rrmdir(MOD_DIR . $file->title);
-                        break;
-                    case 'templates':
-                        $this->rrmdir(THEME_DIR . $file->filename . '/' . $file->title);
-                        break;
-                    case 'hook':
-                        $this->rrmdir(HOOKS_DIR . $file->filename);
-                        break;
-                }
-            }
-            $this->db->execute('DELETE FROM <ezrpg>Update WHERE pid=' . $id . ' OR id=' . $id);
-            $this->db->execute('DELETE FROM <ezrpg>Update_meta WHERE plug_id=' . $id);
-            $this->db->execute('DELETE FROM <ezrpg>menu WHERE module_id=' . $id);
-            killMenuCache();
-
-            return true;
-        } catch (Exception $e) {
-            $this->setMessage($e, 'FAIL');
-
-            return false;
-        }
-    }
-
     private function view_update($id = 0)
     {
         if ($id == 0) {
             $this->list_update();
-            break;
+            exit;
         }
     }
 
