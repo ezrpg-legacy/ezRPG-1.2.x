@@ -43,8 +43,12 @@ require_once $rootPath .'/init.php';
     $container = new \Pimple\Container;
     $ezrpg = new Application($container);
 
-    // Get Config for the game
-    $ezrpg->getConfig();
+// Get configuration
+$config = $ezrpg->getConfig();
+
+echo $config['session']['lifetime'];
+
+
 
         // error_reporting(E_ALL);
         // ini_set('display_errors', 0);
