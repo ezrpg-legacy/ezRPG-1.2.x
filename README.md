@@ -1,4 +1,4 @@
-##ezRPG 1.2.1.7 | Active Development
+##ezRPG 1.2.1.9 | Active Development
 
 ###Warning this version of ezRPG 1.2.1 has substantial code changes from it's previous version (1.0.x). If you are upgrading, make sure you've checked and tested all modules to make sure they conform to the new code.
 
@@ -8,16 +8,14 @@ This engine is destined to be part of the ezRPG legacy 1.x series started by Zeg
 
 =====
 
-##Notes about 1.2.1.7
-####Pushed July 24 2016
+##Notes about 1.2.1.9
+####Pushed Oct 23 2016
 ```
 
-- This is still a pretty unstable and actively developed engine. A number of issues have arisen and things are getting fixed.
-- I'm testing on the following
- 1. CentOS7, PHP5.6, MariaDB
- 2. CentOS6, PHP5.4, MySQL
- 3. Ubuntu16.04, PHP7, MariaDB
-- When everything passes, and we have a stable and working Plugin, Menu, and overall system, I'll release as 1.2.2 and continue develop as 1.2.3.x.
+- Update System has a Proof Of Concept working now
+-- a zip containing the root directory of all changed files should be used as the update package
+-- /sql/ should be the folder that contains the .sql files for any db changes needed
+-- sql files should go x.x.x.x-x.x.x.x.sql (1.2.1.7-1.2.1.9.sql for ex)
 
 ```
 =====
