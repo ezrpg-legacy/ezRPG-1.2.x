@@ -19,6 +19,10 @@
 /templates/themes/fantasy/
 /web/static/fantasy/
 
+/composer.lock
+/lock
+/vendor
+
 config.php
 /cache/*
 /cache/templates/*.php

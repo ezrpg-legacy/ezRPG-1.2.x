@@ -52,7 +52,11 @@ class DbFactory
         }else{
             $dbconfig = $config;
         }
+<<<<<<< HEAD
         //$dbconfig['dsn'] = $dbconfig['dbdriver'] . ":dbname=" . $dbconfig['dbname'] . ";host=" . $dbconfig['dbserver'] . ";port=" . $dbconfig['dbport'];
+=======
+        $dbconfig['dsn'] = "mysql:dbname=" . $dbconfig['dbname'] . ";host=" . $dbconfig['dbserver'] . ";port=" . $dbconfig['dbport'];
+>>>>>>> refs/remotes/origin/master
         return new \ezRPG\lib\DbEngine($dbconfig);
     }
 
