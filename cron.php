@@ -7,9 +7,9 @@
   Package: ezRPG-Core
  */
 
-namespace ezRPG;
-use ezRPG\lib\Application,
-    ezRPG\lib\ModuleFactory;
+namespace ezrpg;
+use ezrpg\core\Application,
+    ezrpg\core\ModuleFactory;
 
 
 // Define IN_EZRPG as TRUE
@@ -47,15 +47,15 @@ try {
 
     if (isset($params['act'])) {
         if ($params['act'] == "hour") {
-            $cron = new \ezRPG\lib\HourlyCron($container);
+            $cron = new \ezrpg\core\HourlyCron($container);
             $cron->start();
             echo date("M-d-y @ H:i:s") . "Executed Hourly \n";
         } elseif ($params['act'] == "halfhour") {
-            $cron = new \ezRPG\lib\HalfHourCron($container);
+            $cron = new \ezrpg\core\HalfHourCron($container);
             $cron->start();
             echo date("M-d-y @ H:i:s") . "Executed HalfHour \n";
         } elseif ($params['act'] == "daily") {
-            $cron = new \ezRPG\lib\DailyCron($container);
+            $cron = new \ezrpg\core\DailyCron($container);
             $cron->start();
             echo date("M-d-y @ H:i:s") . "Executed Daily";
         } else {

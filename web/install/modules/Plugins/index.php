@@ -1,14 +1,14 @@
 <?php
 
-namespace ezRPG\Install\Modules;
-use ezRPG\Install\InstallerFactory;
+namespace ezrpg\Install\Modules;
+use ezrpg\Install\InstallerFactory;
 
 class Install_Plugins extends InstallerFactory
 {
 
     function start()
     {
-        if ( !file_exists(ROOT_DIR . '/config.php') OR filesize(ROOT_DIR . '/config.php') == 0 )
+        if ( !file_exists(ROOT_DIR . '/config/core.php') OR filesize(ROOT_DIR . '/config/core.php') == 0 )
         {
             $this->header();
             echo "<h2>There's been an error!</h2><br />";
@@ -23,8 +23,8 @@ class Install_Plugins extends InstallerFactory
         }
         try
         {
-            $this->container['app']->getConfig(ROOT_DIR . '/config.php');
-            $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
+            $this->container['app']->getConfig(ROOT_DIR . '/config/core.php');
+            $db = \ezrpg\core\DbFactory::factory($this->container['config']);
         }
         catch ( DbException $e )
         {

@@ -1,10 +1,10 @@
 <?php
 
-namespace ezRPG\lib;
-use ezRPG\lib\DbException,
+namespace ezrpg\core;
+use ezrpg\core\DbException,
     \PDO,
     \PDOException,
-    ezRPG\lib\EzException;
+    ezrpg\core\EzException;
 
 // This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -66,6 +66,7 @@ class DbEngine
     protected $username;
     protected $password;
     protected $port;
+    protected $prefix;
 
     /*
       Constructor: __construct
@@ -85,16 +86,16 @@ class DbEngine
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         );
         try {
-            $dsn = "mysql:host=".$conf['dbserver'].";dbname=".$conf['dbname'].";";
-            $this->db = new \PDO( $dsn, $conf['dbuser'], $conf['dbpass'], $options );
-            $this->host = $conf['dbserver'];
-            $this->password = $conf['dbpass'];
-            $this->username = $conf['dbuser'];
-            $this->port = $conf['dbport'];
-            $this->dbname = $conf['dbname'];
+            $dsn = "mysql:host=".$conf['host'].";dbname=".$conf['name'].";";
+            $this->db = new \PDO( $dsn, $conf['user'], $conf['pass'], $options );
+            $this->host = $conf['host'];
+            $this->password = $conf['pass'];
+            $this->username = $conf['user'];
+            $this->port = $conf['port'];
+            $this->dbname = $conf['name'];
             $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $this->prefix = (defined('DB_PREFIX') ? DB_PREFIX : 'ezrpg');
+            $this->prefix = $conf['prefix'];
         }catch(\PDOException $ex){
             throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of DbEngine.php");
         }
@@ -143,8 +144,8 @@ class DbEngine
         $query = trim($query);
 
         try {
-            if (strpos($query, DB_PREFIX) !== true) {
-                $query = str_replace('<ezrpg>', DB_PREFIX, $query);
+            if (strpos($query, $this->prefix) !== true) {
+                $query = str_replace('<ezrpg>', $this->prefix, $query);
             }
 
             //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
@@ -253,8 +254,8 @@ class DbEngine
         $query = trim($query);
 
         try {
-            if (strpos($query, DB_PREFIX) !== true) {
-                $query = str_replace('<ezrpg>', DB_PREFIX, $query);
+            if (strpos($query, $this->prefix) !== true) {
+                $query = str_replace('<ezrpg>', $this->prefix, $query);
             }
 
             if (count($params) > 0 && is_array($params)) {
@@ -463,8 +464,8 @@ class DbEngine
     public function insert($table, $data){
         // check if table name not empty
         if ( !empty( $table ) ) {
-            if (strpos($table, DB_PREFIX) !== true) {
-                $table = str_replace('<ezrpg>', DB_PREFIX, $table);
+            if (strpos($table, $this->prefix) !== true) {
+                $table = str_replace('<ezrpg>', $this->prefix, $table);
             }
             // and array data not empty
             if (count($data) > 0 && is_array($data)) {

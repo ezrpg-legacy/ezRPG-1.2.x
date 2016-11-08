@@ -1,6 +1,6 @@
 <?php
-namespace ezRPG\Install\Modules;
-use ezRPG\Install\InstallerFactory;
+namespace ezrpg\Install\Modules;
+use ezrpg\Install\InstallerFactory;
 
 class Install_Config extends InstallerFactory
 {
@@ -34,7 +34,7 @@ class Install_Config extends InstallerFactory
             //test database connection.
             try
             {
-                $db = \ezRPG\lib\DbFactory::factory($dbconfig);
+                $db = \ezrpg\core\DbFactory::factory($dbconfig);
             }
             catch ( DbException $e )
             {
@@ -42,132 +42,56 @@ class Install_Config extends InstallerFactory
             }
             if ( $error != 1 )
             {
-                require_once(ROOT_DIR . "/lib/functions/func.rand.php");
+                require_once(ROOT_DIR . "/core/functions/func.rand.php");
                 $secret_key = createKey(24);
                 $config = <<<CONF
 <?php
-//This file cannot be viewed, it must be included
-defined('IN_EZRPG') or exit;
-
-/*
-  Title: Config
-  The most important settings for the game are set here.
-*/
-
-/*
-  Variables: Database Connection
-  Connection settings for the database.
-  
-  \$config_server - Database server
-  \$config_dbname - Database name
-  \$config_username - Username to login to server with
-  \$config_password - Password to login to server with
-  \$config_driver - Contains the database driver to use to connect to the database.
-  \$config_port - Contains the database port your database server port.
-*/
-\$config_server = '{$dbconfig['dbserver']}';
-\$config_dbname = '{$dbconfig['dbname']}';
-\$config_username = '{$dbconfig['dbuser']}';
-\$config_password = '{$dbconfig['dbpass']}';
-\$config_driver = '{$dbconfig['dbdriver']}';
-\$config_port = '{$dbconfig['dbport']}';
-
-/*
-  Constant:
-  This secret key is used in the hashing of player passwords and other important data.
-  Secret keys can be of any length, however longer keys are more effective.
-  
-  This should only ever be set ONCE! Any changes to it will cause your game to break!
-  You should save a copy of the key on your computer, just in case the secret key is lost or accidentally changed,.
-  
-  SECRET_KEY - A long string of random characters.
-*/
-define('SECRET_KEY', '{$secret_key}');
-
-
-/*
-  Constants: Settings
-  Various settings used in ezRPG.
-  
-  DB_PREFIX - Prefix to the table names
-  VERSION - Version of ezRPG
-  SHOW_ERRORS - Turn on to show PHP errors.
-  DEBUG_MODE - Turn on to show database errors and debug information.
-*/
-define('DB_PREFIX', '{$dbconfig['dbprefix']}');
-define('VERSION', '1.2.1.7');
-define('SHOW_ERRORS', 0);
-define('DEBUG_MODE', 0);
-?>
+return [
+    'database' => [
+        'host' => '{$dbconfig['dbserver']}',
+        'name' => '{$dbconfig['dbname']}',
+        'user' => '{$dbconfig['dbuser']}',
+        'pass' => '{$dbconfig['dbpass']}',
+        'driver' => '{$dbconfig['dbdriver']}',
+        'port' => '{$dbconfig['dbport']}',
+        'prefix' => '{$dbconfig['dbprefix']}',
+    ],
+    'debug' => [
+        'show_errors' => 0,
+        'debug_mode' => 0,
+    ],
+    'version' => '1.2.1.9',
+    'secret' => '{$secret_key}',
+];
 CONF;
-                $fh = fopen(ROOT_DIR . '/config.php', 'w');
+                $fh = fopen(ROOT_DIR . '/config/core.php', 'w');
                 fwrite($fh, $config);
                 fclose($fh);
                 $this->header();
-                if ( filesize(ROOT_DIR . '/config.php') == 0 )
+                if ( filesize(ROOT_DIR . '/config/core.php') == 0 )
                 {
-                    rename(ROOT_DIR . '/config.php', ROOT_DIR . '/config.php.bak');
+                    rename(ROOT_DIR . '/config/core.php', ROOT_DIR . '/config/core.php.bak');
                     echo "<h2>Error Writing To Config.php</h2>";
                     echo "<p>There was an error writing to Config.php.</p>";
                     echo "<p>Before continuing, please rename 'http://ezrpg/config.php.bak' to 'http://ezrpg/config.php.bak' and update with the following:</p><br />\n";
                     echo "<pre style='background-color: lightgrey;'><code style='word-wrap: break-word;'>&#60;?php<br />
-//This file cannot be viewed, it must be included<br />
-defined('IN_EZRPG') or exit; <br />
-<br />
-/*<br />
-  Title: Config<br />
-  The most important settings for the game are set here.<br />
-*/<br />
-<br />
-/*<br />
-  Variables: Database Connection<br />
-  Connection settings for the database.<br />
-  <br />
-  \$config_server - Database server <br />
-  \$config_dbname - Database name <br />
-  \$config_username - Username to login to server with<br />
-  \$config_password - Password to login to server with<br />
-  \$config_driver - Contains the database driver to use to connect to the database.<br />
-  \$config_port - Contains the database port your database server port.<br />
-*/<br />
-\$config_server = '{$dbconfig['dbserver']}';<br />
-\$config_dbname = '{$dbconfig['dbname']}';<br />
-\$config_username = '{$dbconfig['dbuser']}';<br />
-\$config_password = '{$dbconfig['dbpass']}';<br />
-\$config_driver = '{$dbconfig['dbdriver']}';<br />
-\$config_port = '{$dbconfig['dbport']}';<br />
-<br />
-/*<br />
-  Constant:<br />
-  This secret key is used in the hashing of player passwords and other important data.<br />
-  Secret keys can be of any length, however longer keys are more effective.<br />
-  <br />
-  This should only ever be set ONCE! Any changes to it will cause your game to break!<br />
-  You should save a copy of the key on your computer, just in case the secret key is lost or accidentally changed,.<br />
-  <br />
-  SECRET_KEY - A long string of random characters.<br />
-*/<br />
-if(!defined('SECRET_KEY'))
-    define('SECRET_KEY', '{$secret_key}');<br />
-<br />
-<br />
-/*<br />
-  Constants: Settings<br />
-  Various settings used in ezRPG.<br />
-  <br />
-  DB_PREFIX - Prefix to the table names<br />
-  VERSION - Version of ezRPG<br />
-  SHOW_ERRORS - Turn on to show PHP errors.<br />
-  DEBUG_MODE - Turn on to show database errors and debug information.<br />
-*/<br />
-if(!defined('DB_PREFIX'))
-    define('DB_PREFIX', '{$dbconfig['dbprefix']}');<br />
-if(!defined('VERSION'))
-    define('VERSION', '1.2.1.7');<br />
-if(!defined('SHOW_ERRORS'))
-    define('SHOW_ERRORS', 0);<br />
-if(!defined('DEBUG_MODE))
-    define('DEBUG_MODE', 0);<br />
+return [<br />
+    'database' => [<br />
+        'host' => '{$dbconfig['dbserver']}',<br />
+        'name' => '{$dbconfig['dbname']}',<br />
+        'user' => '{$dbconfig['dbuser']}',<br />
+        'pass' => '{$dbconfig['dbpass']}',<br />
+        'driver' => '{$dbconfig['dbdriver']}',<br />
+        'port' => '{$dbconfig['dbport']}',<br />
+        'prefix' => '{$dbconfig['dbprefix']}',<br />
+    ],<br />
+    'debug' => [<br />
+        'show_errors' => 0,<br />
+        'debug_mode' => 0,<br />
+    ],<br />
+    'version' => '1.2.1.9',<br />
+    'secret' => '{$secret_key}',<br />
+];<br />
 ?><br /></code></pre>";
                     echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
                 }

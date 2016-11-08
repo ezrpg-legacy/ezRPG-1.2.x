@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -47,14 +47,11 @@ class DbFactory
 
     public static function factory($config)
     {
-        if(!is_array($config)) {
-            $dbconfig = $config->readConfig();
-        }else{
-            $dbconfig = $config;
-        }
-        $dbconfig['dsn'] = "mysql:dbname=" . $dbconfig['dbname'] . ";host=" . $dbconfig['dbserver'] . ";port=" . $dbconfig['dbport'];
+        $dbconfig = $config['database'];
 
-        return new \ezRPG\lib\DbEngine($dbconfig);
+        $dbconfig['dsn'] = "mysql:dbname=" . $dbconfig['name'] . ";host=" . $dbconfig['host'] . ";port=" . $dbconfig['port'];
+
+        return new \ezrpg\core\DbEngine($dbconfig);
     }
 
 }

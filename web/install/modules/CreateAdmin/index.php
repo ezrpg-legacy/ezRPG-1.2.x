@@ -1,9 +1,9 @@
 <?php
 
-namespace ezRPG\Install\Modules;
-use ezRPG\Install\InstallerFactory,
-    ezRPG\Lib\DbException,
-    ezRPG\Lib\EzException;
+namespace ezrpg\Install\Modules;
+use ezrpg\Install\InstallerFactory,
+    ezrpg\core\DbException,
+    ezrpg\core\EzException;
 
 class Install_CreateAdmin extends InstallerFactory
 {
@@ -49,11 +49,16 @@ class Install_CreateAdmin extends InstallerFactory
 
             if ( $errors == 0 )
             {
-                require_once ROOT_DIR . "/lib/functions/func.rand.php";
+                require_once ROOT_DIR . "/core/functions/func.rand.php";
                 try
                 {
-                    $this->container['app']->getConfig(ROOT_DIR . '/config.php');
-                    $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
+                    $this->container['app']->getConfig(ROOT_DIR . '/config/core.php');
+                    // Initialize the Database
+                    $this->container['app']->setDatabase();
+
+                    // Settings
+                    $this->container['app']->getSettings();
+                    //$db = \ezrpg\core\DbFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
                 {
@@ -68,10 +73,10 @@ class Install_CreateAdmin extends InstallerFactory
                 $insert['secret_key'] = $secret_key;
                 $insert['registered'] = time();
                 $insert['rank'] = 10;
-                $new_admin = $db->insert("<ezrpg>players", $insert);
+                $new_admin = $this->container['db']->insert("<ezrpg>players", $insert);
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;
-                $db->insert("<ezrpg>players_meta", $admin_meta);
+                $this->container['db']->insert("<ezrpg>players_meta", $admin_meta);
                 try{
                     $this->container['app']->hooks->run_hooks('register_after', $admin_meta['pid']);
                 }catch( \Exception $e){
@@ -83,7 +88,7 @@ class Install_CreateAdmin extends InstallerFactory
                 $insertconf['optionscode'] = 'text';
                 $insertconf['value'] = $siteurl;
                 $insertconf['gid'] = 1;
-                $db->insert("<ezrpg>settings", $insertconf);
+                $this->container['db']->insert("<ezrpg>settings", $insertconf);
                 $this->header();
                 echo "<p>Your admin account has been created! You may now login to the game.</p>\n";
                 $fh = fopen(CUR_DIR . "/lock", "w+");

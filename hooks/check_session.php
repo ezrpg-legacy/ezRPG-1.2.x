@@ -14,10 +14,10 @@ function hook_check_session($container, $args = 0)
 
     if (array_key_exists('userid', $_SESSION) && array_key_exists('hash', $_SESSION)) {
         // The client has prompted that they have authorization details.
-        // Validate they they are indeed valid: this will be in the for 
+        // Validate they they are indeed valid: this will be in the for
         if (compareSignature($_SESSION['hash'])) {
             //Select player details from Cache
-            $query = 'SELECT id, username, 
+            $query = 'SELECT id, username,
 			email, rank, registered
 			FROM `<ezrpg>players` WHERE id = ' . $_SESSION['userid'];
             $player_base = $container['db']->fetchRow($query);

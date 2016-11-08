@@ -6,7 +6,7 @@
  * Time: 9:19 PM
  */
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 class View{
     protected $container;
@@ -16,7 +16,7 @@ class View{
     {
         $this->container = $container;
         $this->tpl = $this->container['tpl'] = new \Smarty();
-        $this->tpl->addPluginsDir(LIB_DIR . '/ext/smarty');
+        $this->tpl->addPluginsDir(CORE_DIR . '/ext/smarty');
         $this->tpl->caching = 0;
         $this->tpl->assign('GAMESETTINGS', $this->container['settings']->setting['general']);
         if (DEBUG_MODE) {

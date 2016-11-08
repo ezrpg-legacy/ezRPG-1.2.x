@@ -1,8 +1,8 @@
 <?php
 
-namespace ezRPG\Modules\Settings\Admin;
+namespace ezrpg\Modules\Settings\Admin;
 
-use \ezRPG\lib\Base_Module;
+use \ezrpg\core\Base_Module;
 
 defined('IN_EZRPG') or exit;
 

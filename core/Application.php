@@ -6,7 +6,7 @@
  * Time: 12:10 AM
  */
 
-namespace ezRPG\lib;
+namespace ezrpg\core;
 
 use Pimple\Container;
 
@@ -71,7 +71,7 @@ class Application
     public function getHooks()
     {
         // Create a hooks object
-        $hooks = new \ezRPG\lib\Hooks($this->container);
+        $hooks = new \ezrpg\core\Hooks($this->container);
         $debugTimer['Hooks Initiated:'] = microtime(1);
         // Include all hook files
         $hook_files = scandir(HOOKS_DIR);
@@ -87,7 +87,7 @@ class Application
 
     public function getThemes()
     {
-        return $this->themes = $this->container['themes'] = new \ezRPG\lib\Themes($this->container);
+        return $this->themes = $this->container['themes'] = new \ezrpg\core\Themes($this->container);
     }
 
     public function initializePlayer(){
@@ -96,25 +96,37 @@ class Application
 
     public function setDatabase()
     {
-        $this->container['db'] = \ezRPG\lib\DbFactory::factory($this->container['config']);
+        $this->container['db'] = \ezrpg\core\DbFactory::factory($this->container['config']);
 
         return $this->db = $this->container['db'];
     }
 
     public function getSettings()
     {
-        $this->container['settings'] = new \ezRPG\lib\Settings($this->container['db']);
+        $this->container['settings'] = new \ezrpg\core\Settings($this->container['db']);
 
         return $this->settings = $this->container['settings'];
     }
 
-    public function getConfig($filelocation)
+    public function getConfig()
     {
-        return $this->config = $this->container['config'] = new \ezRPG\lib\Config($filelocation);
+        if (!array_key_exists('config', $this->container)) {
+            $config_paths = [
+                'core/config/*.php',
+                'modules/*/config.php',
+                'config/*.php',
+            ];
+
+            $configLoader = new \ezrpg\core\ConfigLoader();
+            $config = $configLoader->loadConfigFromPaths($config_paths);
+
+            $this->container['config'] = new \ezrpg\core\Config($config);
+        }
+        return $this->container['config'];
     }
 
     public function initializeView(){
-        return new \ezRPG\lib\View($this->container);
+        return new \ezrpg\core\View($this->container);
     }
 
     public function dispatch(){
@@ -153,3 +165,10 @@ class Application
         }
     }
 }
+
+if(!defined("DEBUG_MODE"))
+    define('DEBUG_MODE', 0);
+if(!defined("SHOW_ERRORS"))
+    define('SHOW_ERRORS', 0);
+if(!defined("SECRET_KEY"))
+    define('SECRET_KEY', 1231123123);
