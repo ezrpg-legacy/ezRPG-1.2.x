@@ -101,13 +101,6 @@ class Application
         return $this->db = $this->container['db'];
     }
 
-    public function getSettings()
-    {
-        $this->container['settings'] = new \ezrpg\core\Settings($this->container['db']);
-
-        return $this->settings = $this->container['settings'];
-    }
-
     public function getConfig()
     {
         if (!array_key_exists('config', $this->container)) {
@@ -165,10 +158,3 @@ class Application
         }
     }
 }
-
-if(!defined("DEBUG_MODE"))
-    define('DEBUG_MODE', 0);
-if(!defined("SHOW_ERRORS"))
-    define('SHOW_ERRORS', 0);
-if(!defined("SECRET_KEY"))
-    define('SECRET_KEY', 1231123123);

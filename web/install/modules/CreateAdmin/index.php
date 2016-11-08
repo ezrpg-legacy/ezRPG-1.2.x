@@ -14,6 +14,7 @@ class Install_CreateAdmin extends InstallerFactory
         {
             $sitefolder = strtok($_SERVER['PHP_SELF'], 'install');
             $siteurl = 'http://' . $_SERVER['HTTP_HOST'] . $sitefolder;
+            $gamename = 'ezRPG 1.2.1';
             $username = '';
             $email = '';
         }
@@ -22,6 +23,7 @@ class Install_CreateAdmin extends InstallerFactory
             $errors = 0;
             $msg = '';
             $siteurl = $_POST['siteurl'];
+            $gamename = $_POST['gamename'];
             $username = $_POST['username'];
             $password = $_POST['password'];
             $password2 = $_POST['password2'];
@@ -52,12 +54,10 @@ class Install_CreateAdmin extends InstallerFactory
                 require_once ROOT_DIR . "/core/functions/func.rand.php";
                 try
                 {
-                    $this->container['app']->getConfig(ROOT_DIR . '/config/core.php');
+                    $this->container['app']->getConfig();
                     // Initialize the Database
                     $this->container['app']->setDatabase();
 
-                    // Settings
-                    $this->container['app']->getSettings();
                     //$db = \ezrpg\core\DbFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
@@ -82,13 +82,24 @@ class Install_CreateAdmin extends InstallerFactory
                 }catch( \Exception $e){
                     throw new EzException($e->getMessage() . $e->getLine());
                 }
-                $insertconf = array( );
-                $insertconf['name'] = 'site_url';
-                $insertconf['title'] = 'Site URL';
-                $insertconf['optionscode'] = 'text';
+                $config = <<<CONF
+<?php
+return [
+    'app' => [
+        'game_name' => [
+            'value' => '{$siteurl}'
+        ],
+        'site_url' => [
+            'value' => '{$gamename}'
+        ]
+    ]
+];
+CONF;
+                $fh = fopen(ROOT_DIR . '/config/site.php', 'w');
+                fwrite($fh, $config);
+                fclose($fh);
                 $insertconf['value'] = $siteurl;
-                $insertconf['gid'] = 1;
-                $this->container['db']->insert("<ezrpg>settings", $insertconf);
+
                 $this->header();
                 echo "<p>Your admin account has been created! You may now login to the game.</p>\n";
                 $fh = fopen(CUR_DIR . "/lock", "w+");
@@ -113,6 +124,8 @@ class Install_CreateAdmin extends InstallerFactory
         echo '<form method="post">';
         echo '<label>SiteURL</label>';
         echo '<input type="text" name="siteurl" value="', $siteurl, '" />';
+        echo '<label>Game Name</label>';
+        echo '<input type="text" name="gamename" value="', $gamename, '" />';
         echo '<label>Username</label>';
         echo '<input type="text" name="username" value="', $username, '" />';
         echo '<label>Email</label>';

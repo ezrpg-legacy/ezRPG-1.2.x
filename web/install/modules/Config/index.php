@@ -44,7 +44,7 @@ class Install_Config extends InstallerFactory
             {
                 require_once(ROOT_DIR . "/core/functions/func.rand.php");
                 $secret_key = createKey(24);
-                $config = <<<CONF
+                $configdb = <<<CONF
 <?php
 return [
     'database' => [
@@ -56,21 +56,20 @@ return [
         'port' => '{$dbconfig['dbport']}',
         'prefix' => '{$dbconfig['dbprefix']}',
     ],
-    'debug' => [
-        'show_errors' => 0,
-        'debug_mode' => 0,
-    ],
-    'version' => '1.2.1.9',
-    'secret' => '{$secret_key}',
+    'app' => [
+        'constants' => [
+            'secret' => '6Rcg|*yExiMhW27=J/m|]G$=',
+        ],
+    ]
 ];
 CONF;
-                $fh = fopen(ROOT_DIR . '/config/core.php', 'w');
-                fwrite($fh, $config);
+                $fh = fopen(ROOT_DIR . '/config/database.php', 'w');
+                fwrite($fh, $configdb);
                 fclose($fh);
                 $this->header();
-                if ( filesize(ROOT_DIR . '/config/core.php') == 0 )
+                if ( filesize(ROOT_DIR . '/config/database.php') == 0 )
                 {
-                    rename(ROOT_DIR . '/config/core.php', ROOT_DIR . '/config/core.php.bak');
+                    rename(ROOT_DIR . '/config/database.php', ROOT_DIR . '/config/database.php.bak');
                     echo "<h2>Error Writing To Config.php</h2>";
                     echo "<p>There was an error writing to Config.php.</p>";
                     echo "<p>Before continuing, please rename 'http://ezrpg/config.php.bak' to 'http://ezrpg/config.php.bak' and update with the following:</p><br />\n";
@@ -85,12 +84,11 @@ return [<br />
         'port' => '{$dbconfig['dbport']}',<br />
         'prefix' => '{$dbconfig['dbprefix']}',<br />
     ],<br />
-    'debug' => [<br />
-        'show_errors' => 0,<br />
-        'debug_mode' => 0,<br />
-    ],<br />
-    'version' => '1.2.1.9',<br />
-    'secret' => '{$secret_key}',<br />
+    'app' => [<br />
+        'constants' => [<br />
+            'secret' => '6Rcg|*yExiMhW27=J/m|]G$=',<br />
+        ],<br />
+    ]<br />
 ];<br />
 ?><br /></code></pre>";
                     echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
