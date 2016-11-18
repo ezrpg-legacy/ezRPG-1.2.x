@@ -8,22 +8,13 @@
 /templates/cache/
 /admin/Plugins/temp/*
 /admin/Update/temp/*
-/modules/Bank/
-/modules/Attack/
-/modules/Items/
-/modules/Housing/
-/modules/Store/
-/modules/Profile/
-/modules/Mining/
-/modules/Upgrades/
 
-/composer.lock
-/lock
-/vendor
+composer.lock
+lock
+vendor
 
 config.php
 /cache/*
 /cache/templates/*.php
 web/install/lock
 .idea/
-vender/
