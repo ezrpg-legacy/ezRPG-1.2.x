@@ -24,7 +24,7 @@ function smarty_function_settings($params, &$smarty)
     if (!empty($params)) {
         if (!empty($params['g'])) {
             if (!empty($params['n'])) {
-                $print = $container['settings']->setting[$params['g']][$params['n']]['value'];
+                $print = $container['config'][$params['g']][$params['n']]['value'];
             }
         }
     }

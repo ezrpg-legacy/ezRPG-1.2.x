@@ -19,7 +19,7 @@
 function smarty_function_hook($params, &$smarty)
 {
     $print = '<!-- Not Found -->';
-    if (DEBUG_MODE) {
+    if ($this->container['config']['debug']['debug_mode']['debug_mode']) {
         //$print .= '<pre>'. print_r($params) . '</pre>';
     }
     //$print .= '-->';

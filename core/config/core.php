@@ -44,7 +44,7 @@ return [
                     'value' => 3
                 ],
             ],
-            'value' => 'legacy,'
+            'value' => 'legacy',
         ],
         'validation' => [
             'title' => 'Validation Settings',

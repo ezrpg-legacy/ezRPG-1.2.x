@@ -211,7 +211,7 @@ class DbEngine
 
             $this->query = $query;
 
-            if (DEBUG_MODE === 1) {
+            if ($this->container['config']['debug']['debug_mode']['debug_mode'] === 1) {
                 echo "SQLCommand: " . $query, '<br />';
             };
 

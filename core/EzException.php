@@ -20,6 +20,11 @@ class EzException extends Exception
 
     public function __toString()
     {
+        $configLoader = new \ezrpg\core\ConfigLoader();
+        $config = $configLoader->loadConfigFromPaths(['core/config/core.php']);
+        $debug = new \ezrpg\core\Config($config);
+        $debug = $debug['debug'];
+
         $trace = nl2br($this->getTraceAsString());
         $this_class = __CLASS__;
         //Output message
@@ -38,12 +43,12 @@ class EzException extends Exception
 OUT;
 
         //Only show line number and file if debug mode is on
-        //if (DEBUG_MODE) {
+        if ($debug) {
             $ret .= <<<OUT
 <strong>File</strong>: $this->file<br />
 <strong>Line</strong>: $this->line<br />
 OUT;
-        //}
+        }
 
         //The error message itself
         $ret .= <<<OUT
@@ -52,7 +57,7 @@ $this->message
 OUT;
 
         //Only show stack trace if debug mode is on
-        if (DEBUG_MODE) {
+        if ($debug) {
             $ret .= <<<OUT
 <br /><br />
 <strong>Stack Trace:</strong><br />

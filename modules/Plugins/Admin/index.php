@@ -96,7 +96,7 @@ class Admin_Plugins extends Base_Module
                 // Make sure it's in proper Module structure format with the index.php
                 if(file_exists(MOD_DIR . $module . '/index.php')) {
                     // Check if any of the modules has a Module_Info.txt file.
-                    if (fopen(MOD_DIR . $module . "/Module_Info.txt", "r") != false) {
+                    if (file_exists(MOD_DIR . $module . "/Module_Info.txt") && fopen(MOD_DIR . $module . "/Module_Info.txt", "r") != false) {
                         // Okay, let's parse the file
                         $contents = file_get_contents(MOD_DIR . $module . "/Module_Info.txt");
                         $contents = explode(":", $contents);

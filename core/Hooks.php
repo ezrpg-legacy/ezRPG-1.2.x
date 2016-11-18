@@ -122,7 +122,7 @@ class Hooks
                 $call_func = 'hook_' . $hook_function;
 
                 //Debug mode? Show what's going on
-                if (DEBUG_MODE == 1) {
+                if ($this->container['config']['debug']['debug_mode'] == 1) {
                     echo 'Calling hook: ', $call_func, '<br />';
                 }
 

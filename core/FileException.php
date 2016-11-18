@@ -46,7 +46,7 @@ class FileException extends Exception
 OUT;
 
         //Only show line number and file if debug mode is on
-        if (DEBUG_MODE) {
+        if ($this->container['config']['debug']['debug_mode']['debug_mode']) {
             $ret .= <<<OUT
 <strong>File</strong>: $this->file<br />
 <strong>Line</strong>: $this->line<br />
@@ -60,7 +60,7 @@ $this->message
 OUT;
 
         //Only show stack trace if debug mode is on
-        if (DEBUG_MODE) {
+        if ($this->container['config']['debug']['debug_mode']['debug_mode']) {
             $ret .= <<<OUT
 <br /><br />
 <strong>Stack Trace:</strong><br />

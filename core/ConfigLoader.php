@@ -14,17 +14,6 @@ class ConfigLoader
             $config = $this->mergeArrays($config, $config_data);
         }
 
-        /*this doesn't work yet. but the idea is there
-        foreach($config['app']['constants'] as $constants => $values){
-            if(is_array($values)){
-                foreach($values as $const => $val){
-                    define(strtoupper($const), $val);
-                }
-            }else{
-                define(strtoupper($constants), $values);
-            }
-        }
-        */
         return $config;
     }
 

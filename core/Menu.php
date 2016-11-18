@@ -64,7 +64,7 @@ class Menu
         if (file_exists(CACHE_DIR . $cache_file)) {
             if (filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24) {
                 $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if (DEBUG_MODE == 1) {
+                if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
                     echo 'Loaded Menu Cache! <br />';
                 }
             } else {
@@ -77,7 +77,7 @@ class Menu
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if (DEBUG_MODE == 1) {
+            if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
                 echo 'Created Menu Cache! <br />';
             }
         }

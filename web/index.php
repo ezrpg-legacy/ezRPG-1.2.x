@@ -10,7 +10,7 @@ namespace ezrpg;
 use \ezrpg\core\Application,
     \ezrpg\core\ModuleFactory;
 
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
@@ -26,7 +26,7 @@ chdir($rootPath);
 $debugTimer['ezRPG start'] = microtime(1);
 
 // Check for config and if it has data. @since 1.2RC
-if (!file_exists('config/core.php') OR filesize('config/core.php') == 0) {
+if (!file_exists('config.php') OR filesize('config.php') == 0) {
     //Redirect to installer @since 1.x
     header('Location: install/index.php');
     exit(1);
@@ -41,13 +41,10 @@ $container = new \Pimple\Container;
 $ezrpg = new Application($container);
 
 // Get Config for the game
-$ezrpg->getConfig($rootPath . '/config/core.php');
+$ezrpg->getConfigFromCache($rootPath . '/config.php');
 
 // Initialize the Database
 $ezrpg->setDatabase();
-
-// Settings
-$ezrpg->getSettings();
 
 // Initialize the View Controller;
 $ezrpg->initializeView();

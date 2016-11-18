@@ -68,8 +68,7 @@ class Application
         $this->player = $args;
     }
 
-    public function getHooks()
-    {
+    public function getHooks(){
         // Create a hooks object
         $hooks = new \ezrpg\core\Hooks($this->container);
         $debugTimer['Hooks Initiated:'] = microtime(1);
@@ -101,8 +100,35 @@ class Application
         return $this->db = $this->container['db'];
     }
 
-    public function getConfig()
-    {
+    public function getConfig($path = null){
+        if (!array_key_exists('config', $this->container)) {
+            if($path == null || strpos($path, '*')) { //logic needs to be tested, here for "load only config files `/XYZ/*`"
+                $config_paths = [
+                    'core/config/*.php',
+                    'modules/*/config.php',
+                    'config/*.php',
+                ];
+                $configLoader = new \ezrpg\core\ConfigLoader();
+                $config = $configLoader->loadConfigFromPaths($config_paths);
+            }else{
+                $config = include $path;
+            }
+
+            $this->container['config'] = new \ezrpg\core\Config($config);
+        }
+        return $this->container['config'];
+    }
+
+    public function getConfigFromCache($path = null){
+        if($path == null){
+            $this->container['config'] = new \ezrpg\core\Config(unserialize(file_get_contents(ROOT_DIR . "/config.php")));
+        }else{
+            $this->container['config'] = new \ezrpg\core\Config(unserialize(file_get_contents($path)));
+        }
+        return $this->container['config'];
+    }
+
+    public function buildConfigCache(){
         if (!array_key_exists('config', $this->container)) {
             $config_paths = [
                 'core/config/*.php',
@@ -112,10 +138,10 @@ class Application
 
             $configLoader = new \ezrpg\core\ConfigLoader();
             $config = $configLoader->loadConfigFromPaths($config_paths);
-
-            $this->container['config'] = new \ezrpg\core\Config($config);
+            $serialized = serialize($config);
+            file_put_contents(ROOT_DIR . "/config.php", $serialized);
         }
-        return $this->container['config'];
+
     }
 
     public function initializeView(){
@@ -124,7 +150,7 @@ class Application
 
     public function dispatch(){
         //Set Default module and check if Module is selected in URI
-        $default_mod = $this->container['settings']->setting['general']['default_module']['value'];
+        $default_mod = $this->container['config']['app']['default_module']['value'];
 
         $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
         $this->container['tpl']->assign('module_name', $module_name);
@@ -134,8 +160,7 @@ class Application
         return $module_name;
     }
 
-    public function run($module_name, $admin = false)
-    {
+    public function run($module_name, $admin = false){
         //Begin module
         if($admin)
             $module = ModuleFactory::adminFactory($this->container, $module_name);

@@ -39,13 +39,10 @@ $container = new \Pimple\Container;
 $ezrpg = new \ezrpg\core\Application($container);
 
 // Get Config for the game
-$ezrpg->getConfig(CUR_DIR . '/config.php');
+$ezrpg->getConfigFromCache(CUR_DIR . '/config.php');
 
 // Initialize the Database
 $ezrpg->setDatabase();
-
-// Settings
-$ezrpg->getSettings();
 
 // Initialize the View Controller;
 $ezrpg->initializeView();

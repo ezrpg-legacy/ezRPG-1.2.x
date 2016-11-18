@@ -22,7 +22,7 @@ require_once CORE_DIR . '/Base_Module.php';
 require_once CORE_DIR . '/DbException.php';
 require_once CORE_DIR . '/const.errors.php';
 require_once CORE_DIR . '/DbFactory.php';
-require_once CORE_DIR . '/functions/func.modules.php';
+require_once CORE_DIR . '/functions/modules.php';
 require_once CUR_DIR . '/core/InstallerFactory.php';
 
 $_SESSION['in_installer'] = true;

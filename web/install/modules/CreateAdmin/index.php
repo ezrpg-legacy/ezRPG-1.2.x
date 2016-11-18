@@ -51,7 +51,7 @@ class Install_CreateAdmin extends InstallerFactory
 
             if ( $errors == 0 )
             {
-                require_once ROOT_DIR . "/core/functions/func.rand.php";
+                require_once ROOT_DIR . "/core/functions/rand.php";
                 try
                 {
                     $this->container['app']->getConfig();
@@ -67,7 +67,7 @@ class Install_CreateAdmin extends InstallerFactory
                 $secret_key = createKey(16);
                 $insert = array( );
                 $insert['username'] = $username;
-                $insert['password'] = sha1($secret_key . $password . SECRET_KEY);
+                $insert['password'] = sha1($secret_key . $password . $this->container['config']['secret']);
                 $insert['email'] = $email;
                 $insert['pass_method'] = 1;
                 $insert['secret_key'] = $secret_key;
@@ -87,10 +87,10 @@ class Install_CreateAdmin extends InstallerFactory
 return [
     'app' => [
         'game_name' => [
-            'value' => '{$siteurl}'
+            'value' => '{$gamename}'
         ],
         'site_url' => [
-            'value' => '{$gamename}'
+            'value' => '{$siteurl}'
         ]
     ]
 ];
@@ -98,7 +98,8 @@ CONF;
                 $fh = fopen(ROOT_DIR . '/config/site.php', 'w');
                 fwrite($fh, $config);
                 fclose($fh);
-                $insertconf['value'] = $siteurl;
+
+                $this->container['app']->buildConfigCache();
 
                 $this->header();
                 echo "<p>Your admin account has been created! You may now login to the game.</p>\n";

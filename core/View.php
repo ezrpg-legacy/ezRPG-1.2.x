@@ -18,8 +18,8 @@ class View{
         $this->tpl = $this->container['tpl'] = new \Smarty();
         $this->tpl->addPluginsDir(CORE_DIR . '/ext/smarty');
         $this->tpl->caching = 0;
-        $this->tpl->assign('GAMESETTINGS', $this->container['settings']->setting['general']);
-        if (DEBUG_MODE) {
+        $this->tpl->assign('GAMESETTINGS', $this->container['config']['app']);
+        if ($this->container['config']['debug']['debug_mode']['debug_mode']) {
             echo 'GAMESETTINGS Smarty Variable is being deprecated. Use {settings g=\'general\' n=\'Setting_Name\'} for your GameSettings needs.';
         }
 

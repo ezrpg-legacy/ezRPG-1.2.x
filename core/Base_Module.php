@@ -80,7 +80,7 @@ abstract class Base_Module
         $this->theme = $this->getTheme();
         $this->player = $container['player'];
         $this->menu = $container['menu'];
-        $this->settings = $container['settings'];
+        $this->settings = $container['config']['app'];
         $this->name = get_class($this);
         $this->scripts = array();
         $this->container = $container;

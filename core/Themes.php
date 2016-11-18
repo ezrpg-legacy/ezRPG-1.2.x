@@ -23,6 +23,8 @@ class Themes
      */
     protected $tpl;
 
+    protected $debug;
+
     /*
       Function: __construct
       The constructor takes in database and template to pass onto any functions called.
@@ -36,6 +38,7 @@ class Themes
     {
         $this->db = $container['db'];
         $this->tpl = $container['tpl'];
+        $this->debug = $container['config']['debug']['debug_mode'];
         $this->template = $this->loadCache();
         $this->loadTemplates();
     }
@@ -54,7 +57,7 @@ class Themes
             if (file_exists($cache_file)) {
                 if (filemtime($cache_file) > time() - 60 * 60 * 24) {
                     $array = unserialize(file_get_contents($cache_file));
-                    if (DEBUG_MODE == 1) {
+                    if ($this->debug == 1) {
                         echo 'Loaded Themes Cache! <br />';
                     }
 
@@ -73,7 +76,7 @@ class Themes
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents($cache_file, serialize($array));
-            if (DEBUG_MODE == 1) {
+            if ($this->debug == 1) {
                 echo 'Created Themes Cache! <br />';
             }
 

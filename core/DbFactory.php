@@ -49,8 +49,6 @@ class DbFactory
     {
         $dbconfig = $config['database'];
 
-        $dbconfig['dsn'] = "mysql:dbname=" . $dbconfig['name'] . ";host=" . $dbconfig['host'] . ";port=" . $dbconfig['port'];
-
         return new \ezrpg\core\DbEngine($dbconfig);
     }
 

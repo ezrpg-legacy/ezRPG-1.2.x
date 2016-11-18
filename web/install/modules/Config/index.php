@@ -1,6 +1,7 @@
 <?php
 namespace ezrpg\Install\Modules;
-use ezrpg\Install\InstallerFactory;
+use ezrpg\Install\InstallerFactory,
+    ezrpg\core\DbException;
 
 class Install_Config extends InstallerFactory
 {
@@ -13,28 +14,29 @@ class Install_Config extends InstallerFactory
         $dbconfig = [];
         if ( !isset($_POST['submit']) )
         {
-            $dbconfig['dbserver'] = "localhost";
-            $dbconfig['dbuser'] = "root";
-            $dbconfig['dbname'] = "ezrpg";
-            $dbconfig['dbport'] = "3306";
-            $dbconfig['dbpass'] = "ezrpg_";
-            $dbconfig['dbprefix'] = "ezrpg_";
+            $dbconfig['host'] = "localhost";
+            $dbconfig['user'] = "root";
+            $dbconfig['name'] = "ezrpg";
+            $dbconfig['port'] = "3306";
+            $dbconfig['pass'] = "ezrpg_";
+            $dbconfig['prefix'] = "ezrpg_";
         }
         else
         {
-            $dbconfig['dbserver'] = $_POST['dbhost'];
-            $dbconfig['dbuser'] = $_POST['dbuser'];
-            $dbconfig['dbname'] = $_POST['dbname'];
-            $dbconfig['dbpass'] = $_POST['dbpass'];
-            $dbconfig['dbprefix'] = $_POST['dbprefix'];
-            $dbconfig['dbdriver'] = $_POST['dbdriver'];
-            $dbconfig['dbport'] = $_POST['dbport'];
+            $dbconfig['host'] = $_POST['dbhost'];
+            $dbconfig['user'] = $_POST['dbuser'];
+            $dbconfig['name'] = $_POST['dbname'];
+            $dbconfig['pass'] = $_POST['dbpass'];
+            $dbconfig['prefix'] = $_POST['dbprefix'];
+            $dbconfig['driver'] = $_POST['dbdriver'];
+            $dbconfig['port'] = $_POST['dbport'];
             $error = 0;
 
             //test database connection.
             try
             {
-                $db = \ezrpg\core\DbFactory::factory($dbconfig);
+                $conf['database'] = $dbconfig;
+                $db = \ezrpg\core\DbFactory::factory($conf);
             }
             catch ( DbException $e )
             {
@@ -42,25 +44,21 @@ class Install_Config extends InstallerFactory
             }
             if ( $error != 1 )
             {
-                require_once(ROOT_DIR . "/core/functions/func.rand.php");
+                require_once(ROOT_DIR . "/core/functions/rand.php");
                 $secret_key = createKey(24);
                 $configdb = <<<CONF
 <?php
 return [
     'database' => [
-        'host' => '{$dbconfig['dbserver']}',
-        'name' => '{$dbconfig['dbname']}',
-        'user' => '{$dbconfig['dbuser']}',
-        'pass' => '{$dbconfig['dbpass']}',
-        'driver' => '{$dbconfig['dbdriver']}',
-        'port' => '{$dbconfig['dbport']}',
-        'prefix' => '{$dbconfig['dbprefix']}',
+        'host' => '{$dbconfig['host']}',
+        'name' => '{$dbconfig['name']}',
+        'user' => '{$dbconfig['user']}',
+        'pass' => '{$dbconfig['pass']}',
+        'driver' => '{$dbconfig['driver']}',
+        'port' => '{$dbconfig['port']}',
+        'prefix' => '{$dbconfig['prefix']}',
     ],
-    'app' => [
-        'constants' => [
-            'secret' => '6Rcg|*yExiMhW27=J/m|]G$=',
-        ],
-    ]
+    'secret' => '{$secret_key}',
 ];
 CONF;
                 $fh = fopen(ROOT_DIR . '/config/database.php', 'w');
@@ -72,23 +70,19 @@ CONF;
                     rename(ROOT_DIR . '/config/database.php', ROOT_DIR . '/config/database.php.bak');
                     echo "<h2>Error Writing To Config.php</h2>";
                     echo "<p>There was an error writing to Config.php.</p>";
-                    echo "<p>Before continuing, please rename 'http://ezrpg/config.php.bak' to 'http://ezrpg/config.php.bak' and update with the following:</p><br />\n";
+                    echo "<p>Before continuing, please rename 'http://ezrpg/config/database.php' to 'http://ezrpg/config/database.php.bak' and update with the following:</p><br />\n";
                     echo "<pre style='background-color: lightgrey;'><code style='word-wrap: break-word;'>&#60;?php<br />
 return [<br />
     'database' => [<br />
-        'host' => '{$dbconfig['dbserver']}',<br />
-        'name' => '{$dbconfig['dbname']}',<br />
-        'user' => '{$dbconfig['dbuser']}',<br />
-        'pass' => '{$dbconfig['dbpass']}',<br />
-        'driver' => '{$dbconfig['dbdriver']}',<br />
-        'port' => '{$dbconfig['dbport']}',<br />
-        'prefix' => '{$dbconfig['dbprefix']}',<br />
+        'host' => '{$dbconfig['host']}',<br />
+        'name' => '{$dbconfig['name']}',<br />
+        'user' => '{$dbconfig['user']}',<br />
+        'pass' => '{$dbconfig['pass']}',<br />
+        'driver' => '{$dbconfig['driver']}',<br />
+        'port' => '{$dbconfig['port']}',<br />
+        'prefix' => '{$dbconfig['prefix']}',<br />
     ],<br />
-    'app' => [<br />
-        'constants' => [<br />
-            'secret' => '6Rcg|*yExiMhW27=J/m|]G$=',<br />
-        ],<br />
-    ]<br />
+    'secret' => '{$secret_key}',<br />
 ];<br />
 ?><br /></code></pre>";
                     echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
@@ -110,17 +104,17 @@ return [<br />
         echo '<label>Driver</label>';
         echo '<select name="dbdriver"><option value="mysql">MySQLi</option></select>';
         echo '<label>Host</label>';
-        echo '<input type="text" name="dbhost" value="' . $dbconfig['dbserver'] . '" />';
+        echo '<input type="text" name="dbhost" value="' . $dbconfig['host'] . '" />';
         echo '<label>Port</label>';
-        echo '<input type="text" name="dbport" value="' . $dbconfig['dbport'] . '" />';
+        echo '<input type="text" name="dbport" value="' . $dbconfig['port'] . '" />';
         echo '<label>Database Name</label>';
-        echo '<input type="text" name="dbname" value="' . $dbconfig['dbname'] . '" />';
+        echo '<input type="text" name="dbname" value="' . $dbconfig['name'] . '" />';
         echo '<label>User</label>';
-        echo '<input type="text" name="dbuser" value="' . $dbconfig['dbuser'] . '" />';
+        echo '<input type="text" name="dbuser" value="' . $dbconfig['user'] . '" />';
         echo '<label>Password</label>';
         echo '<input type="password" name="dbpass" value="" />';
         echo '<label>Table Prefix (Optional)</label>';
-        echo '<input type="text" name="dbprefix" value="', $dbconfig['dbprefix'], '" />';
+        echo '<input type="text" name="dbprefix" value="', $dbconfig['prefix'], '" />';
         echo '<p>You can enter a prefix for your table names if you like.<br />This can be useful if you will be sharing the database with other applications, or if you are running more than one ezRPG instance in a single database.</p>';
         echo '<p><strong>Note</strong> Please make sure that the database exists.</p>';
         echo '<input type="submit" name="submit" value="Submit"  class="button" />';

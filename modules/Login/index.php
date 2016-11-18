@@ -43,7 +43,7 @@ class Module_Login extends Base_Module
             }
         }
         if ($error == 0) {
-            $pass_method = $this->settings->setting['general']['pass_encryption']['value']['value'];
+            $pass_method = $this->container['config']['app']['pass_encryption']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password);
 
             if ($check != true) {
@@ -104,7 +104,6 @@ class Module_Login extends Base_Module
 
     private function validate()
     {
-        global $settings;
         $query = $this->db->execute('SELECT `id`, `username`, `password`, `secret_key`, `pass_method` FROM `<ezrpg>players` WHERE `username`=?',
             array($_POST['username']));
 
@@ -114,7 +113,7 @@ class Module_Login extends Base_Module
             $player = $this->db->fetch($query);
 
             // We have different authentication methods at our disposal.
-            $pass_meth = $this->settings->setting['general']['pass_encryption']['value']['value'];
+            $pass_meth = $this->container['config']['app']['pass_encryption']['value'];
             $check = checkPassword($player->secret_key, $_POST['password'], $player->password,
                 ($player->pass_method == $pass_meth ? '0' : $player->pass_method));
             if ($check != true) {
