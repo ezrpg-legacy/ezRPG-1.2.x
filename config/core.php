@@ -4,5 +4,5 @@ return [
         'show_errors' => 0,
         'debug_mode' => 0,
     ],
-    'version' => '1.2.1.9',
+    'version' => '1.2.1.10',
 ];

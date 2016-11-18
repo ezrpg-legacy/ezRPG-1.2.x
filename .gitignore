@@ -13,7 +13,7 @@ composer.lock
 lock
 vendor
 
-/config.php
+config.php
 /cache/*
 /cache/templates/*.php
 web/install/lock

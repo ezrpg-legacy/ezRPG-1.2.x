@@ -24,7 +24,7 @@ class Application
 
     public $player;
 
-    public $version = "1.2.1.9";
+    public $version = "1.2.1.10";
 
     public $themes;
 

@@ -7,12 +7,12 @@ return [
                 'debug_mode' => 0,
             ],
         ],
-        'version' => '1.2.1.9',
+        'version' => '1.2.1.10',
         'game_name' => [
             'title' => 'Game Title',
             'description' => "The title for your game",
             'datatype' => "text",
-            'value' => 'ezRPG 1.2.1.9'
+            'value' => 'ezRPG 1.2.1.10'
         ],
         'site_url' => [
             'title' => 'Site URL',
