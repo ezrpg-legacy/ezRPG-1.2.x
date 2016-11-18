@@ -22,7 +22,6 @@ if (!defined('IN_EZRPG')) {
 function loadModuleCache($admin = false)
 {
     global $container;
-    $db = $container['db'];
     if(file_exists(CACHE_DIR . '/module_cache')){
         $cache = file_get_contents(CACHE_DIR . '/module_cache');
         $plugins = unserialize($cache);
@@ -91,16 +90,18 @@ function killMenuCache()
 
   Returns:
   TRUE
+
+  DEPRECATED
  */
 
 function killSettingsCache()
 {
-    $query = 'SELECT * FROM `<ezrpg>settings`';
-    $cache_file = md5($query);
-    if (file_exists(CACHE_DIR . $cache_file)) {
-        unlink(CACHE_DIR . $cache_file);
-        $_SESSION['status_messages']['Admin_Message'] = array('GOOD' => 'Settings Cache Cleaned');
-    }
+    //$query = 'SELECT * FROM `<ezrpg>settings`';
+    //$cache_file = md5($query);
+    //if (file_exists(CACHE_DIR . $cache_file)) {
+    //    unlink(CACHE_DIR . $cache_file);
+        $_SESSION['status_messages']['Admin_Message'] = array('WARN' => '`killSettingsCache` is Deprecated and not in use.');
+    //}
 
     return true;
 }

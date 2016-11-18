@@ -111,21 +111,21 @@ function loadMetaCache($kill = 0, $id = 0)
     if (file_exists($cache)) {
         if (filemtime($cache) > time() - 60 * 60 * 24) {
             $array = unserialize(file_get_contents($cache));
-            if (DEBUG_MODE == 1) {
+            if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
                 echo 'Loaded Player_Meta Cache! <br />';
             }
         } else {
             unlink($cache);
             $array = $container['db']->fetchRow($query);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if (DEBUG_MODE == 1) {
+            if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
                 echo 'Created Player_Meta Cache! <br />';
             }
         }
     } else {
         $array = $container['db']->fetchRow($query);
         file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-        if (DEBUG_MODE == 1) {
+        if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
             echo 'Created Player_Meta Cache! <br />';
         }
     }

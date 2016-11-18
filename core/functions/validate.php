@@ -39,10 +39,10 @@ function isUsername($username)
 function isPassword($password)
 {
     global $container;
-    $settings = $container['settings'];
-    $length = $settings->setting['validation']['passLenMin']['value'];
-    if ($settings->setting['validation']['passLens']['value']['value'] == 'minmax') {
-        $length .= ',' . $settings->setting['validation']['passLenMax']['value'];
+    $settings = $container['config'];
+    $length = $settings['app']['validation']['passLenMin']['value'];
+    if ($settings['app']['validation']['passLens']['value'] == 'minmax') {
+        $length .= ',' . $settings['app']['validation']['passLenMax']['value'];
     }
 
     return (preg_match("/[a-zA-Z0-9\W]{" . $length . "}+/", $password));
