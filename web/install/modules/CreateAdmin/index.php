@@ -1,9 +1,9 @@
 <?php
 
-namespace ezRPG\Install\Modules;
-use ezRPG\Install\InstallerFactory,
-    ezRPG\Lib\DbException,
-    ezRPG\Lib\EzException;
+namespace ezrpg\Install\Modules;
+use ezrpg\Install\InstallerFactory,
+    ezrpg\core\DbException,
+    ezrpg\core\EzException;
 
 class Install_CreateAdmin extends InstallerFactory
 {
@@ -14,6 +14,7 @@ class Install_CreateAdmin extends InstallerFactory
         {
             $sitefolder = strtok($_SERVER['PHP_SELF'], 'install');
             $siteurl = 'http://' . $_SERVER['HTTP_HOST'] . $sitefolder;
+            $gamename = 'ezRPG 1.2.1';
             $username = '';
             $email = '';
         }
@@ -22,6 +23,7 @@ class Install_CreateAdmin extends InstallerFactory
             $errors = 0;
             $msg = '';
             $siteurl = $_POST['siteurl'];
+            $gamename = $_POST['gamename'];
             $username = $_POST['username'];
             $password = $_POST['password'];
             $password2 = $_POST['password2'];
@@ -49,11 +51,14 @@ class Install_CreateAdmin extends InstallerFactory
 
             if ( $errors == 0 )
             {
-                require_once ROOT_DIR . "/lib/functions/func.rand.php";
+                require_once ROOT_DIR . "/core/functions/rand.php";
                 try
                 {
-                    $this->container['app']->getConfig(ROOT_DIR . '/config.php');
-                    $db = \ezRPG\lib\DbFactory::factory($this->container['config']);
+                    $this->container['app']->getConfig();
+                    // Initialize the Database
+                    $this->container['app']->setDatabase();
+
+                    //$db = \ezrpg\core\DbFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
                 {
@@ -62,28 +67,40 @@ class Install_CreateAdmin extends InstallerFactory
                 $secret_key = createKey(16);
                 $insert = array( );
                 $insert['username'] = $username;
-                $insert['password'] = sha1($secret_key . $password . SECRET_KEY);
+                $insert['password'] = sha1($secret_key . $password . $this->container['config']['secret']);
                 $insert['email'] = $email;
                 $insert['pass_method'] = 1;
                 $insert['secret_key'] = $secret_key;
                 $insert['registered'] = time();
                 $insert['rank'] = 10;
-                $new_admin = $db->insert("<ezrpg>players", $insert);
+                $new_admin = $this->container['db']->insert("<ezrpg>players", $insert);
                 $admin_meta = array( );
                 $admin_meta['pid'] = $new_admin;
-                $db->insert("<ezrpg>players_meta", $admin_meta);
+                $this->container['db']->insert("<ezrpg>players_meta", $admin_meta);
                 try{
                     $this->container['app']->hooks->run_hooks('register_after', $admin_meta['pid']);
                 }catch( \Exception $e){
                     throw new EzException($e->getMessage() . $e->getLine());
                 }
-                $insertconf = array( );
-                $insertconf['name'] = 'site_url';
-                $insertconf['title'] = 'Site URL';
-                $insertconf['optionscode'] = 'text';
-                $insertconf['value'] = $siteurl;
-                $insertconf['gid'] = 1;
-                $db->insert("<ezrpg>settings", $insertconf);
+                $config = <<<CONF
+<?php
+return [
+    'app' => [
+        'game_name' => [
+            'value' => '{$gamename}'
+        ],
+        'site_url' => [
+            'value' => '{$siteurl}'
+        ]
+    ]
+];
+CONF;
+                $fh = fopen(ROOT_DIR . '/config/site.php', 'w');
+                fwrite($fh, $config);
+                fclose($fh);
+
+                $this->container['app']->buildConfigCache();
+
                 $this->header();
                 echo "<p>Your admin account has been created! You may now login to the game.</p>\n";
                 $fh = fopen(CUR_DIR . "/lock", "w+");
@@ -108,6 +125,8 @@ class Install_CreateAdmin extends InstallerFactory
         echo '<form method="post">';
         echo '<label>SiteURL</label>';
         echo '<input type="text" name="siteurl" value="', $siteurl, '" />';
+        echo '<label>Game Name</label>';
+        echo '<input type="text" name="gamename" value="', $gamename, '" />';
         echo '<label>Username</label>';
         echo '<input type="text" name="username" value="', $username, '" />';
         echo '<label>Email</label>';
