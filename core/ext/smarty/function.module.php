@@ -19,14 +19,14 @@
  */
 function smarty_function_module($params, &$smarty)
 {
+    global $container;
     $print = '<!-- Not Found -->';
-    if ($this->container['config']['debug']['debug_mode']['debug_mode']) {
+    if ($container['config']['debug']['debug_mode']) {
         $print .= '<pre>'. var_dump($params) . '</pre>';
     }
     $print .= '-->';
     if (!empty($params)) {
         if (!empty($params['n'])) {
-            global $container;
             $module = ezrpg\core\ModuleFactory::factory($container, $params['n']);
             if (!empty($params['f'])) {
                 $print = $module->$params['f']();

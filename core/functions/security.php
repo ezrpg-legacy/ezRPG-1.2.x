@@ -28,11 +28,19 @@ if (!defined('IN_EZRPG')) {
 function createPBKDF2(
     $password,
     $salt = 'ezRPG',
-    $global_salt = SECRET_KEY,
+    $global_salt = "",
     $count = 1005,
     $length = 32,
     $algorithm = 'sha256'
 ) {
+    if($global_salt == ""){
+        $config_paths = [
+            'config/*.php'
+        ];
+        $configLoader = new \ezrpg\core\ConfigLoader();
+        $config = $configLoader->loadConfigFromPaths($config_paths);
+        $global_salt = $config['secret'];
+    }
     $password = $salt . $password;
 
     $kb = $length;
@@ -147,11 +155,17 @@ function generateSignature()
     $client = array_key_exists('userid', $_SESSION) ?
         $_SESSION['userid'] : 'guest';
 
+    $config_paths = [
+        'config/*.php'
+    ];
+    $configLoader = new \ezrpg\core\ConfigLoader();
+    $config = $configLoader->loadConfigFromPaths($config_paths);
+
     $bits = array(
         'userid' => $client,
         'ip' => $_SERVER['REMOTE_ADDR'],
         'browser' => $_SERVER['HTTP_USER_AGENT'],
-        'key' => SECRET_KEY
+        'key' => $config['secret']
     );
 
     $signature = false;
@@ -170,12 +184,24 @@ function compareSignature($origin)
 
 function createLegacyPassword($secret, $password)
 {
-    return sha1($secret . $password . SECRET_KEY);
+    $config_paths = [
+        'config/*.php'
+    ];
+    $configLoader = new \ezrpg\core\ConfigLoader();
+    $config = $configLoader->loadConfigFromPaths($config_paths);
+
+    return sha1($secret . $password . $config['secret']);
 }
 
 function compareLegacyPassword($secret, $input, $password)
 {
-    if (sha1($secret . $input . SECRET_KEY) == $password) {
+    $config_paths = [
+        'config/*.php'
+    ];
+    $configLoader = new \ezrpg\core\ConfigLoader();
+    $config = $configLoader->loadConfigFromPaths($config_paths);
+
+    if (sha1($secret . $input . $config['secret']) == $password) {
         return true;
     } else {
         return false;

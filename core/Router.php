@@ -64,7 +64,7 @@ class Router
         if (file_exists(CACHE_DIR . $cache_file)) {
             if (filemtime(CACHE_DIR . $cache_file) > time() - 60 * 60 * 24) {
                 $array = unserialize(file_get_contents(CACHE_DIR . $cache_file));
-                if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
+                if ($this->container['config']['debug']['debug_mode'] == 1) {
                     echo 'Loaded Route Cache! <br />';
                 }
             } else {
@@ -77,7 +77,7 @@ class Router
             $query1 = $this->db->execute($query);
             $array = $this->db->fetchAll($query1);
             file_put_contents(CACHE_DIR . $cache_file, serialize($array));
-            if ($this->container['config']['debug']['debug_mode']['debug_mode'] == 1) {
+            if ($this->container['config']['debug']['debug_mode'] == 1) {
                 echo 'Created Route Cache! <br />';
             }
         }
