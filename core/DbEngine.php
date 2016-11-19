@@ -185,25 +185,10 @@ class DbEngine
       - <fetchArray>
      */
 
-    public function fetchAll(&$result, $return_array = false)
+    public function fetchAll($result, $return_array = false)
     {
-        $ret = array();
-
-        if ($result === false) {
-            return $ret;
-        }
-
-        if ($return_array === true) {
-            while ($row = $this->fetchArray($result)) {
-                $ret[] = $row;
-            }
-        } else {
-            while ($row = $this->fetch($result)) {
-                $ret[] = $row;
-            }
-        }
-
-        return $ret;
+        $fetch_style = $return_array ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
+        return $result->fetchAll($fetch_style);
     }
 
     /*
