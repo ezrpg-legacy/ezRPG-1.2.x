@@ -156,9 +156,9 @@ class DbEngine
       - <fetch>
      */
 
-    public function fetchArray(&$result)
+    public function fetchArray($result)
     {
-        return $this->fetch_array();
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
 
     /*
