@@ -131,7 +131,7 @@ class DbEngine
       - <fetchRow>
      */
 
-    public function fetch(&$result)
+    public function fetch($result)
     {
         return $result->fetchObject();
     }
