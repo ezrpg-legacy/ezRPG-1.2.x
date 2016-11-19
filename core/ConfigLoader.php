@@ -17,23 +17,21 @@ class ConfigLoader
         return $config;
     }
 
-    /*
-     * source: http://php.net/manual/en/function.array-merge-recursive.php
-     * author: andyidol@gmail.com
+    /**
+     * Merge arrays recursively.
+     * 
+     * @author Andy <andyidol@gmail.com>
      */
-    public function mergeArrays($Arr1, $Arr2)
+    private function mergeArrays($arr1, $arr2)
     {
-        foreach($Arr2 as $key => $Value)
-        {
-            if(array_key_exists($key, $Arr1) && is_array($Value))
-                $Arr1[$key] = $this->MergeArrays($Arr1[$key], $Arr2[$key]);
-
-            else
-                $Arr1[$key] = $Value;
-
+        foreach($arr2 as $key => $value) {
+            if(array_key_exists($key, $arr1) && is_array($value)) {
+                $arr1[$key] = $this->mergeArrays($arr1[$key], $arr2[$key]);
+            } else {
+                $arr1[$key] = $value;
+            }
         }
 
-        return $Arr1;
-
+        return $arr1;
     }
 }
