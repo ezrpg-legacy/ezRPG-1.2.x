@@ -70,44 +70,30 @@ class DbEngine
     {
         $query = trim($query);
 
-        try {
-            if (strpos($query, $this->prefix) !== true) {
-                $query = str_replace('<ezrpg>', $this->prefix, $query);
-            }
+        if (strpos($query, $this->prefix) !== true) {
+            $query = str_replace('<ezrpg>', $this->prefix, $query);
+        }
 
-            if (count($params) > 0 && is_array($params)) {
+        if (count($params) > 0 && is_array($params)) {
 
-                foreach ($params as $f => $v) {
-                    $tmp[] = ":s_$f";
-                    $pos = strpos($query, "?");
-                    if ($pos !== false) {
-                        $query = substr_replace($query, ":s_$f", $pos, strlen("?"));
-                    }
-                }
-
-                $sql = $query;
-                // pdo prepare statement
-                try {
-                    $this->prepared = $this->db->prepare($sql);
-                    $this->_bindPdoNameSpace($params);
-                    // set class where property with array data
-
-                    //die(var_dump($this->prepared->debugDumpParams()));
-                    $this->prepared->execute();
-                    return $this->prepared;
-                } catch (\PDOException $ex) {
-                    throw new DbException($ex->getMessage());
-                }
-            }else{
-                try {
-                    return $this->db->query($query);
-                }catch(\PDOException $ex){
-                    throw new DbException($ex->getMessage());
+            foreach ($params as $f => $v) {
+                $tmp[] = ":s_$f";
+                $pos = strpos($query, "?");
+                if ($pos !== false) {
+                    $query = substr_replace($query, ":s_$f", $pos, strlen("?"));
                 }
             }
 
-        }catch(\PDOException $ex){
-            throw new DbException($ex->getMessage());
+            $sql = $query;
+
+            $this->prepared = $this->db->prepare($sql);
+            $this->_bindPdoNameSpace($params);
+
+            $this->prepared->execute();
+            return $this->prepared;
+
+        } else {
+            return $this->db->query($query);
         }
     }
 
