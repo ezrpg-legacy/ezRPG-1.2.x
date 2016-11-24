@@ -2,6 +2,8 @@
 
 namespace ezrpg\core;
 
+use PDO;
+
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
 
@@ -47,9 +49,22 @@ class DbFactory
 
     public static function factory($config)
     {
-        $dbconfig = $config['database'];
+        $conf = $config['database'];
 
-        return new \ezrpg\core\DbEngine($dbconfig);
+        $options = array(
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        );
+        try {
+            $dsn = "mysql:host=".$conf['host'].";dbname=".$conf['name'].";";
+            $pdo = new PDO( $dsn, $conf['user'], $conf['pass'], $options );
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }catch(\PDOException $ex){
+            throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of DbEngine.php");
+        }
+
+        return new \ezrpg\core\DbEngine($pdo, $conf['prefix']);
     }
 
 }

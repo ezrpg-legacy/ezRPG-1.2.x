@@ -40,12 +40,6 @@ class DbEngine
     public $query;
 
     /*
-      Boolean: $isConnected
-      A boolean showing the status of the database connection.
-     */
-    public $isConnected = false;
-
-    /*
       Variable: $db
       Contains a PDO link identifier.
      */
@@ -53,19 +47,6 @@ class DbEngine
 
     protected $prepared;
 
-    /*
-      Variables: Connection Details
-      $host - Host name of database server.
-      $dbname - Name of the database.
-      $username - Username to connect with.
-      $password - Password to connect with.
-      $port - Database Port to connect to.
-     */
-    protected $host;
-    protected $dbname;
-    protected $username;
-    protected $password;
-    protected $port;
     protected $prefix;
 
     /*
@@ -79,218 +60,40 @@ class DbEngine
       $dbname - Name of database
      */
 
-    public function __construct($conf)
+    public function __construct(\PDO $db, $prefix = '')
     {
-        $options = array(
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        );
-        try {
-            $dsn = "mysql:host=".$conf['host'].";dbname=".$conf['name'].";";
-            $this->db = new \PDO( $dsn, $conf['user'], $conf['pass'], $options );
-            $this->host = $conf['host'];
-            $this->password = $conf['pass'];
-            $this->username = $conf['user'];
-            $this->port = $conf['port'];
-            $this->dbname = $conf['name'];
-            $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $this->prefix = $conf['prefix'];
-        }catch(\PDOException $ex){
-            throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of DbEngine.php");
-        }
-    }
-
-    /*
-      Destructor: __destruct
-      Closes the connection to the MySQL server.
-     */
-
-    public function __destruct()
-    {
-        if ($this->isConnected) {
-            $this->db == null;
-        }
-    }
-
-    /*
-      Function: execute
-      Checks if a connection is made, otherwise first calls <connect>.
-      Executes a query and returns the result (a resource or boolean).
-
-      Parameters:
-      $query - A string with the SQL query to execute.
-      $params - An optional array of parameters to use with parameter binding.
-
-      Returns:
-      The result of the SQL query. Either a resource or a boolean.
-      On a failed query, it returns false.
-      On an SQL error, it throws a <DbException> with the MySQL error.
-
-      Example Usage:
-      > $query = $db->execute('SELECT username FROM <ezrpg>players WHERE id=?', array($player->id));
-
-      > $query = $db->execute('SELECT COUNT(id) AS count FROM <ezrpg>players');
-
-      See Also:
-      - <connect>
-     */
-    public function oldexecute($query, $params = 0)
-    {
-        if ($this->isConnected === false) {
-            $this->connect();
-        }
-
-        $query = trim($query);
-
-        try {
-            if (strpos($query, $this->prefix) !== true) {
-                $query = str_replace('<ezrpg>', $this->prefix, $query);
-            }
-
-            //SQL queries should query for tables with <ezrpg>tablename so that <ezrpg> is replaced with the table prefix.
-            //Parameter binding
-            if ($params != 0) {
-                //Split the query
-                $parts = explode('?', $query);
-
-                //Make sure query parts and parameters match, otherwise adjust the arrays
-                $count1 = count($parts);
-                $count2 = count($params);
-                if ($count1 <= $count2) //Too many parameters, drop the extras
-                {
-                    $params = array_slice($params, 0, $count1);
-                }
-
-                if ($count1 > ($count2 + 1)) //Too little parameters, add extra '?' symbols
-                { //OR throw an SQL exception?
-                    $diff = $count2 - $count1;
-                    array_fill($params, $diff, '?');
-                }
-
-                //Sanitize parameters
-                for ($i = 0; $i < $count2; $i++) {
-                    $val = $params[$i];
-
-                    if (is_string($val)) {
-                        //magic quotes
-                        if (get_magic_quotes_gpc()) {
-                            $val = stripslashes($val);
-                        }
-
-                        //Below conditional has been commented out to enforce types
-                        //If a string was passed that was meant to be an integer, you must cast it to an int with intval() first.
-                        //Otherwise, strings of numbers will still be passed as a string, and surrounded with single quotes
-                        //if (!ctype_digit($val))
-                        //{
-                        $val = '\'' . $val . '\'';
-                        //} //Otherwise the string is acting as a digit, so leave it alone
-                    } else {
-                        if (is_int($val) || is_float($val)) {
-                            //Value is an integer, no sanitation is necessary.
-                            //Only need to convert to string so the parameter can be concatenated onto the query string.
-                            //(Not really necessary, but otherwise this block would be empty ;])
-                            $val = strval($val);
-                        } else {
-                            //Parameter is not a valid type.
-                            $val = '?';
-                            //OR throw an SQL exception?
-                        }
-                    }
-
-                    $params[$i] = $val;
-                }
-
-                $query = '';
-                //Reconstruct query
-                for ($i = 0; $i < $count2; $i++) {
-                    $query .= $parts[$i] . $params[$i];
-                }
-                $query .= $parts[($count1 - 1)];
-            }
-
-            $this->query = $query;
-
-            if ($this->container['config']['debug']['debug_mode'] === 1) {
-                echo "SQLCommand: " . $query, '<br />';
-            };
-
-            //Execute query
-            $result = $this->db->query($query);
-            if ($result === false) { //If there was an error with the query
-                $this->error = $this->db->errorInfo();
-
-                //If in debug mode, send exception, otherwise ignore
-                if (SHOW_ERRORS === 1) {
-                    //Feature: admin logging of errors?
-                    $error_msg = '<strong>Query:</strong> <em>' . $this->query . '</em><br /><strong>' . var_dump($this->error) . '</strong>';
-                } elseif (defined("IN_INSTALLER")) {
-                    $error_msg = '<strong>Query:</strong> <em><pre>' . $this->query . '</pre></em><br /><strong>' . var_dump($this->error) . '</strong> <br />';
-                    $error_msg .= 'Contact Current Game Support staff or ezRPGProject.net Support for help. <br />';
-                    $error_msg .= '<a href="javascript:document.location.reload();">Reload</a>';
-                } else {
-                    $error_msg = '<strong>Error:</strong> <em>There has been a database error. This error has been logged.</em><br>'. $this->error[2];
-                }
-                throw new EzException($error_msg);
-
-                return false;
-            }
-        } catch (\PDOException $e) {
-            throw new EzException($e->__toString());
-        }
-
-        //Update query count
-        ++$this->query_count;
-
-        return $result;
+        $this->db = $db;
+        $this->prefix = $prefix;
     }
 
     public function execute($query, $params = 0)
     {
-        if ($this->isConnected === false) {
-            $this->connect();
-        }
-
         $query = trim($query);
 
-        try {
-            if (strpos($query, $this->prefix) !== true) {
-                $query = str_replace('<ezrpg>', $this->prefix, $query);
-            }
+        if (strpos($query, $this->prefix) !== true) {
+            $query = str_replace('<ezrpg>', $this->prefix, $query);
+        }
 
-            if (count($params) > 0 && is_array($params)) {
+        if (count($params) > 0 && is_array($params)) {
 
-                foreach ($params as $f => $v) {
-                    $tmp[] = ":s_$f";
-                    $pos = strpos($query, "?");
-                    if ($pos !== false) {
-                        $query = substr_replace($query, ":s_$f", $pos, strlen("?"));
-                    }
-                }
-
-                $sql = $query;
-                // pdo prepare statement
-                try {
-                    $this->prepared = $this->db->prepare($sql);
-                    $this->_bindPdoNameSpace($params);
-                    // set class where property with array data
-
-                    //die(var_dump($this->prepared->debugDumpParams()));
-                    $this->prepared->execute();
-                    return $this->prepared;
-                } catch (\PDOException $ex) {
-                    throw new DbException($ex->getMessage());
-                }
-            }else{
-                try {
-                    return $this->db->query($query);
-                }catch(\PDOException $ex){
-                    throw new DbException($ex->getMessage());
+            foreach ($params as $f => $v) {
+                $tmp[] = ":s_$f";
+                $pos = strpos($query, "?");
+                if ($pos !== false) {
+                    $query = substr_replace($query, ":s_$f", $pos, strlen("?"));
                 }
             }
 
-        }catch(\PDOException $ex){
-            throw new DbException($ex->getMessage());
+            $sql = $query;
+
+            $this->prepared = $this->db->prepare($sql);
+            $this->_bindPdoNameSpace($params);
+
+            $this->prepared->execute();
+            return $this->prepared;
+
+        } else {
+            return $this->db->query($query);
         }
     }
 
@@ -314,7 +117,7 @@ class DbEngine
       - <fetchRow>
      */
 
-    public function fetch(&$result)
+    public function fetch($result)
     {
         return $result->fetchObject();
     }
@@ -339,9 +142,9 @@ class DbEngine
       - <fetch>
      */
 
-    public function fetchArray(&$result)
+    public function fetchArray($result)
     {
-        return $this->fetch_array();
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
 
     /*
@@ -368,25 +171,10 @@ class DbEngine
       - <fetchArray>
      */
 
-    public function fetchAll(&$result, $return_array = false)
+    public function fetchAll($result, $return_array = false)
     {
-        $ret = array();
-
-        if ($result === false) {
-            return $ret;
-        }
-
-        if ($return_array === true) {
-            while ($row = $this->fetchArray($result)) {
-                $ret[] = $row;
-            }
-        } else {
-            while ($row = $this->fetch($result)) {
-                $ret[] = $row;
-            }
-        }
-
-        return $ret;
+        $fetch_style = $return_array ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
+        return $result->fetchAll($fetch_style);
     }
 
     /*
@@ -508,43 +296,6 @@ class DbEngine
     }
 
     /*
-      Function: connect
-      Connects to a MySQL server and selects a database.
-
-      Parameters:
-      $host - Database server
-      $username - Username to login with
-      $password - Password to login with
-      $dbname - Name of database
-
-      Returns:
-      True if there were no errors.
-
-      Throws a <DbException> if there was a connection problem.
-     */
-
-    protected function connect()
-    {
-        if ($this->isConnected === false) {
-            try {
-                $uri = sprintf('mysql:host=%s;dbname=%s;port=%s', $this->host, $this->dbname, $this->port);
-                $this->db = new PDO($uri, $this->username, $this->password);
-                if ($this->db === false) {
-                    throw new DbException($this->db, SERVER_ERROR);
-                } else {
-                    $this->isConnected = true;
-
-                    return true;
-                }
-            }catch(PDOException $ex){
-                throw new EzException($ex->getMessage());
-            }
-        } else {
-            return true;
-        }
-    }
-
-    /*
       Function: update
       Updates a row based on where clause
 
@@ -565,11 +316,8 @@ class DbEngine
       Also it could allow for a default column to be select (perhaps player->id?)
      */
 
-    function update($table, $fields, $where)
+    public function update($table, $fields, $where)
     {
-        if ($this->isConnected === false) {
-            $this->connect();
-        }
         $i = 0;
         $var = "";
         $numFields = count($fields);
@@ -657,5 +405,3 @@ class DbEngine
         } // end for each here
     }
 }
-
-?>
