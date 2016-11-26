@@ -18,7 +18,7 @@ define('CACHE_DIR', ROOT_DIR . '/cache/');
 define('EXT_DIR', CORE_DIR . '/ext');
 define('HOOKS_DIR', ROOT_DIR . '/hooks');
 
-require_once CORE_DIR . '/Base_Module.php';
+require_once CORE_DIR . '/src/Base_Module.php';
 require_once CORE_DIR . '/const.errors.php';
 require_once CORE_DIR . '/database/DatabaseFactory.php';
 require_once CORE_DIR . '/functions/modules.php';
