@@ -20,7 +20,7 @@ define('HOOKS_DIR', ROOT_DIR . '/hooks');
 
 require_once CORE_DIR . '/src/Base_Module.php';
 require_once CORE_DIR . '/const.errors.php';
-require_once CORE_DIR . '/database/DatabaseFactory.php';
+require_once CORE_DIR . '/src/database/DatabaseFactory.php';
 require_once CORE_DIR . '/functions/modules.php';
 require_once CUR_DIR . '/core/InstallerFactory.php';
 
