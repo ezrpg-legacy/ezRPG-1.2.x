@@ -1,21 +1,26 @@
 {
-  "name": "ezRPG/ezRPG-Engine",
-  "description": "TextBased MMORPG Engine for PHP",
-  "license": "GNU GPL v3",
-  "authors": [
-    {
-      "name": "Zeggy",
-      "role": "Founder"
+    "name": "ezRPG/ezRPG-Engine",
+    "description": "TextBased MMORPG Engine for PHP",
+    "license": "GNU GPL v3",
+    "authors": [
+        {
+            "name": "Zeggy",
+            "role": "Founder"
+        },
+        {
+            "name": "Tim Garrity",
+            "email": "timgarrity89@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "pimple/pimple": "~3.0",
+        "smarty/smarty": "~3.1",
+        "pclzip/pclzip": "~2.8.2"
     },
-    {
-      "name": "Tim Garrity",
-      "email": "timgarrity89@gmail.com",
-      "role": "Developer"
+    "autoload": {
+        "psr-4": {
+            "ezrpg\\core\\": "core/"
+        }
     }
-  ],
-  "require": {
-    "pimple/pimple": "~3.0",
-    "smarty/smarty": "~3.1",
-    "pclzip/pclzip": "~2.8.2"
-  }
 }
