@@ -95,7 +95,7 @@ class Application
 
     public function setDatabase()
     {
-        $this->container['db'] = \ezrpg\core\DbFactory::factory($this->container['config']);
+        $this->container['db'] = \ezrpg\core\database\DatabaseFactory::factory($this->container['config']);
 
         return $this->db = $this->container['db'];
     }
