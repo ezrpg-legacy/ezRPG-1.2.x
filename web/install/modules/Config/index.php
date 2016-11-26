@@ -1,7 +1,6 @@
 <?php
 namespace ezrpg\Install\Modules;
-use ezrpg\Install\InstallerFactory,
-    ezrpg\core\DbException;
+use ezrpg\Install\InstallerFactory;
 
 class Install_Config extends InstallerFactory
 {
@@ -38,7 +37,7 @@ class Install_Config extends InstallerFactory
                 $conf['database'] = $dbconfig;
                 $db = \ezrpg\core\DbFactory::factory($conf);
             }
-            catch ( DbException $e )
+            catch ( \PDOException $e )
             {
                 $error = 1;
             }

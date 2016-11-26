@@ -427,12 +427,8 @@ class Menu
 
     function isMenu($name)
     {
-        try {
             $query = $this->db->execute('SELECT id, name FROM `<ezrpg>menu`  ORDER BY `id`');
             $array = $this->db->fetchAll($query);
-        }catch(\ezrpg\core\DbException $ex){
-            throw new $ex;
-        }
         try {
             foreach ($array as $item => $ival) {
                 if ($ival->name == $name) {

@@ -11,8 +11,6 @@ defined('IN_EZRPG') or exit;
   Class: DbFactory
   Factory class for database drivers.
 
-  See Also:
-  - <DbException>
  */
 
 class DbFactory
@@ -31,20 +29,18 @@ class DbFactory
       Returns:
       A new instance of the database driver class.
 
-      Throws a <DbException> on failure.
+      Throws a <PDOException> on failure.
 
       Example Usage:
       > try
       > {
       >     $db = DbFactory::factory('mysql', 'localhost', 'root', 'password', 'ezrpg');
       > }
-      > catch (DbException $e)
+      > catch (PDOException $e)
       > {
       >     $e->__toString();
       > }
 
-      See Also:
-      - <DbException>
      */
 
     public static function factory($config)

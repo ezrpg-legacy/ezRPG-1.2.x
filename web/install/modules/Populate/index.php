@@ -25,15 +25,10 @@ class Install_Populate extends InstallerFactory
             $this->footer();
             die;
         }
-		try
-        {
-            $this->container['app']->getConfig(ROOT_DIR . '/config/database.php'); //this doesn't work yet. @todo add a variable to getConfig to set the configpath if applicable
-            $db = \ezrpg\core\DbFactory::factory($this->container['config']);
-        }
-        catch ( DbException $e )
-        {
-            $e->__toString();
-        }
+
+        $this->container['app']->getConfig(ROOT_DIR . '/config/database.php'); //this doesn't work yet. @todo add a variable to getConfig to set the configpath if applicable
+        $db = \ezrpg\core\DbFactory::factory($this->container['config']);
+
 		
         $structure1 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>players` (

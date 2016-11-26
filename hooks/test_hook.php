@@ -18,9 +18,7 @@ function hook_test_hook($container, $args = 0)
 
 function hook_exec_test($container, $args = 0)
 {
-    if ($args == 'db') {
-        throw new \ezrpg\core\DbException("This is an db exception");
-    }elseif($args == 'file'){
+    if($args == 'file'){
         throw new \ezrpg\core\FileException('This is a file exception');
     }elseif($args == 'norm'){
         throw new \ezrpg\core\EzException("This is a normal ezRPG exception");
