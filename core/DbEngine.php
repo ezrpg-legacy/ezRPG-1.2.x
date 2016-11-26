@@ -270,15 +270,13 @@ class DbEngine
                 // set pdo insert statement in class property
                 $sql = "INSERT INTO `$table` ($sFields) VALUES ($sNameSpaceParam);";
                 // pdo prepare statement
-                try {
-                    $this->prepared = $this->db->prepare($sql);
-                    $this->_bindPdoNameSpace($data);
-                    // set class where property with array data
-                    $this->prepared->execute();
-                    return $this->db->lastInsertId();
-                }catch(\PDOException $ex){
-                    throw new DbException($ex->getMessage());
-                }
+
+                $this->prepared = $this->db->prepare($sql);
+                $this->_bindPdoNameSpace($data);
+                // set class where property with array data
+                $this->prepared->execute();
+                return $this->db->lastInsertId();
+
             }
         }
     }

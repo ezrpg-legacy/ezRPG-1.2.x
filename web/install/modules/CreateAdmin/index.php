@@ -64,13 +64,10 @@ class Install_CreateAdmin extends InstallerFactory
                 {
                     $e->__toString();
                 }
-                $secret_key = createKey(16);
                 $insert = array( );
                 $insert['username'] = $username;
-                $insert['password'] = sha1($secret_key . $password . $this->container['config']['secret']);
+                $insert['password'] = password_hash($password, PASSWORD_BCRYPT);
                 $insert['email'] = $email;
-                $insert['pass_method'] = 1;
-                $insert['secret_key'] = $secret_key;
                 $insert['registered'] = time();
                 $insert['rank'] = 10;
                 $new_admin = $this->container['db']->insert("<ezrpg>players", $insert);
