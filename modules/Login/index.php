@@ -90,7 +90,7 @@ class Module_Login extends Base_Module
 
     private function validate()
     {
-        $query = $this->db->execute('SELECT `id`, `username`, `password` FROM `<ezrpg>players` WHERE `username`=?',
+        $query = $this->db->execute('SELECT `id`, `username`, `password`, `secret_key` FROM `<ezrpg>players` WHERE `username`=?',
             array($_POST['username']));
 
         if ($this->db->numRows($query) == 0) {
@@ -98,8 +98,8 @@ class Module_Login extends Base_Module
         } else {
             $player = $this->db->fetch($query);
 
-            $check = password_verify($_POST['password'], $player->password);
-
+            $check = $this->container['hooks']->run_hooks('login_funcs', array('post'=>$_POST['password'], 'player' =>$player));
+            
             if ($check != true) {
                 return false;
             }
