@@ -13,7 +13,7 @@ function generateSignature()
     $config_paths = [
         'config/*.php'
     ];
-    $configLoader = new \ezrpg\core\ConfigLoader();
+    $configLoader = new \ezrpg\core\config\ConfigLoader();
     $config = $configLoader->loadConfigFromPaths($config_paths);
 
     $bits = array(

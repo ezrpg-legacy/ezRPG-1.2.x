@@ -108,22 +108,22 @@ class Application
                     'modules/*/config.php',
                     'config/*.php',
                 ];
-                $configLoader = new \ezrpg\core\ConfigLoader();
+                $configLoader = new \ezrpg\core\config\ConfigLoader();
                 $config = $configLoader->loadConfigFromPaths($config_paths);
             }else{
                 $config = include $path;
             }
 
-            $this->container['config'] = new \ezrpg\core\Config($config);
+            $this->container['config'] = new \ezrpg\core\config\Config($config);
         }
         return $this->container['config'];
     }
 
     public function getConfigFromCache($path = null){
         if($path == null){
-            $this->container['config'] = new \ezrpg\core\Config(unserialize(file_get_contents(ROOT_DIR . "/config.php")));
+            $this->container['config'] = new \ezrpg\core\config\Config(unserialize(file_get_contents(ROOT_DIR . "/config.php")));
         }else{
-            $this->container['config'] = new \ezrpg\core\Config(unserialize(file_get_contents($path)));
+            $this->container['config'] = new \ezrpg\core\config\Config(unserialize(file_get_contents($path)));
         }
         return $this->container['config'];
     }
@@ -136,7 +136,7 @@ class Application
                 'config/*.php',
             ];
 
-            $configLoader = new \ezrpg\core\ConfigLoader();
+            $configLoader = new \ezrpg\core\config\ConfigLoader();
             $config = $configLoader->loadConfigFromPaths($config_paths);
             $serialized = serialize($config);
             file_put_contents(ROOT_DIR . "/config.php", $serialized);

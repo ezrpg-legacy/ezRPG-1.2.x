@@ -1,5 +1,5 @@
 <?php
-namespace ezrpg\core;
+namespace ezrpg\core\config;
 
 class Config implements \ArrayAccess
 {

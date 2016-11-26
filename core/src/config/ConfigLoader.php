@@ -1,5 +1,5 @@
 <?php
-namespace ezrpg\core;
+namespace ezrpg\core\config;
 
 class ConfigLoader
 {
@@ -19,7 +19,7 @@ class ConfigLoader
 
     /**
      * Merge arrays recursively.
-     * 
+     *
      * @author Andy <andyidol@gmail.com>
      */
     private function mergeArrays($arr1, $arr2)
