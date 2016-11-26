@@ -26,7 +26,7 @@ class Install_Plugins extends InstallerFactory
             $this->container['app']->getConfig(ROOT_DIR . '/config/database.php');
             $db = \ezrpg\core\DbFactory::factory($this->container['config']);
         }
-        catch ( \PDOException $e )
+        catch ( DbException $e )
         {
             $e->__toString();
         }

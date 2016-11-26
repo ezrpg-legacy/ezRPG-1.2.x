@@ -2,6 +2,7 @@
 
 namespace ezrpg\Install\Modules;
 use ezrpg\Install\InstallerFactory,
+    ezrpg\core\DbException,
     ezrpg\core\EzException;
 
 class Install_CreateAdmin extends InstallerFactory
@@ -59,7 +60,7 @@ class Install_CreateAdmin extends InstallerFactory
 
                     //$db = \ezrpg\core\DbFactory::factory($this->container['config']);
                 }
-                catch ( \PDOException $e )
+                catch ( DbException $e )
                 {
                     $e->__toString();
                 }

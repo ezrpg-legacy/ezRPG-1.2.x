@@ -1,7 +1,8 @@
 <?php
 
 namespace ezrpg\core;
-use \PDO,
+use ezrpg\core\DbException,
+    \PDO,
     \PDOException,
     ezrpg\core\EzException;
 
@@ -14,6 +15,7 @@ defined('IN_EZRPG') or exit;
 
   See Also:
   - <DbFactory>
+  - <DbException>
  */
 
 class DbEngine
@@ -275,7 +277,7 @@ class DbEngine
                     $this->prepared->execute();
                     return $this->db->lastInsertId();
                 }catch(\PDOException $ex){
-                    throw new EzException($ex->getMessage());
+                    throw new DbException($ex->getMessage());
                 }
             }
         }
