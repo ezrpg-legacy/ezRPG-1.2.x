@@ -36,7 +36,7 @@ class Install_Config extends InstallerFactory
             try
             {
                 $conf['database'] = $dbconfig;
-                $db = \ezrpg\core\DbFactory::factory($conf);
+                $db = \ezrpg\core\database\DatabaseFactory::factory($conf);
             }
             catch ( DbException $e )
             {

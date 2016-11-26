@@ -1,6 +1,6 @@
 <?php
+namespace ezrpg\core\database;
 
-namespace ezrpg\core;
 use ezrpg\core\DbException,
     \PDO,
     \PDOException,
@@ -14,11 +14,11 @@ defined('IN_EZRPG') or exit;
   Database abstraction class for PDO.
 
   See Also:
-  - <DbFactory>
+  - <DatabaseFactory>
   - <DbException>
  */
 
-class DbEngine
+class Database
 {
     /*
       Integer: $query_count

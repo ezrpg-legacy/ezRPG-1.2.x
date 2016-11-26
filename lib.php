@@ -28,16 +28,6 @@ foreach ($func as $item) {
     }
 }
 
-function ezrpg_autoloader($classname) {
-    $class = str_replace("ezrpg\\core\\", "", $classname);
-    $file = __DIR__ . '/core/' . $class . '.php';
-
-    if (file_exists($file)) {
-      include $file;
-    }
-}
-
-spl_autoload_register("ezrpg_Autoloader");
 
 //Constants
 require_once(CORE_DIR . '/const.errors.php');

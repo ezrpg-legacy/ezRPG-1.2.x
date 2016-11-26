@@ -1,6 +1,5 @@
 <?php
-
-namespace ezrpg\core;
+namespace ezrpg\core\database;
 
 use PDO;
 
@@ -8,14 +7,14 @@ use PDO;
 defined('IN_EZRPG') or exit;
 
 /*
-  Class: DbFactory
+  Class: DatabaseFactory
   Factory class for database drivers.
 
   See Also:
   - <DbException>
  */
 
-class DbFactory
+class DatabaseFactory
 {
     /*
       Function: factory
@@ -36,7 +35,7 @@ class DbFactory
       Example Usage:
       > try
       > {
-      >     $db = DbFactory::factory('mysql', 'localhost', 'root', 'password', 'ezrpg');
+      >     $db = DatabaseFactory::factory('mysql', 'localhost', 'root', 'password', 'ezrpg');
       > }
       > catch (DbException $e)
       > {
@@ -61,10 +60,10 @@ class DbFactory
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }catch(\PDOException $ex){
-            throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of DbEngine.php");
+            throw new EzException($ex->getMessage() . ": ".$dsn . ". Line:" . $ex->getLine() . " of Database.php");
         }
 
-        return new \ezrpg\core\DbEngine($pdo, $conf['prefix']);
+        return new \ezrpg\core\database\Database($pdo, $conf['prefix']);
     }
 
 }

@@ -58,7 +58,7 @@ class Install_CreateAdmin extends InstallerFactory
                     // Initialize the Database
                     $this->container['app']->setDatabase();
 
-                    //$db = \ezrpg\core\DbFactory::factory($this->container['config']);
+                    //$db = \ezrpg\core\database\DatabaseFactory::factory($this->container['config']);
                 }
                 catch ( DbException $e )
                 {
