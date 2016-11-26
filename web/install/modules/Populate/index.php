@@ -34,15 +34,13 @@ class Install_Populate extends InstallerFactory
         {
             $e->__toString();
         }
-		
+
         $structure1 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `username` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) default NULL,
-  `pass_method` tinyint(3) NOT NULL,
-  `secret_key` text NOT NULL,
   `rank` smallint(5) unsigned NOT NULL default '1',
   `registered` int(11) unsigned default NULL,
   `force_cache` int(11) unsigned default '0',
@@ -128,7 +126,7 @@ QUERY;
 		echo "<h2>The database has been populated.</h2>\n";
 		echo "<a href=\"index.php?step=Plugins\">Continue to next step</a>";
 		$this->footer();
-		
+
     }
 
 }

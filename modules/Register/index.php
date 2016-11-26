@@ -162,10 +162,7 @@ class Module_Register extends Base_Module
             //Add new user to database
             $insert['username'] = $_POST['username'];
             $insert['email'] = $_POST['email'];
-            $insert['secret_key'] = createKey(16);
-            $insert['password'] = createPassword($insert['secret_key'], $_POST['password']);
-            $settings = $this->settings;
-            $insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
+            $insert['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
             $insert['registered'] = time();
 
             //Run register hook

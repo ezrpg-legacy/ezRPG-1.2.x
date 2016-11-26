@@ -19,7 +19,6 @@ define('EXT_DIR', CORE_DIR . '/ext');
 define('HOOKS_DIR', ROOT_DIR . '/hooks');
 
 require_once CORE_DIR . '/Base_Module.php';
-require_once CORE_DIR . '/DbException.php';
 require_once CORE_DIR . '/const.errors.php';
 require_once CORE_DIR . '/DbFactory.php';
 require_once CORE_DIR . '/functions/modules.php';

@@ -43,26 +43,12 @@ class Module_Login extends Base_Module
             }
         }
         if ($error == 0) {
-            $pass_method = $this->container['config']['app']['pass_encryption']['value'];
-            $check = checkPassword($player->secret_key, $_POST['password'], $player->password);
+
+            $check = password_verify($_POST['password'], $player->password);
 
             if ($check != true) {
-                if ($player->pass_method != $pass_method) {
-                    $check = checkPassword($player->secret_key, $_POST['password'], $player->password,
-                        $player->pass_method);
-                    if ($check != true) {
-                        $errors[] = 'Password Set as Old Method!';
-                        $error = 1;
-                    } else {
-                        $new_password = createPassword($player->secret_key, $_POST['password']);
-                        $this->db->execute('UPDATE `<ezrpg>players` SET `password`=?, `pass_method`=? WHERE `id`=?',
-                            array($new_password, $pass_method, $player->id));
-                        killPlayerCache($player->id);
-                    }
-                } else {
-                    $errors[] = 'Please check your username/password!';
-                    $error = 1;
-                }
+                $errors[] = 'Please check your username/password!';
+                $error = 1;
             }
 
             if ($error == 0) {
@@ -104,7 +90,7 @@ class Module_Login extends Base_Module
 
     private function validate()
     {
-        $query = $this->db->execute('SELECT `id`, `username`, `password`, `secret_key`, `pass_method` FROM `<ezrpg>players` WHERE `username`=?',
+        $query = $this->db->execute('SELECT `id`, `username`, `password` FROM `<ezrpg>players` WHERE `username`=?',
             array($_POST['username']));
 
         if ($this->db->numRows($query) == 0) {
@@ -112,10 +98,8 @@ class Module_Login extends Base_Module
         } else {
             $player = $this->db->fetch($query);
 
-            // We have different authentication methods at our disposal.
-            $pass_meth = $this->container['config']['app']['pass_encryption']['value'];
-            $check = checkPassword($player->secret_key, $_POST['password'], $player->password,
-                ($player->pass_method == $pass_meth ? '0' : $player->pass_method));
+            $check = password_verify($_POST['password'], $player->password);
+
             if ($check != true) {
                 return false;
             }
