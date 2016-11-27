@@ -128,7 +128,7 @@ function loadMetaCache($kill = 0, $id = 0)
         $config_paths = [
             'config/*.php'
         ];
-        $configLoader = new \ezrpg\core\ConfigLoader();
+        $configLoader = new \ezrpg\core\config\ConfigLoader();
         $config = $configLoader->loadConfigFromPaths($config_paths);
         if ($config['debug']['debug_mode'] == 1) {
             echo 'Created Player_Meta Cache! <br />';

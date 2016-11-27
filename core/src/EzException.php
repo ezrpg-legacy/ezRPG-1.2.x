@@ -20,9 +20,9 @@ class EzException extends Exception
 
     public function __toString()
     {
-        $configLoader = new \ezrpg\core\ConfigLoader();
+        $configLoader = new config\ConfigLoader();
         $config = $configLoader->loadConfigFromPaths(['core/config/core.php']);
-        $debug = new \ezrpg\core\Config($config);
+        $debug = new config\Config($config);
         $debug = $debug['debug'];
 
         $trace = nl2br($this->getTraceAsString());

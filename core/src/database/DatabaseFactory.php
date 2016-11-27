@@ -1,7 +1,8 @@
 <?php
 namespace ezrpg\core\database;
 
-use PDO;
+use PDO,
+    ezrpg\core\EzException;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
