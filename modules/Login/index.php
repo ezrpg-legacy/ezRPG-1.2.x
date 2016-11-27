@@ -42,37 +42,26 @@ class Module_Login extends Base_Module
                 $error = 1;
             }
         }
+
         if ($error == 0) {
 
-            $check = password_verify($_POST['password'], $player->password);
+            //Run login hook
+            $player = $hooks->run_hooks('login', $player);
 
-            if ($check != true) {
-                $errors[] = 'Please check your username/password!';
-                $error = 1;
+            $query = $this->db->execute('UPDATE `<ezrpg>players_meta` SET `last_login`=? WHERE `pid`=?',
+                array(time(), $player->id));
+            $_SESSION['userid'] = $player->id;
+            $_SESSION['hash'] = generateSignature();
+            $_SESSION['last_active'] = time();
+
+            $hooks->run_hooks('login_after', $player);
+            if (isset($_SESSION['last_page'])) {
+                header('Location: ' . $_SESSION['last_page']);
+                exit;
+            } else {
+                header('Location: index.php');
+                exit;
             }
-
-            if ($error == 0) {
-
-                //Run login hook
-                $player = $hooks->run_hooks('login', $player);
-
-                $query = $this->db->execute('UPDATE `<ezrpg>players_meta` SET `last_login`=? WHERE `pid`=?',
-                    array(time(), $player->id));
-                $_SESSION['userid'] = $player->id;
-                $_SESSION['hash'] = generateSignature();
-                $_SESSION['last_active'] = time();
-
-                $hooks->run_hooks('login_after', $player);
-                if (isset($_SESSION['last_page'])) {
-                    header('Location: ' . $_SESSION['last_page']);
-                    exit;
-                } else {
-                    header('Location: index.php');
-                    exit;
-                }
-            }
-        } else {
-            $hooks->run_hooks('3rdparty_login', $_POST);
         }
 
         //If we made it this far, then there's an issue
