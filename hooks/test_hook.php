@@ -19,11 +19,11 @@ function hook_test_hook($container, $args = 0)
 function hook_exec_test($container, $args = 0)
 {
     if ($args == 'db') {
-        throw new \ezRPG\lib\DbException("This is an db exception");
+        throw new \ezrpg\core\DbException("This is an db exception");
     }elseif($args == 'file'){
-        throw new \ezRPG\lib\FileException('This is a file exception');
+        throw new \ezrpg\core\FileException('This is a file exception');
     }elseif($args == 'norm'){
-        throw new \ezRPG\lib\EzException("This is a normal ezRPG exception");
+        throw new \ezrpg\core\EzException("This is a normal ezRPG exception");
     }else{
         $ex = new Exception("This is a normal PHP exception!");
         die($ex->getMessage());

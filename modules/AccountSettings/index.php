@@ -1,8 +1,8 @@
 <?php
 
-namespace ezRPG\Modules;
+namespace ezrpg\Modules;
 
-use \ezRPG\lib\Base_Module;
+use \ezrpg\core\Base_Module;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -37,10 +37,10 @@ class Module_AccountSettings extends Base_Module
         if (empty($_POST['current_password']) || empty($_POST['new_password']) || empty($_POST['new_password2'])) {
             $msg = 'You forgot to fill in something!';
         } else {
-            $player_check = $this->db->fetchRow('SELECT id, password, secret_key FROM `<ezrpg>players` WHERE `id` =?',
+            $player_check = $this->db->fetchRow('SELECT id, password FROM `<ezrpg>players` WHERE `id` =?',
                 array($_SESSION['userid']));
 
-            $check = checkPassword($player_check->secret_key, $_POST['current_password'], $player_check->password);
+            $check = password_verify($_POST['current_password'], $player_check->password);
             if ($check !== true) {
                 $msg = 'The password you entered does not match this account\'s password.';
             } else {
@@ -50,7 +50,7 @@ class Module_AccountSettings extends Base_Module
                     if ($_POST['new_password'] != $_POST['new_password2']) {
                         $msg = 'You didn\'t confirm your new password correctly!';
                     } else {
-                        $new_password = createPassword($player_check->secret_key, $_POST['new_password']);
+                        $new_password = password_hash($_POST['new_password'], PASSWORD_BCRYPT);
                         $this->db->execute('UPDATE `<ezrpg>players` SET `password`=? WHERE `id`=?',
                             array($new_password, $this->player->id));
                         $msg = 'You have changed your password.';

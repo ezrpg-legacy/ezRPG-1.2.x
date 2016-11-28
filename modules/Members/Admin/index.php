@@ -1,8 +1,8 @@
 <?php
 
-namespace ezRPG\Modules\Members\Admin;
+namespace ezrpg\Modules\Members\Admin;
 
-use \ezRPG\lib\Base_Module;
+use \ezrpg\core\Base_Module;
 
 defined('IN_EZRPG') or exit;
 
@@ -79,7 +79,7 @@ class Admin_Members extends Base_Module
             exit;
         }
 
-        $member = $this->db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, <ezrpg>players.email, <ezrpg>players_meta.rank, <ezrpg>players_meta.money, <ezrpg>players_meta.level FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE `id`=?',
+        $member = $this->db->fetchRow('SELECT <ezrpg>players.id, <ezrpg>players.username, <ezrpg>players.email, <ezrpg>players.rank, <ezrpg>players_meta.money, <ezrpg>players_meta.level FROM `<ezrpg>players` JOIN `<ezrpg>players_meta` ON <ezrpg>players.id = <ezrpg>players_meta.pid WHERE <ezrpg>players.`id`=?',
             array(intval($_GET['id'])));
 
         //No rows found

@@ -22,26 +22,14 @@ $func = array(
 );
 
 foreach ($func as $item) {
-    $filename = LIB_DIR . '/functions/func.' . $item . '.php';
+    $filename = CORE_DIR . '/functions/' . $item . '.php';
     if (is_readable($filename)) {
         require_once($filename);
     }
 }
 
-function ezrpg_Autoloader($pClassName)
-{
-    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
-    if (file_exists(__DIR__ . "/lib/" . $class . ".php")) {
-        include(__DIR__ . "/lib/" . $class . ".php");
-    }
-}
-
-spl_autoload_register("ezrpg_Autoloader");
-
-
-require_once(CUR_DIR . '/lib/Application.php');
 
 //Constants
-require_once(LIB_DIR . '/const.errors.php');
+require_once(CORE_DIR . '/const.errors.php');
 
 ?>

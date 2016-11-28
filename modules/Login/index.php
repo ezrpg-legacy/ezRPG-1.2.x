@@ -1,7 +1,7 @@
 <?php
 
-namespace ezRPG\Modules;
-use \ezRPG\lib\Base_Module;
+namespace ezrpg\Modules;
+use \ezrpg\core\Base_Module;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -13,9 +13,9 @@ defined('IN_EZRPG') or exit;
 
 class Module_Login extends Base_Module
 {
-    public function __construct($container, $menu)
+    public function __construct($container)
     {
-        parent::__construct($container, $menu);
+        parent::__construct($container);
     }
 
     /*
@@ -42,51 +42,26 @@ class Module_Login extends Base_Module
                 $error = 1;
             }
         }
+
         if ($error == 0) {
-            $pass_method = $this->settings->setting['general']['pass_encryption']['value']['value'];
-            $check = checkPassword($player->secret_key, $_POST['password'], $player->password);
 
-            if ($check != true) {
-                if ($player->pass_method != $pass_method) {
-                    $check = checkPassword($player->secret_key, $_POST['password'], $player->password,
-                        $player->pass_method);
-                    if ($check != true) {
-                        $errors[] = 'Password Set as Old Method!';
-                        $error = 1;
-                    } else {
-                        $new_password = createPassword($player->secret_key, $_POST['password']);
-                        $this->db->execute('UPDATE `<ezrpg>players` SET `password`=?, `pass_method`=? WHERE `id`=?',
-                            array($new_password, $pass_method, $player->id));
-                        killPlayerCache($player->id);
-                    }
-                } else {
-                    $errors[] = 'Please check your username/password!';
-                    $error = 1;
-                }
+            //Run login hook
+            $player = $hooks->run_hooks('login', $player);
+
+            $query = $this->db->execute('UPDATE `<ezrpg>players_meta` SET `last_login`=? WHERE `pid`=?',
+                array(time(), $player->id));
+            $_SESSION['userid'] = $player->id;
+            $_SESSION['hash'] = generateSignature();
+            $_SESSION['last_active'] = time();
+
+            $hooks->run_hooks('login_after', $player);
+            if (isset($_SESSION['last_page'])) {
+                header('Location: ' . $_SESSION['last_page']);
+                exit;
+            } else {
+                header('Location: index.php');
+                exit;
             }
-
-            if ($error == 0) {
-
-                //Run login hook
-                $player = $hooks->run_hooks('login', $player);
-
-                $query = $this->db->execute('UPDATE `<ezrpg>players_meta` SET `last_login`=? WHERE `pid`=?',
-                    array(time(), $player->id));
-                $_SESSION['userid'] = $player->id;
-                $_SESSION['hash'] = generateSignature();
-                $_SESSION['last_active'] = time();
-
-                $hooks->run_hooks('login_after', $player);
-                if (isset($_SESSION['last_page'])) {
-                    header('Location: ' . $_SESSION['last_page']);
-                    exit;
-                } else {
-                    header('Location: index.php');
-                    exit;
-                }
-            }
-        } else {
-            $hooks->run_hooks('3rdparty_login', $_POST);
         }
 
         //If we made it this far, then there's an issue
@@ -104,8 +79,7 @@ class Module_Login extends Base_Module
 
     private function validate()
     {
-        global $settings;
-        $query = $this->db->execute('SELECT `id`, `username`, `password`, `secret_key`, `pass_method` FROM `<ezrpg>players` WHERE `username`=?',
+        $query = $this->db->execute('SELECT `id`, `username`, `password` FROM `<ezrpg>players` WHERE `username`=?',
             array($_POST['username']));
 
         if ($this->db->numRows($query) == 0) {
@@ -113,10 +87,8 @@ class Module_Login extends Base_Module
         } else {
             $player = $this->db->fetch($query);
 
-            // We have different authentication methods at our disposal.
-            $pass_meth = $this->settings->setting['general']['pass_encryption']['value']['value'];
-            $check = checkPassword($player->secret_key, $_POST['password'], $player->password,
-                ($player->pass_method == $pass_meth ? '0' : $player->pass_method));
+            $check = $this->container['hooks']->run_hooks('login_funcs', array('post'=>$_POST['password'], 'player' =>$player));
+            
             if ($check != true) {
                 return false;
             }

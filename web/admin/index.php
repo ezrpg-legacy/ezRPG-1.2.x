@@ -1,6 +1,6 @@
 <?php
 
-namespace ezRPG\admin;
+namespace ezrpg\admin;
 
 define('IN_EZRPG', true);
 define('IN_ADMIN', true);
@@ -24,10 +24,10 @@ ini_set('display_errors', 0);
 
 function ezrpg_Autoloader($pClassName)
 {
-    $class = str_replace("ezRPG\\lib\\", "", $pClassName);
+    $class = str_replace("ezRPG\\core\\", "", $pClassName);
     $class = str_replace("\\", "/",$class);
-    if (file_exists(LIB_DIR . "/" . $class . ".php")) {
-        include(LIB_DIR . "/" . $class . ".php");
+    if (file_exists(CORE_DIR . "/" . $class . ".php")) {
+        include(CORE_DIR . "/" . $class . ".php");
     }
 
 }
@@ -36,16 +36,13 @@ spl_autoload_register("ezRPG\\admin\\ezrpg_Autoloader");
 require_once $rootPath. '/init.php';
 
 $container = new \Pimple\Container;
-$ezrpg = new \ezRPG\lib\Application($container);
+$ezrpg = new \ezrpg\core\Application($container);
 
 // Get Config for the game
-$ezrpg->getConfig(CUR_DIR . '/config.php');
+$ezrpg->getConfigFromCache(CUR_DIR . '/config.php');
 
 // Initialize the Database
 $ezrpg->setDatabase();
-
-// Settings
-$ezrpg->getSettings();
 
 // Initialize the View Controller;
 $ezrpg->initializeView();
@@ -63,11 +60,11 @@ $container['hooks'] = $hooks = $ezrpg->getHooks();
 $ezrpg->setPlayer($hooks->run_hooks('player', 0));
 
 // Create the Menu object
-$ezrpg->container['menu'] = new \ezRPG\lib\Menu($container);
+$ezrpg->container['menu'] = new \ezrpg\core\Menu($container);
 
 $ezrpg->container['menu']->get_menus();
 
-$players = new \ezRPG\lib\Players($container);
+$players = new \ezrpg\core\Players($container);
 
 // Check player exists
 if ($container['player'] == '0') {

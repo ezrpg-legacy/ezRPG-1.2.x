@@ -1,7 +1,7 @@
 <?php
 
-namespace ezRPG\Modules;
-use \ezRPG\lib\Base_Module;
+namespace ezrpg\Modules;
+use \ezrpg\core\Base_Module;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
@@ -14,9 +14,9 @@ defined('IN_EZRPG') or exit;
 class Module_Register extends Base_Module
 {
 
-    public function __construct($container, $menu)
+    public function __construct($container)
     {
-        parent::__construct($container, $menu);
+        parent::__construct($container);
     }
 
     /*
@@ -145,7 +145,7 @@ class Module_Register extends Base_Module
             $errors[] = 'You didn\'t enter the verification code!';
             $error = 1;
         } else {
-            if ($_SESSION['verify_code'] != sha1(strtoupper($_POST['reg_verify']) . SECRET_KEY)) {
+            if ($_SESSION['verify_code'] != sha1(strtoupper($_POST['reg_verify']) . $this->container['config']['secret_key'])) {
                 $errors[] = 'You didn\'t enter the correct verification code!';
                 $error = 1;
             }
@@ -162,10 +162,7 @@ class Module_Register extends Base_Module
             //Add new user to database
             $insert['username'] = $_POST['username'];
             $insert['email'] = $_POST['email'];
-            $insert['secret_key'] = createKey(16);
-            $insert['password'] = createPassword($insert['secret_key'], $_POST['password']);
-            $settings = $this->settings;
-            $insert['pass_method'] = $settings->setting['general']['pass_encryption']['value']['value'];
+            $insert['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
             $insert['registered'] = time();
 
             //Run register hook

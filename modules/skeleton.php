@@ -1,8 +1,8 @@
 <?php
 
-namespace ezRPG\Modules;
+namespace ezrpg\Modules;
 
-use \ezRPG\lib\Base_Module;
+use \ezrpg\core\Base_Module;
 
 //This file cannot be viewed, it must be included
 defined('IN_EZRPG') or exit;
