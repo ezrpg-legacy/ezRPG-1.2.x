@@ -31,15 +31,12 @@ try {
 
     $container = new \Pimple\Container;
     $ezrpg = new Application($container);
-    $ezrpg->getConfig(CUR_DIR . '/config.php');
+    $ezrpg->getConfigFromCache(CUR_DIR . '/config.php');
 // Database
     $ezrpg->setDatabase();
 
     // Database password no longer needed, unset variable
     unset($config_password);
-
-    // Settings
-    $ezrpg->getSettings();
 
     $container['hooks'] = $hooks = $ezrpg->getHooks();
 
@@ -47,16 +44,13 @@ try {
 
     if (isset($params['act'])) {
         if ($params['act'] == "hour") {
-            $cron = new \ezrpg\core\HourlyCron($container);
-            $cron->start();
+            $ezrpg->hooks->run_hooks('cron_1hr');
             echo date("M-d-y @ H:i:s") . "Executed Hourly \n";
         } elseif ($params['act'] == "halfhour") {
-            $cron = new \ezrpg\core\HalfHourCron($container);
-            $cron->start();
+            $ezrpg->hooks->run_hooks('cron_30min');
             echo date("M-d-y @ H:i:s") . "Executed HalfHour \n";
         } elseif ($params['act'] == "daily") {
-            $cron = new \ezrpg\core\DailyCron($container);
-            $cron->start();
+            $ezrpg->hooks->run_hooks('cron_daily');
             echo date("M-d-y @ H:i:s") . "Executed Daily";
         } else {
             die('Unknown argument');
