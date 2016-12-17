@@ -1,5 +1,44 @@
 {include file="file:[$THEME]header.tpl" TITLE="Plugin/Module Admin"}
 
+{function name=fsettings item=0 key=0 grp=0}
+    {foreach from=$item item=sitem key=skey}
+        {if isset($sitem.visible) && $sitem.visible == 1}
+                    {if isset($sitem.children)}
+                        <!--<tr>
+							<td valign="top">
+
+								<strong>{$sitem.title}</strong><br/>
+                                {$sitem.description}
+							</td>
+						</tr>-->
+						{fsettings item=$sitem.children key={$skey + $subkey}}
+                    {else}
+						<tr>
+						<td valign="top">
+						<strong>{$sitem.title}</strong><br>
+                        {$sitem.description}<br>
+						{if $sitem.datatype == 'text'}
+							<input name='{$group}.{$skey}' type='text' value='{$sitem.value}'></input>
+						{/if}
+
+						{if $sitem.datatype == 'select'}
+							<select name='{$group}.{$skey}'>
+							{foreach from=$sitem['options'] item=$subitem}
+								<option value='{$subitem.name}' {if $subitem.name == $sitem.value}selected{/if}>
+									{$subitem.title} - {$subitem.value}
+								</option>
+							{/foreach}
+						{/if}
+
+						</td>
+					</tr>
+                    {/if}
+
+        {/if}
+    {/foreach}
+{/function}
+
+
 <!-- START OF ADMINCP_PLUGINS_ROW-->
 {if $error != 0}
 <b>You have an error with a code of {$error}:</b>
@@ -12,41 +51,10 @@
   <tbody>
 		<tr>
 			<th width="25%">
-				{$GROUP}
+				{$group|capitalize}
 			</th>
 		</tr>
-{foreach from=$settings item=sitem}
-		{if $sitem->visible == 1}
-		<tr>
-			<td valign="top">
-				<strong>{$sitem->title}</strong><br>
-				{$sitem->description}<br>
-				{if $sitem->optionscode == 'text'}
-					<input name="sid{$sitem->id}" type='text' value="{$sitem->value}"></input>
-				{/if}
-				
-				{if $sitem->optionscode == 'select'}
-					<select name="sid{$sitem->id}">
-						{foreach from=$allSettings item=subitem}
-						{if $sitem->id == $subitem->gid}
-					<option value="{$subitem->id}" {if $subitem->id == $sitem->value} selected{/if}>{$subitem->title} - {$subitem->value}</option>
-						{/if}
-						{/foreach}
-					</select>
-				{/if}
-				
-				{if $sitem->optionscode == 'radio'}
-					{foreach from=$allSettings item=subitem}
-					{if $sitem->id == $subitem->gid}
-					<input name="sid{$sitem->id}" type='radio' name='setting{$sitem->id}' value="{$subitem->id}" {if $subitem->id == $sitem->value} checked{/if}>{$subitem->value}</input>
-					{/if}
-					{/foreach}
-				{/if}
-			</td>
-		</tr>
-		{/if}
-{/foreach}
-
+{fsettings item=$settings}
 	</tbody>
 </table>
 

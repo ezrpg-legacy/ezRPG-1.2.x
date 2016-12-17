@@ -20,11 +20,11 @@ class Admin_Settings extends Base_Module
 
     public function start()
     {
-
-        if (isset($_GET['act']) && isset($_GET['gid'])) {
+        $this->rebuildConfigCache();
+        if (isset($_GET['act']) && isset($_GET['group'])) {
             switch ($_GET['act']) {
                 case 'getGroup':
-                    $this->getGroupPage($_GET['gid']);
+                    $this->getGroupPage($_GET['group']);
             }
         } elseif (isset($_POST['act'])) {
             switch ($_POST['act']) {
@@ -38,22 +38,18 @@ class Admin_Settings extends Base_Module
 
     private function list_settings()
     {
-        $query1 = $this->db->execute('select * from <ezrpg>settings where gid = 0 ORDER BY disporder');
-        $groups = $this->db->fetchAll($query1);
-        $this->tpl->assign("groups", $groups);
+        $config = unserialize(file_get_contents(CUR_DIR . '/config.php'));
+        $this->tpl->assign("groups", $config);
         $this->loadView('settings.tpl');
     }
 
     private function getGroupPage($id)
     {
-        $query1 = $this->db->execute('select title from <ezrpg>settings where id = ' . $id);
-        $this->tpl->assign('GROUP', $this->db->fetch($query1)->title);
-        $query2 = $this->db->execute('select * from <ezrpg>settings where gid = ' . $id . ' ORDER BY disporder');
-        $settings = $this->db->fetchAll($query2);
-        $query3 = $this->db->execute('select * from <ezrpg>settings');
-        $allSettings = $this->db->fetchAll($query3);
-        $this->tpl->assign('allSettings', $allSettings);
-        $this->tpl->assign('settings', $settings);
+        //$this->tpl->assign('allSettings', $allSettings);
+        $config = unserialize(file_get_contents(CUR_DIR . '/config.php'));
+        $this->tpl->assign('group', $id);
+        //die(print("<pre>".print_r($config[$id],true)."</pre>"));
+        $this->tpl->assign('settings', $config[$id]);
         $this->loadView('settings_page.tpl');
     }
 
@@ -62,21 +58,29 @@ class Admin_Settings extends Base_Module
         $settings = array();
         foreach ($_POST as $item => $val) {
             if ($item != 'act' and $item != 'save') {
-                if (strpos($item, 'sid') === 0) {
-                    $settings[preg_replace('/sid/', '', $item)] = $val;
-                }
-                if (strpos($item, 'sgid') === 0) {
-                    $settings[preg_replace('/sgid/', '', $item)] = $val;
-                }
+                $setting = explode("_",$item);
+                die(var_dump($this->container['config'][$setting[0]][$setting[1]]));
             }
         }
         foreach ($settings as $item => $val) {
-            $update = array();
-            $update['value'] = $val;
-            $this->db->update("<ezrpg>settings", $update, 'id=' . $item);
+
         }
-        killSettingsCache();
+
         $this->list_settings();
     }
 
+    private function rebuildConfigCache(){
+        if (!array_key_exists('config', $this->container)) {
+            $config_paths = [
+                'core/config/*.php',
+                'modules/*/config.php',
+                'config/*.php',
+            ];
+            $configLoader = new \ezrpg\core\config\ConfigLoader();
+            $config = $configLoader->loadConfigFromPaths($config_paths);
+            $serialized = serialize($config);
+            file_put_contents(CUR_DIR . "/config.php", $serialized);
+        }
+
+    }
 }

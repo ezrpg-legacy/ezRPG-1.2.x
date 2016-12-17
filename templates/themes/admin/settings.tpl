@@ -14,12 +14,14 @@
 				Setting Groups
 			</th>
 		</tr>
-{foreach from=$groups item=gitem}
+{foreach from=$groups item=gitem key=gkey}
+	{if isset($gitem.visible) && $gitem.visible == 1}
 		<tr>
 			<td valign="top">
-				<a href="index.php?mod=Settings&act=getGroup&gid={$gitem->id}">{$gitem->title}</a><br>
+				<a href="index.php?mod=Settings&act=getGroup&group={$gkey}">{$gkey|capitalize}</a><br>
 			</td>
 		</tr>
+    {/if}
 {/foreach}
 	</tbody>
 </table>
