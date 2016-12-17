@@ -46,6 +46,8 @@ $ezrpg->getConfigFromCache($rootPath . '/config.php');
 // Initialize the Database
 $ezrpg->setDatabase();
 
+$ezrpg->initializeRouter();
+
 // Initialize the View Controller;
 $ezrpg->initializeView();
 

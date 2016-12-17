@@ -148,11 +148,34 @@ class Application
         return new \ezrpg\core\View($this->container);
     }
 
+    public function initializeRouter(){
+        return new \ezrpg\core\Router($this->container);
+    }
+
     public function dispatch(){
         //Set Default module and check if Module is selected in URI
         $default_mod = $this->container['config']['app']['default_module']['value'];
 
-        $module_name = ((isset($_GET['mod']) && ctype_alnum($_GET['mod']) && isModuleActive($_GET['mod']) ) ? $_GET['mod'] : $default_mod);
+        $match = $this->container['router']->match();
+
+        if($match)
+        {
+            // Ugly patch work for compatibility
+            if(!empty($match['params'])){
+                foreach($match['params'] as $v=>$k){
+                    $_GET[$v] = $k;
+                }
+            }else{
+                $match['params'] = $_GET;
+            }
+            ///
+
+            $module_name = ((isset($match['params']['mod']) && ctype_alnum($match['params']['mod']) && isModuleActive($match['params']['mod']) ) ? $match['params']['mod'] : $default_mod);
+        }else{
+            array_push($_SESSION['status_messages'], array('warn'=>'This Route does not exist.')); //hacky way to setMessage
+            $module_name = $default_mod;
+        }
+
         $this->container['tpl']->assign('module_name', $module_name);
 
         //Init Hooks - Runs before Header

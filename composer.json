@@ -16,7 +16,8 @@
     "require": {
         "pimple/pimple": "~3.0",
         "smarty/smarty": "~3.1",
-        "pclzip/pclzip": "~2.8.2"
+        "pclzip/pclzip": "~2.8.2",
+        "altorouter/altorouter": "v1.2.0"
     },
     "autoload": {
         "psr-4": {
