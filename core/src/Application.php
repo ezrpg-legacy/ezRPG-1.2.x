@@ -135,7 +135,6 @@ class Application
                 'modules/*/config.php',
                 'config/*.php',
             ];
-
             $configLoader = new \ezrpg\core\config\ConfigLoader();
             $config = $configLoader->loadConfigFromPaths($config_paths);
             $serialized = serialize($config);
